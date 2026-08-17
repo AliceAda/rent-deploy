@@ -7,6 +7,11 @@ declare module 'vue-router' {
     title?: string
     requiresAuth?: boolean
     roles?: UserRole[]
+    // 控制台（admin/landlord 共用布局）菜单元数据：icon 为图标名，group 为分组标题
+    shell?: 'admin' | 'landlord'
+    menu?: { icon?: string; group?: string }
+    // 不在侧边菜单展示的路由（详情页等）
+    hidden?: boolean
   }
 }
 
@@ -49,53 +54,55 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/admin',
-    component: () => import('@/layouts/AdminLayout.vue'),
+    component: () => import('@/layouts/ConsoleLayout.vue'),
     redirect: '/admin/dashboard',
-    meta: { requiresAuth: true, roles: ['agent', 'admin'] },
+    meta: { requiresAuth: true, roles: ['agent', 'admin'], shell: 'admin' },
     children: [
-      { path: 'dashboard', name: 'admin-dashboard', component: () => import('@/views/admin/Dashboard.vue'), meta: { title: '工作台' } },
-      { path: 'houses', name: 'admin-houses', component: () => import('@/views/admin/HouseManage.vue'), meta: { title: '房源管理' } },
-      { path: 'users', name: 'admin-users', component: () => import('@/views/admin/UserManage.vue'), meta: { title: '用户管理' } },
-      { path: 'users/:id', name: 'admin-user-detail', component: () => import('@/views/admin/UserDetail.vue'), meta: { title: '用户详情' } },
-      { path: 'trades', name: 'admin-trades', component: () => import('@/views/admin/TradeManage.vue'), meta: { title: '交易管理' } },
-      { path: 'contracts', name: 'admin-contracts', component: () => import('@/views/admin/ContractManage.vue'), meta: { title: '合同管理' } },
-      { path: 'contract-templates', name: 'admin-contract-templates', component: () => import('@/views/admin/ContractTemplate.vue'), meta: { title: '合同模板' } },
-      { path: 'finance', name: 'admin-finance', component: () => import('@/views/admin/Finance.vue'), meta: { title: '财务管理' } },
-      { path: 'refunds', name: 'admin-refunds', component: () => import('@/views/admin/RefundManage.vue'), meta: { title: '退款审批' } },
-      { path: 'withdrawals', name: 'admin-withdrawals', component: () => import('@/views/admin/WithdrawManage.vue'), meta: { title: '提现审批' } },
-      { path: 'tickets', name: 'admin-tickets', component: () => import('@/views/admin/TicketManage.vue'), meta: { title: '工单管理' } },
-      { path: 'content', name: 'admin-content', component: () => import('@/views/admin/ContentManage.vue'), meta: { title: '内容管理' } },
-      { path: 'statistics', name: 'admin-statistics', component: () => import('@/views/admin/Statistics.vue'), meta: { title: '数据统计' } },
-      { path: 'risk', name: 'admin-risk', component: () => import('@/views/admin/RiskManage.vue'), meta: { title: '风控管理' } },
-      { path: 'reports', name: 'admin-reports', component: () => import('@/views/admin/ReportManage.vue'), meta: { title: '举报管理' } },
-      { path: 'search', name: 'admin-search', component: () => import('@/views/admin/SearchManage.vue'), meta: { title: '搜索管理' } },
-      { path: 'message-templates', name: 'admin-message-templates', component: () => import('@/views/admin/MessageTemplate.vue'), meta: { title: '消息模板' } },
-      { path: 'system', name: 'admin-system', component: () => import('@/views/admin/SystemManage.vue'), meta: { title: '系统管理' } },
-      { path: 'dict', name: 'admin-dict', component: () => import('@/views/admin/DictManage.vue'), meta: { title: '数据字典' } },
-      { path: 'config', name: 'admin-config', component: () => import('@/views/admin/ConfigManage.vue'), meta: { title: '系统配置' } }
+      { path: 'dashboard', name: 'admin-dashboard', component: () => import('@/views/admin/Dashboard.vue'), meta: { title: '工作台', menu: { icon: 'DataLine' } } },
+      { path: 'houses', name: 'admin-houses', component: () => import('@/views/admin/HouseManage.vue'), meta: { title: '房源管理', menu: { icon: 'House' } } },
+      { path: 'users', name: 'admin-users', component: () => import('@/views/admin/UserManage.vue'), meta: { title: '用户管理', menu: { icon: 'User' } } },
+      { path: 'users/:id', name: 'admin-user-detail', component: () => import('@/views/admin/UserDetail.vue'), meta: { title: '用户详情', hidden: true } },
+      { path: 'trades', name: 'admin-trades', component: () => import('@/views/admin/TradeManage.vue'), meta: { title: '交易管理', menu: { icon: 'Tickets' } } },
+      { path: 'contracts', name: 'admin-contracts', component: () => import('@/views/admin/ContractManage.vue'), meta: { title: '合同列表', menu: { icon: 'Document', group: '合同管理' } } },
+      { path: 'contract-templates', name: 'admin-contract-templates', component: () => import('@/views/admin/ContractTemplate.vue'), meta: { title: '合同模板', menu: { icon: 'Document', group: '合同管理' } } },
+      { path: 'finance', name: 'admin-finance', component: () => import('@/views/admin/Finance.vue'), meta: { title: '财务概览', menu: { icon: 'Money', group: '财务管理' } } },
+      { path: 'refunds', name: 'admin-refunds', component: () => import('@/views/admin/RefundManage.vue'), meta: { title: '退款审批', menu: { icon: 'Money', group: '财务管理' } } },
+      { path: 'withdrawals', name: 'admin-withdrawals', component: () => import('@/views/admin/WithdrawManage.vue'), meta: { title: '提现审批', menu: { icon: 'Money', group: '财务管理' } } },
+      { path: 'tickets', name: 'admin-tickets', component: () => import('@/views/admin/TicketManage.vue'), meta: { title: '工单管理', menu: { icon: 'Service' } } },
+      { path: 'content', name: 'admin-content', component: () => import('@/views/admin/ContentManage.vue'), meta: { title: '内容管理', menu: { icon: 'Notebook' } } },
+      { path: 'statistics', name: 'admin-statistics', component: () => import('@/views/admin/Statistics.vue'), meta: { title: '数据统计', menu: { icon: 'TrendCharts' } } },
+      { path: 'risk', name: 'admin-risk', component: () => import('@/views/admin/RiskManage.vue'), meta: { title: '风控中心', menu: { icon: 'WarnTriangleFilled', group: '风控管理' } } },
+      { path: 'reports', name: 'admin-reports', component: () => import('@/views/admin/ReportManage.vue'), meta: { title: '举报管理', menu: { icon: 'WarnTriangleFilled', group: '风控管理' } } },
+      { path: 'search', name: 'admin-search', component: () => import('@/views/admin/SearchManage.vue'), meta: { title: '搜索管理', menu: { icon: 'Search' } } },
+      { path: 'message-templates', name: 'admin-message-templates', component: () => import('@/views/admin/MessageTemplate.vue'), meta: { title: '消息模板', menu: { icon: 'Message' } } },
+      { path: 'system', name: 'admin-system', component: () => import('@/views/admin/SystemManage.vue'), meta: { title: '系统设置', menu: { icon: 'Setting', group: '系统管理' } } },
+      { path: 'dict', name: 'admin-dict', component: () => import('@/views/admin/DictManage.vue'), meta: { title: '数据字典', menu: { icon: 'Setting', group: '系统管理' } } },
+      { path: 'config', name: 'admin-config', component: () => import('@/views/admin/ConfigManage.vue'), meta: { title: '系统配置', menu: { icon: 'Setting', group: '系统管理' } } }
     ]
   },
   {
     path: '/landlord',
-    component: () => import('@/layouts/LandlordLayout.vue'),
+    component: () => import('@/layouts/ConsoleLayout.vue'),
     redirect: '/landlord/dashboard',
-    meta: { requiresAuth: true, roles: ['landlord'] },
+    meta: { requiresAuth: true, roles: ['landlord'], shell: 'landlord' },
     children: [
-      { path: 'dashboard', name: 'landlord-dashboard', component: () => import('@/views/landlord/Dashboard.vue'), meta: { title: '工作台' } },
-      { path: 'my-houses', name: 'landlord-houses', component: () => import('@/views/landlord/MyHouses.vue'), meta: { title: '我的房源' } },
-      { path: 'houses/:id', name: 'landlord-house-edit', component: () => import('@/views/landlord/HouseEdit.vue'), meta: { title: '编辑房源' } },
-      { path: 'publish', name: 'landlord-publish', component: () => import('@/views/landlord/PublishHouse.vue'), meta: { title: '发布房源' } },
-      { path: 'bookings', name: 'landlord-bookings', component: () => import('@/views/landlord/Bookings.vue'), meta: { title: '看房预约' } },
-      { path: 'bookings/:id', name: 'landlord-booking-detail', component: () => import('@/views/landlord/BookingDetail.vue'), meta: { title: '预约详情' } },
-      { path: 'orders', name: 'landlord-orders', component: () => import('@/views/landlord/Orders.vue'), meta: { title: '订单' } },
-      { path: 'contracts', name: 'landlord-contracts', component: () => import('@/views/landlord/Contracts.vue'), meta: { title: '合同管理' } },
-      { path: 'workorders', name: 'landlord-workorders', component: () => import('@/views/landlord/RepairManage.vue'), meta: { title: '工单处理' } },
-      { path: 'bills', name: 'landlord-bills', component: () => import('@/views/landlord/Bills.vue'), meta: { title: '账单' } },
-      { path: 'bills/:id', name: 'landlord-bill-detail', component: () => import('@/views/landlord/BillDetail.vue'), meta: { title: '账单详情' } },
-      { path: 'withdraw', name: 'landlord-withdraw', component: () => import('@/views/landlord/Withdraw.vue'), meta: { title: '提现管理' } },
-      { path: 'profile', name: 'landlord-profile', component: () => import('@/views/landlord/LandlordProfile.vue'), meta: { title: '房东资料' } }
+      { path: 'dashboard', name: 'landlord-dashboard', component: () => import('@/views/landlord/Dashboard.vue'), meta: { title: '工作台', menu: { icon: 'Odometer' } } },
+      { path: 'my-houses', name: 'landlord-houses', component: () => import('@/views/landlord/MyHouses.vue'), meta: { title: '我的房源', menu: { icon: 'House' } } },
+      { path: 'houses/:id', name: 'landlord-house-edit', component: () => import('@/views/landlord/HouseEdit.vue'), meta: { title: '编辑房源', hidden: true } },
+      { path: 'publish', name: 'landlord-publish', component: () => import('@/views/landlord/PublishHouse.vue'), meta: { title: '发布房源', menu: { icon: 'Plus' } } },
+      { path: 'bookings', name: 'landlord-bookings', component: () => import('@/views/landlord/Bookings.vue'), meta: { title: '看房预约', menu: { icon: 'Calendar' } } },
+      { path: 'bookings/:id', name: 'landlord-booking-detail', component: () => import('@/views/landlord/BookingDetail.vue'), meta: { title: '预约详情', hidden: true } },
+      { path: 'orders', name: 'landlord-orders', component: () => import('@/views/landlord/Orders.vue'), meta: { title: '订单', menu: { icon: 'Tickets' } } },
+      { path: 'contracts', name: 'landlord-contracts', component: () => import('@/views/landlord/Contracts.vue'), meta: { title: '合同管理', menu: { icon: 'Document' } } },
+      { path: 'workorders', name: 'landlord-workorders', component: () => import('@/views/landlord/RepairManage.vue'), meta: { title: '工单处理', menu: { icon: 'Service' } } },
+      { path: 'bills', name: 'landlord-bills', component: () => import('@/views/landlord/Bills.vue'), meta: { title: '账单', menu: { icon: 'Money' } } },
+      { path: 'bills/:id', name: 'landlord-bill-detail', component: () => import('@/views/landlord/BillDetail.vue'), meta: { title: '账单详情', hidden: true } },
+      { path: 'withdraw', name: 'landlord-withdraw', component: () => import('@/views/landlord/Withdraw.vue'), meta: { title: '提现管理', menu: { icon: 'Wallet' } } },
+      { path: 'profile', name: 'landlord-profile', component: () => import('@/views/landlord/LandlordProfile.vue'), meta: { title: '房东资料', menu: { icon: 'UserFilled' } } }
     ]
   },
+  // 开发工具：探测后端接口就绪矩阵（生产构建页面内会提示不可用）
+  { path: '/api-status', name: 'api-status', component: () => import('@/views/dev/ApiStatus.vue'), meta: { title: '接口状态' } },
   { path: '/:pathMatch(.*)*', redirect: '/home' }
 ]
 
