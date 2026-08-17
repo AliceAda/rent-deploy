@@ -197,8 +197,16 @@ export interface StockData {
   name: string
   value: number
 }
+export interface DashboardToday {
+  newHouse: number
+  newOrder: number
+  deal: number
+  todo: number
+}
 export const getGmvStat = (dim: string) => get<GmvData>('/admin/statistics/gmv', { dim })
 export const getStockStat = () => get<StockData[]>('/admin/statistics/stock')
+/** 工作台今日指标 */
+export const getDashboardToday = () => get<DashboardToday>('/admin/statistics/today')
 export const exportStat = (data: { dim: string; range: string }) => post('/admin/statistics/export', data)
 
 // ===== 系统管理 =====

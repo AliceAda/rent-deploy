@@ -2,7 +2,7 @@
   <div class="page-max">
     <!-- Hero -->
     <section class="hero">
-      <h1>在{{ store.city }}，找到你的下一处家</h1>
+      <h1>在{{ store.cityShort }}，找到你的下一处家</h1>
       <p>真实房源 · 在线签约 · 租金透明，三步完成找房到入住</p>
       <el-input v-model="kw" placeholder="想租哪？试试「望京」「10号线」" class="hero-search" @keyup.enter="goList">
         <template #append><el-button type="warning" @click="goList">找房</el-button></template>
@@ -16,8 +16,17 @@
       </div>
     </section>
 
+    <el-alert
+      v-if="source.isDemo"
+      type="warning"
+      show-icon
+      :closable="false"
+      style="margin-bottom: 14px"
+      title="当前为演示房源数据（接口未就绪）"
+    />
+
     <h2 class="sec-title">精选房源 <small class="text-sub">运营位 · 按综合权重排序</small></h2>
-    <el-row :gutter="16">
+    <el-row :gutter="16" v-loading="source.loading">
       <el-col v-for="h in featured" :key="h.id" :xs="24" :sm="12" :md="6">
         <HouseCard :house="h" @open="openDetail" @fav="store.toggleCollect(h.id)" />
       </el-col>
@@ -26,15 +35,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '@/store'
 import HouseCard from '@/components/HouseCard.vue'
+import { getHouseList } from '@/api/house'
+import { useDataSource } from '@/composables/useDataSource'
+import { toBrowseHouse } from '@/utils/house'
+import type { House } from '@/mock/data'
 
 const store = useAppStore()
 const router = useRouter()
 const kw = ref('')
-const featured = computed(() => store.publicHouses.slice(0, 4))
+
+// API-first + mock 回退：接口就绪用真实房源，未就绪回退本地演示数据
+const source = useDataSource<House[]>(
+  async () => {
+    const r = await getHouseList()
+    return { code: r.code, data: (r.data?.list ?? []).map(toBrowseHouse) }
+  },
+  store.publicHouses
+)
+onMounted(() => source.load())
+
+const featured = computed(() => source.data.value.slice(0, 4))
 
 function openDetail(id: number) {
   router.push('/detail/' + id)

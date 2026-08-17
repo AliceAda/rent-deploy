@@ -48,8 +48,20 @@
 
       <!-- 主内容 -->
       <el-col :xs="24" :sm="16" :md="18">
+        <el-alert
+          v-if="source.isDemo"
+          type="warning"
+          show-icon
+          :closable="false"
+          style="margin-bottom: 12px"
+          title="当前为演示房源数据（接口未就绪）"
+        />
         <div class="list-head">
-          <div class="count text-sub">共 {{ filtered.length }} 套房源</div>
+          <div class="count text-sub">
+            共 {{ filtered.length }} 套房源
+            <span v-if="store.district" class="loc">（{{ store.cityShort }} · {{ store.district }}）</span>
+            <span v-else class="loc">（{{ store.cityShort }}）</span>
+          </div>
           <div class="right">
             <el-radio-group v-model="sort" size="small">
               <el-radio-button label="综合" value="default" />
@@ -112,11 +124,23 @@ import { reactive, ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAppStore } from '@/store'
 import HouseCard from '@/components/HouseCard.vue'
+import { getHouseList } from '@/api/house'
+import { useDataSource } from '@/composables/useDataSource'
+import { toBrowseHouse } from '@/utils/house'
 import type { House } from '@/mock/data'
 
 const store = useAppStore()
 const route = useRoute()
 const router = useRouter()
+
+// API-first + mock 回退：接口就绪用真实房源，未就绪回退本地演示数据
+const source = useDataSource<House[]>(
+  async () => {
+    const r = await getHouseList()
+    return { code: r.code, data: (r.data?.list ?? []).map(toBrowseHouse) }
+  },
+  store.publicHouses
+)
 const mapMode = ref(false)
 const active = ref<number | null>(null)
 const sort = ref('default')
@@ -124,14 +148,31 @@ const kw = ref('')
 
 const f = reactive({ rent: '全部', type: '', ori: '', price: 15000, fac: [] as string[] })
 
-// 接收来自首页 / 顶栏搜索的 query（关键词 q、租赁方式 rent），进入列表即预筛选
+// 接收来自首页 / 顶栏的 query（关键词 q、租赁方式 rent、定位 city/district），进入列表即预筛选
 function loadQuery() {
   const q = (route.query.q as string) || ''
   const r = (route.query.rent as string) || ''
   if (q) kw.value = q
   if (r && ['全部', '整租', '合租', '公寓'].includes(r)) f.rent = r
+  const cityQ = (route.query.city as string) || ''
+  const districtQ = (route.query.district as string) || ''
+  if (cityQ || districtQ) syncLocation(cityQ || store.cityShort, districtQ)
 }
-onMounted(loadQuery)
+// 把 query 里的城市/区域反查回省→市→区，保持顶栏级联选中态一致
+function syncLocation(cityShort: string, district?: string) {
+  for (const p of store.regions) {
+    for (const c of p.children ?? []) {
+      if (c.name.replace(/[省市]$/, '') === cityShort) {
+        store.setLocation(p.name, c.name, district ?? '')
+        return
+      }
+    }
+  }
+}
+onMounted(() => {
+  loadQuery()
+  source.load()
+})
 watch(() => route.query, loadQuery)
 
 const districts = [
@@ -141,9 +182,16 @@ const districts = [
   { name: '大兴区', style: { left: '62%', top: '76%' } }
 ]
 
+// 先按顶栏定位（城市/区域）过滤，再做关键词与筛选条件过滤
+const locationHouses = computed(() => {
+  const c = store.cityShort
+  const d = store.district
+  return source.data.value.filter((h) => (!c || h.city === c) && (!d || h.district === d))
+})
+
 const filtered = computed(() => {
   const q = kw.value.trim().toLowerCase()
-  let arr = store.publicHouses.filter(
+  let arr = locationHouses.value.filter(
     (h) =>
       (f.rent === '全部' || h.rentType === f.rent) &&
       (!f.type || h.layout.startsWith(f.type)) &&
@@ -158,7 +206,7 @@ const filtered = computed(() => {
   return arr
 })
 
-const activeHouse = computed<House | undefined>(() => store.publicHouses.find((h) => h.id === active.value))
+const activeHouse = computed<House | undefined>(() => source.data.value.find((h) => h.id === active.value))
 
 function reset() {
   f.rent = '全部'
@@ -185,6 +233,9 @@ function openDetail(id: number) {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 14px;
+}
+.loc {
+  color: var(--brand);
 }
 .right {
   display: flex;

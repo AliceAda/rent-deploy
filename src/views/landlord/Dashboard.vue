@@ -3,22 +3,32 @@
     <h3>工作台</h3>
     <p class="sub">房东经营概览，随时掌握房源与收益动态</p>
 
-    <el-row :gutter="14" class="stats">
+    <el-alert
+      v-if="isDemo"
+      type="warning"
+      show-icon
+      :closable="false"
+      style="margin-bottom: 14px"
+      title="当前为演示数据（工作台接口未就绪）"
+      description="各项指标已回退到本地演示数据，接入后端后自动切换为真实数据。"
+    />
+
+    <el-row :gutter="14" class="stats" v-loading="loading">
       <el-col :span="6">
         <el-card shadow="never" class="stat">
-          <div class="num">{{ landlord.myHouses.length }}</div>
+          <div class="num">{{ totalHouses }}</div>
           <div class="lab">房源总数</div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card shadow="never" class="stat">
-          <div class="num ok">{{ landlord.rentableCount }}</div>
+          <div class="num ok">{{ rentableCount }}</div>
           <div class="lab">在租 / 可租</div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card shadow="never" class="stat">
-          <div class="num warn">{{ landlord.pendingBookings }}</div>
+          <div class="num warn">{{ pendingBookings }}</div>
           <div class="lab">待确认预约</div>
         </el-card>
       </el-col>
@@ -40,7 +50,7 @@
             <el-table-column prop="time" label="时间" width="140" />
             <el-table-column label="状态" width="90">
               <template #default="{ row }">
-                <el-tag :type="row.status === '待确认' ? 'warning' : row.status === '已确认' ? 'success' : 'info'" size="small">
+                <el-tag :type="statusTag('booking', row.status)" size="small">
                   {{ row.status }}
                 </el-tag>
               </template>
@@ -56,7 +66,7 @@
             <el-button type="primary" size="large" class="qbtn">+ 发布新房源</el-button>
           </router-link>
           <router-link to="/landlord/my-houses">
-            <el-button size="large" class="qbtn">管理我的房源（{{ landlord.myHouses.length }}）</el-button>
+            <el-button size="large" class="qbtn">管理我的房源（{{ totalHouses }}）</el-button>
           </router-link>
           <router-link to="/landlord/bills">
             <el-button size="large" class="qbtn">查看租金账单</el-button>
@@ -71,11 +81,67 @@
 import { computed } from 'vue'
 import { useLandlordStore } from '@/store/landlord'
 import { landlordBills } from '@/mock/data'
+import { getLandlordHouses } from '@/api/house'
+import { getLandlordBookings, type BookingItem } from '@/api/booking'
+import { getLandlordBills, type BillItem } from '@/api/bill'
+import { useDataSource } from '@/composables/useDataSource'
+import { statusTag } from '@/utils/status'
 
 const landlord = useLandlordStore()
-const recentBookings = computed(() => landlord.bookings.slice(0, 4))
+
+// API-first + mock 回退：接口就绪用真实数据，未就绪回退本地演示数据并标记 isDemo
+const houses = useDataSource(
+  () => getLandlordHouses(),
+  { list: landlord.myHouses, total: landlord.myHouses.length }
+)
+const bookings = useDataSource(
+  () => getLandlordBookings(),
+  {
+    list: landlord.bookings.map((b) => ({
+      id: b.id,
+      houseId: b.houseId,
+      houseTitle: b.houseTitle,
+      status: b.status,
+      appointmentTime: b.time,
+      createTime: b.time,
+      remark: b.remark,
+      userName: b.tenant
+    })),
+    total: landlord.bookings.length
+  }
+)
+const bills = useDataSource(
+  () => getLandlordBills(),
+  {
+    list: landlordBills.map((b) => ({
+      id: b.id,
+      houseId: 0,
+      title: b.houseTitle,
+      type: '租金',
+      amount: b.amount,
+      paid: b.paid,
+      status: b.status
+    })),
+    total: landlordBills.length
+  }
+)
+
+const loading = computed(() => houses.loading.value || bookings.loading.value || bills.loading.value)
+const isDemo = computed(() => houses.isDemo.value || bookings.isDemo.value || bills.isDemo.value)
+
+const totalHouses = computed(() => houses.data.value.list.length)
+const rentableCount = computed(() => houses.data.value.list.filter((h) => h.status === '可租').length)
+const pendingBookings = computed(() => bookings.data.value.list.filter((b) => b.status === '待确认').length)
 const receivable = computed(() =>
-  landlordBills.filter((b) => b.status !== '已收').reduce((s, b) => s + (b.amount - b.paid), 0)
+  bills.data.value.list.filter((b) => b.status !== '已收').reduce((s, b) => s + ((b.amount ?? 0) - (b.paid ?? 0)), 0)
+)
+const recentBookings = computed(() =>
+  bookings.data.value.list.slice(0, 4).map((b: BookingItem) => ({
+    houseTitle: b.houseTitle ?? '',
+    tenant: b.userName ?? '',
+    time: b.appointmentTime,
+    status: b.status
+  }))
 )
 </script>
 
