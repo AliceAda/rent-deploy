@@ -3,13 +3,14 @@
     <el-card shadow="never">
       <div class="head">
         <h3>我的账单</h3>
-        <el-radio-group v-model="statusTab" size="small" @change="load">
+        <el-radio-group v-model="statusTab" size="small" @change="reload">
           <el-radio-button label="all" value="all">全部</el-radio-button>
           <el-radio-button label="待支付" value="待支付">待支付</el-radio-button>
           <el-radio-button label="已支付" value="已支付">已支付</el-radio-button>
         </el-radio-group>
       </div>
 
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="list" v-loading="loading" empty-text="暂无账单">
         <el-table-column label="账单" min-width="180">
           <template #default="{ row }">
@@ -42,37 +43,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { safe } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getMyBills, payBill, type BillItem } from '@/api/bill'
+import { statusTag } from '@/utils/status'
 
-const list = ref<BillItem[]>([])
-const loading = ref(false)
 const statusTab = ref('all')
+const { list, loading, error, reload } = useTable<BillItem>(({ page, size }) =>
+  getMyBills(statusTab.value === 'all' ? undefined : statusTab.value)
+)
 
 function statusType(s: string) {
-  if (s === '已支付') return 'success'
-  if (s === '已逾期') return 'danger'
-  return 'warning'
-}
-async function load() {
-  loading.value = true
-  const status = statusTab.value === 'all' ? undefined : statusTab.value
-  const r = await safe(getMyBills(status), { list: [], total: 0 })
-  list.value = r.data?.list ?? []
-  loading.value = false
+  return statusTag('bill', s)
 }
 async function pay(row: BillItem) {
   const r = await safe(payBill(row.id), {})
   if (r.code === 0) {
     ElMessage.success('支付成功')
-    load()
+    reload()
   } else {
     ElMessage.warning((r.data as { payUrl?: string } | undefined)?.payUrl || r.message || '支付发起失败')
   }
 }
-onMounted(load)
 </script>
 
 <style scoped>

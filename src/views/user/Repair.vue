@@ -26,6 +26,7 @@
 
     <el-card shadow="never">
       <h3>我的工单</h3>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="list" v-loading="loading" empty-text="暂无工单">
         <el-table-column prop="title" label="标题" min-width="160" />
         <el-table-column label="类型" width="100">
@@ -41,26 +42,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { safe } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getMyWorkOrders, submitRepair, type WorkOrderItem } from '@/api/workorder'
+import { statusTag } from '@/utils/status'
 
-const list = ref<WorkOrderItem[]>([])
-const loading = ref(false)
 const form = ref({ type: 'repair', houseId: '', title: '', content: '' })
+const { list, loading, error, reload } = useTable<WorkOrderItem>(() => getMyWorkOrders())
 
 function statusType(s: string) {
-  if (s === 'done' || s === '已完成') return 'success'
-  if (s === 'processing' || s === '处理中') return 'warning'
-  if (s === 'closed' || s === '已关闭') return 'info'
-  return 'primary'
-}
-async function load() {
-  loading.value = true
-  const r = await safe(getMyWorkOrders(), { list: [], total: 0 })
-  list.value = r.data?.list ?? []
-  loading.value = false
+  return statusTag('workorder', s)
 }
 async function submit() {
   if (!form.value.title) return ElMessage.warning('请填写标题')
@@ -68,10 +61,9 @@ async function submit() {
   if (r.code === 0) {
     ElMessage.success('已提交，等待处理')
     form.value = { type: 'repair', houseId: '', title: '', content: '' }
-    load()
+    reload()
   } else {
     ElMessage.error(r.message || '提交失败')
   }
 }
-onMounted(load)
 </script>

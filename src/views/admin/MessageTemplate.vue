@@ -7,7 +7,8 @@
       </div>
       <el-tabs v-model="tab">
         <el-tab-pane label="消息模板" name="templates">
-          <el-table :data="templates" v-loading="loading" empty-text="暂无模板">
+          <el-alert v-if="templatesError" type="warning" :title="'加载失败：' + templatesError" show-icon :closable="false" style="margin-bottom: 12px" />
+          <el-table :data="templates" v-loading="templatesLoading" empty-text="暂无模板">
             <el-table-column prop="id" label="ID" width="80" />
             <el-table-column prop="name" label="模板名称" min-width="160" />
             <el-table-column prop="type" label="类型" width="120" />
@@ -19,7 +20,8 @@
         </el-tab-pane>
 
         <el-tab-pane label="通知渠道" name="channels">
-          <el-table :data="channels" v-loading="loading" empty-text="暂无渠道">
+          <el-alert v-if="channelsError" type="warning" :title="'加载失败：' + channelsError" show-icon :closable="false" style="margin-bottom: 12px" />
+          <el-table :data="channels" v-loading="channelsLoading" empty-text="暂无渠道">
             <el-table-column prop="id" label="ID" width="80" />
             <el-table-column prop="name" label="渠道名称" min-width="160" />
             <el-table-column prop="type" label="类型" width="120" />
@@ -54,30 +56,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { get, post, safe, okRes, msgOf } from '@/api/http'
+import { useTable } from '@/composables/useTable'
+
+interface TemplateItem { id: number; name: string; type: string; content: string; status: string }
+interface ChannelItem { id: number; name: string; type: string; enabled: boolean }
 
 const tab = ref('templates')
-const loading = ref(false)
-const templates = ref<Array<{ id: number; name: string; type: string; content: string; status: string }>>([])
-const channels = ref<Array<{ id: number; name: string; type: string; enabled: boolean }>>([])
 const showSend = ref(false)
 const sendForm = ref({ userId: '', templateId: '', content: '' })
-
-async function loadTemplates() {
-  loading.value = true
-  const r = await safe(get('/message/template'), { list: [], total: 0 })
-  templates.value = (r.data as { list?: typeof templates.value })?.list ?? []
-  loading.value = false
-}
-
-async function loadChannels() {
-  loading.value = true
-  const r = await safe(get('/message/notify-channel'), { list: [], total: 0 })
-  channels.value = (r.data as { list?: typeof channels.value })?.list ?? []
-  loading.value = false
-}
+const { list: templates, loading: templatesLoading, error: templatesError, reload: reloadTemplates } =
+  useTable<TemplateItem>(() => get('/message/template'))
+const { list: channels, loading: channelsLoading, error: channelsError, reload: reloadChannels } =
+  useTable<ChannelItem>(() => get('/message/notify-channel'), { immediate: false })
 
 async function send() {
   const r = await safe(post('/message/send', sendForm.value), {})
@@ -86,11 +79,9 @@ async function send() {
 }
 
 watch(tab, (v) => {
-  if (v === 'templates') loadTemplates()
-  else if (v === 'channels') loadChannels()
+  if (v === 'templates') reloadTemplates()
+  else if (v === 'channels') reloadChannels()
 })
-
-onMounted(loadTemplates)
 </script>
 
 <style scoped>

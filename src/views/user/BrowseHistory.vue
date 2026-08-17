@@ -5,6 +5,7 @@
         <h3>浏览历史</h3>
         <el-button type="danger" text @click="clearAll" :disabled="!list.length">清空历史</el-button>
       </div>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <div v-loading="loading">
         <div v-if="list.length" class="history-grid">
           <div v-for="item in list" :key="item.id" class="history-card" @click="goDetail(item.houseId)">
@@ -22,27 +23,28 @@
         </div>
         <el-empty v-else description="暂无浏览记录" />
       </div>
+      <el-pagination
+        v-if="total > size"
+        style="margin-top: 12px; justify-content: flex-end"
+        layout="total, prev, pager, next"
+        :total="total"
+        :page-size="size"
+        :current-page="page"
+        @current-change="setPage"
+      />
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { safe } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getBrowseHistory, type BrowseHistoryItem } from '@/api/house'
 
-const list = ref<BrowseHistoryItem[]>([])
-const loading = ref(false)
 const router = useRouter()
-
-async function load() {
-  loading.value = true
-  const r = await safe(getBrowseHistory(), { list: [], total: 0 })
-  list.value = r.data?.list ?? []
-  loading.value = false
-}
+const { list, loading, error, reload, total, page, size, setPage, setSize } =
+  useTable<BrowseHistoryItem>(({ page, size }) => getBrowseHistory(page, size), { pageSize: 10 })
 
 function goDetail(id: number) {
   router.push(`/detail/${id}`)
@@ -53,8 +55,6 @@ async function clearAll() {
   list.value = []
   ElMessage.success('已清空')
 }
-
-onMounted(load)
 </script>
 
 <style scoped>

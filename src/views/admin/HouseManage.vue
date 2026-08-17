@@ -9,6 +9,7 @@
         <el-tab-pane :label="'违规 (' + counts.violation + ')'" name="违规" />
       </el-tabs>
 
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="paged" border v-loading="loading">
         <el-table-column prop="id" label="ID" width="70" />
         <el-table-column label="房源" min-width="200">
@@ -81,27 +82,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, reactive } from 'vue'
+import { computed, ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { safe, okRes, post } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getAdminHouses, auditHouse, rejectHouse, type AdminHouse } from '@/api/admin'
+import { statusTag } from '@/utils/status'
 
-const list = ref<AdminHouse[]>([])
-const loading = ref(false)
 const submitting = ref(false)
 const tab = ref('all')
+const { list, loading, error, reload } = useTable<AdminHouse>(() => getAdminHouses())
 const detailVisible = ref(false)
 const current = ref<AdminHouse | null>(null)
 const rejectVisible = ref(false)
 const rejectTarget = ref<AdminHouse | null>(null)
 const rejectReason = ref('')
-
-async function fetch() {
-  loading.value = true
-  const res = await safe(getAdminHouses(), [])
-  if (okRes(res)) list.value = res.data
-  loading.value = false
-}
 
 const counts = computed(() => ({
   pending: list.value.filter((h) => h.status === '待审核').length,
@@ -110,7 +105,7 @@ const counts = computed(() => ({
 const paged = computed(() => (tab.value === 'all' ? list.value : list.value.filter((h) => h.status === tab.value)))
 
 function statusType(s: string) {
-  return s === '可租' ? 'success' : s === '待审核' ? 'warning' : s === '违规' ? 'danger' : 'info'
+  return statusTag('house', s)
 }
 async function doAudit(row: AdminHouse, to: string) {
   submitting.value = true
@@ -172,6 +167,4 @@ function view(row: AdminHouse) {
   current.value = row
   detailVisible.value = true
 }
-
-onMounted(fetch)
 </script>

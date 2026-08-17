@@ -5,6 +5,7 @@
       <el-tab-pane label="报修" name="报修" />
       <el-tab-pane label="投诉" name="投诉" />
     </el-tabs>
+    <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
     <el-table :data="rows" border v-loading="loading">
       <el-table-column prop="ticketNo" label="工单号" width="150" />
       <el-table-column prop="type" label="类型" width="80">
@@ -16,7 +17,7 @@
       <el-table-column prop="handler" label="处理人" width="120" />
       <el-table-column label="状态" width="100">
         <template #default="{ row }">
-          <el-tag :type="row.status === '已关闭' ? 'info' : row.status === '待分派' ? 'danger' : 'warning'" size="small">{{ row.status }}</el-tag>
+          <el-tag :type="statusTag('workorder', row.status)" size="small">{{ row.status }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="createdAt" label="创建时间" width="160" />
@@ -63,28 +64,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe, okRes } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getAdminTickets, assignTicket, transferTicket, visitTicket, type AdminTicket } from '@/api/admin'
 import { closeTicket, reopenTicket } from '@/api/workorder'
+import { statusTag } from '@/utils/status'
 
-const list = ref<AdminTicket[]>([])
-const loading = ref(false)
 const submitting = ref(false)
 const tab = ref('全部')
+const { list, loading, error, reload } = useTable<AdminTicket>(() => getAdminTickets())
 const detailVisible = ref(false)
 const detail = ref<AdminTicket | null>(null)
 const transferVisible = ref(false)
 const transferTarget = ref<AdminTicket | null>(null)
 const transferTo = ref('')
-
-async function fetch() {
-  loading.value = true
-  const res = await safe(getAdminTickets(), [])
-  if (okRes(res)) list.value = res.data
-  loading.value = false
-}
 
 const rows = computed(() => (tab.value === '全部' ? list.value : list.value.filter((t) => t.type === tab.value)))
 
@@ -167,6 +162,4 @@ async function doReopen(row: AdminTicket) {
     submitting.value = false
   } catch { /* 取消 */ }
 }
-
-onMounted(fetch)
 </script>

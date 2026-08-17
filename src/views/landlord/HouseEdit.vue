@@ -164,6 +164,7 @@ import {
   getLandlordHouseStatus, updateLandlordHouseStatus,
   type HouseItem, type HouseRoom, type HouseImage, type LandlordHouseStats
 } from '@/api/house'
+import { statusTag } from '@/utils/status'
 
 const route = useRoute()
 const houseId = Number(route.params.id)
@@ -183,10 +184,7 @@ const showImage = ref(false)
 const imgForm = ref({ url: '', type: 'indoor' })
 
 function houseStatusType(s?: string) {
-  if (s === '可租') return 'success'
-  if (s === '已租') return 'warning'
-  if (s === '已下架') return 'info'
-  return ''
+  return statusTag('house', s)
 }
 
 async function load() {

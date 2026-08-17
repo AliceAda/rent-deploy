@@ -3,8 +3,9 @@
     <el-card shadow="never">
       <div class="head">
         <h3>登录会话管理</h3>
-        <el-button text @click="load">刷新</el-button>
+        <el-button text @click="reload">刷新</el-button>
       </div>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="list" v-loading="loading" empty-text="暂无会话">
         <el-table-column prop="device" label="设备" min-width="160" />
         <el-table-column prop="ip" label="IP地址" width="140" />
@@ -28,20 +29,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getSessions, deleteSession, type SessionItem } from '@/api/session'
 
-const list = ref<SessionItem[]>([])
-const loading = ref(false)
-
-async function load() {
-  loading.value = true
-  const r = await safe(getSessions(), { list: [], total: 0 })
-  list.value = r.data?.list ?? []
-  loading.value = false
-}
+const { list, loading, error, reload } = useTable<SessionItem>(() => getSessions())
 
 async function revoke(id: number) {
   await ElMessageBox.confirm('确认注销该设备的登录会话？', '提示', { type: 'warning' })
@@ -53,8 +46,6 @@ async function revoke(id: number) {
     ElMessage.error(r.message || '操作失败')
   }
 }
-
-onMounted(load)
 </script>
 
 <style scoped>

@@ -16,6 +16,7 @@
     <el-card shadow="never" class="block">
       <el-tabs v-model="finTab">
         <el-tab-pane label="分账与结算（平台抽佣 + 房东 + 经纪人）" name="settle">
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="finances" border v-loading="loading">
         <el-table-column prop="settleNo" label="结算单号" width="150" />
         <el-table-column prop="bizDesc" label="业务" min-width="150" />
@@ -40,6 +41,7 @@
       <el-empty v-if="!loading && finances.length === 0" description="暂无结算数据" />
         </el-tab-pane>
         <el-tab-pane label="支付记录" name="payment">
+          <el-alert v-if="paymentError" type="warning" :title="'加载失败：' + paymentError" show-icon :closable="false" style="margin-bottom: 12px" />
           <el-table :data="payments" border v-loading="paymentLoading">
             <el-table-column prop="id" label="ID" width="70" />
             <el-table-column prop="payNo" label="支付单号" width="160" />
@@ -74,9 +76,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe, okRes, post, get } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getAdminFinances, withdrawFinance, disputeFinance, type FinanceItem } from '@/api/admin'
 
 interface PaymentItem {
@@ -90,36 +93,23 @@ interface PaymentItem {
   payTime?: string
 }
 
-const list = ref<FinanceItem[]>([])
-const loading = ref(false)
 const submitting = ref(false)
 const detailVisible = ref(false)
 const detail = ref<FinanceItem | null>(null)
 
 const finTab = ref('settle')
 const reconciling = ref(false)
-const payments = ref<PaymentItem[]>([])
-const paymentLoading = ref(false)
+const { list, loading, error, reload } = useTable<FinanceItem>(() => getAdminFinances())
+const { list: payments, loading: paymentLoading, error: paymentError, reload: reloadPayments } =
+  useTable<PaymentItem>(() => get('/admin/payments'))
 
-async function fetch() {
-  loading.value = true
-  const res = await safe(getAdminFinances(), [])
-  if (okRes(res)) list.value = res.data
-  loading.value = false
-}
-async function fetchPayments() {
-  paymentLoading.value = true
-  const res = await safe(get<PaymentItem[]>('/admin/payments'), [])
-  if (okRes(res)) payments.value = res.data
-  paymentLoading.value = false
-}
 async function doReconcile() {
   reconciling.value = true
   const res = await safe(post('/finance/reconcile'), {})
   if (okRes(res)) {
     ElMessage.success('财务对账完成')
-    await fetch()
-    await fetchPayments()
+    await reload()
+    await reloadPayments()
   }
   reconciling.value = false
 }
@@ -163,11 +153,6 @@ async function doDispute(row: FinanceItem) {
   }
   submitting.value = false
 }
-
-onMounted(() => {
-  fetch()
-  fetchPayments()
-})
 </script>
 
 <style scoped>

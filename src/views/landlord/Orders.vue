@@ -4,6 +4,7 @@
     <p class="sub">查看房源产生的预订订单</p>
 
     <el-card shadow="never" class="card">
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="orders" stripe v-loading="loading" empty-text="暂无订单">
         <el-table-column prop="orderNo" label="订单号" width="150" />
         <el-table-column prop="title" label="房源" min-width="140" />
@@ -42,28 +43,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { safe, okRes, msgOf } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getLandlordOrders, checkinOrder, type OrderItem } from '@/api/order'
 
 const router = useRouter()
-const orders = ref<OrderItem[]>([])
-const loading = ref(false)
-
-async function load() {
-  loading.value = true
-  const r = await safe(getLandlordOrders(), { list: [], total: 0 })
-  orders.value = r.data?.list ?? []
-  loading.value = false
-}
+const { list: orders, loading, error, reload } = useTable<OrderItem>(() => getLandlordOrders())
 
 async function checkin(row: OrderItem) {
   const r = await safe(checkinOrder(row.orderId), {})
   if (okRes(r)) {
     ElMessage.success('入住办理成功')
-    load()
+    reload()
   } else {
     ElMessage.error(msgOf(r))
   }
@@ -72,8 +65,6 @@ async function checkin(row: OrderItem) {
 function detail(row: OrderItem) {
   router.push(`/orders/${row.orderId}`)
 }
-
-onMounted(load)
 </script>
 
 <style scoped>

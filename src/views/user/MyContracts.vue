@@ -2,6 +2,7 @@
   <div class="page-max">
     <el-card shadow="never">
       <h3>我的合同</h3>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="list" v-loading="loading" empty-text="暂无合同，签约成功后会显示在这里">
         <el-table-column label="合同号" prop="contractNo" min-width="160" />
         <el-table-column label="房源" min-width="120">
@@ -23,28 +24,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { safe } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getMyContracts, getContractDetail, type ContractItem } from '@/api/contract'
+import { statusTag } from '@/utils/status'
 
-const list = ref<ContractItem[]>([])
-const loading = ref(false)
 const router = useRouter()
+const { list, loading, error } = useTable<ContractItem>(() => getMyContracts())
 
 function statusType(s: string) {
-  if (s === '生效中') return 'success'
-  if (s === '已解约') return 'danger'
-  if (s === '待签署' || s === '续租中' || s === '退租中') return 'warning'
-  if (s === '已到期') return 'info'
-  return 'info' // 草稿
-}
-async function load() {
-  loading.value = true
-  const r = await safe(getMyContracts(), { list: [], total: 0 })
-  list.value = r.data?.list ?? []
-  loading.value = false
+  return statusTag('contract', s)
 }
 function view(row: ContractItem) {
   const r = safe(getContractDetail(row.id), {} as ContractItem)
@@ -56,5 +47,4 @@ function view(row: ContractItem) {
 function viewDetail(row: ContractItem) {
   router.push('/contracts/' + row.id)
 }
-onMounted(load)
 </script>

@@ -2,6 +2,7 @@
   <div>
     <el-card shadow="never" class="block">
       <template #header><b>看房预约</b></template>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="bookings" border v-loading="loading">
         <el-table-column prop="orderNo" label="预约号" width="150" />
         <el-table-column prop="houseTitle" label="房源" min-width="160" />
@@ -58,23 +59,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe, okRes } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getAdminOrders, confirmOrder, refundOrder, type AdminOrder } from '@/api/admin'
 
-const list = ref<AdminOrder[]>([])
-const loading = ref(false)
 const submitting = ref(false)
+const { list, loading, error, reload } = useTable<AdminOrder>(() => getAdminOrders())
 const detailVisible = ref(false)
 const detail = ref<AdminOrder | null>(null)
-
-async function fetch() {
-  loading.value = true
-  const res = await safe(getAdminOrders(), [])
-  if (okRes(res)) list.value = res.data
-  loading.value = false
-}
 
 const bookings = computed(() => list.value.filter((o) => o.type === '看房预约'))
 const payments = computed(() => list.value.filter((o) => o.type === '预订'))
@@ -107,8 +101,6 @@ async function doRefund(row: AdminOrder) {
 function doFlow(row: AdminOrder) {
   ElMessage.info(`流水号：P${row.orderNo}001，金额：¥${row.amount}，支付渠道：微信支付，时间：${row.createdAt}，状态：成功`)
 }
-
-onMounted(fetch)
 </script>
 
 <style scoped>

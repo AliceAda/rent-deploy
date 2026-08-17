@@ -9,6 +9,7 @@
       </el-radio-group>
       <el-button type="primary" plain @click="ElMessage.info('新增合同模板')">模板管理</el-button>
     </div>
+    <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
     <el-table :data="rows" border v-loading="loading">
       <el-table-column prop="contractNo" label="合同号" width="150" />
       <el-table-column prop="houseTitle" label="房源" min-width="160" />
@@ -52,24 +53,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe, okRes } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getAdminContracts, remindContract, cancelContract, type AdminContract } from '@/api/admin'
 
-const list = ref<AdminContract[]>([])
-const loading = ref(false)
 const submitting = ref(false)
 const tab = ref('全部')
+const { list, loading, error, reload } = useTable<AdminContract>(() => getAdminContracts())
 const detailVisible = ref(false)
 const current = ref<AdminContract | null>(null)
-
-async function fetch() {
-  loading.value = true
-  const res = await safe(getAdminContracts(), [])
-  if (okRes(res)) list.value = res.data
-  loading.value = false
-}
 
 const rows = computed(() =>
   tab.value === '全部' ? list.value
@@ -99,8 +93,6 @@ async function doCancel(row: AdminContract) {
     submitting.value = false
   } catch { /* 取消 */ }
 }
-
-onMounted(fetch)
 </script>
 
 <style scoped>

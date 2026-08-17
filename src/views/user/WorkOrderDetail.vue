@@ -63,6 +63,7 @@ import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe } from '@/api/http'
 import { getWorkOrderDetail, getWorkOrderLog, cancelWorkOrder, type WorkOrderItem, type WorkOrderLog } from '@/api/workorder'
+import { statusTag } from '@/utils/status'
 
 const route = useRoute()
 const ticketId = Number(route.params.id)
@@ -71,11 +72,7 @@ const logs = ref<WorkOrderLog[]>([])
 const loading = ref(false)
 
 function statusType(s: string) {
-  if (s === '已完成' || s === '已关闭') return 'success'
-  if (s === '处理中') return 'primary'
-  if (s === '待处理') return 'warning'
-  if (s === '已取消') return 'info'
-  return ''
+  return statusTag('workorder', s)
 }
 
 async function load() {

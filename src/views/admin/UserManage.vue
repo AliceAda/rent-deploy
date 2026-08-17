@@ -6,6 +6,7 @@
       <el-tab-pane label="房东" name="房东" />
       <el-tab-pane label="经纪人" name="经纪人" />
     </el-tabs>
+    <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
     <el-table :data="rows" border v-loading="loading">
       <el-table-column prop="id" label="ID" width="70" />
       <el-table-column prop="name" label="姓名" width="100" />
@@ -55,27 +56,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe, okRes } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getAdminUserList, toggleUserStatus, type AdminUser } from '@/api/admin'
 
 const router = useRouter()
 
-const list = ref<AdminUser[]>([])
-const loading = ref(false)
 const loadingId = ref<number | null>(null)
 const role = ref('全部')
+const { list, loading, error, reload } = useTable<AdminUser>(() => getAdminUserList())
 const detailVisible = ref(false)
 const current = ref<AdminUser | null>(null)
-
-async function fetch() {
-  loading.value = true
-  const res = await safe(getAdminUserList(), [])
-  if (okRes(res)) list.value = res.data
-  loading.value = false
-}
 
 const rows = computed(() => (role.value === '全部' ? list.value : list.value.filter((u) => u.role === role.value)))
 
@@ -110,6 +104,4 @@ async function doUnfreeze(row: AdminUser) {
     loadingId.value = null
   } catch { /* 取消 */ }
 }
-
-onMounted(fetch)
 </script>

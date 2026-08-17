@@ -5,6 +5,7 @@
         <h3>系统配置</h3>
         <el-button type="primary" @click="showAdd = true">新增配置</el-button>
       </div>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="list" v-loading="loading" empty-text="暂无配置">
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="key" label="配置键" min-width="160" />
@@ -33,24 +34,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { get, post, put, safe, okRes, msgOf } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 
 interface ConfigItem { id: number; key: string; value: string; name: string }
 
-const list = ref<ConfigItem[]>([])
-const loading = ref(false)
 const showAdd = ref(false)
 const editing = ref(false)
 const form = ref<Partial<ConfigItem>>({})
-
-async function load() {
-  loading.value = true
-  const r = await safe(get('/admin/config'), { list: [], total: 0 })
-  list.value = (r.data as { list?: ConfigItem[] })?.list ?? []
-  loading.value = false
-}
+const { list, loading, error, reload } = useTable<ConfigItem>(() => get('/admin/config'))
 
 function edit(row: ConfigItem) {
   editing.value = true
@@ -62,11 +56,9 @@ async function submit() {
   const r = editing.value
     ? await safe(put('/admin/config', form.value), {})
     : await safe(post('/admin/config', form.value), {})
-  if (okRes(r)) { ElMessage.success('操作成功'); showAdd.value = false; editing.value = false; form.value = {}; load() }
+  if (okRes(r)) { ElMessage.success('操作成功'); showAdd.value = false; editing.value = false; form.value = {}; reload() }
   else ElMessage.error(msgOf(r))
 }
-
-onMounted(load)
 </script>
 
 <style scoped>

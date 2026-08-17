@@ -5,6 +5,7 @@
         <h3>合同模板管理</h3>
         <el-button type="primary" @click="showAdd = true">新增模板</el-button>
       </div>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="list" v-loading="loading" empty-text="暂无模板">
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="name" label="模板名称" min-width="160" />
@@ -51,27 +52,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe, okRes, msgOf } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import {
   getContractTemplates, updateContractTemplate, deleteContractTemplate,
   type ContractTemplate
 } from '@/api/contract'
 import { post } from '@/api/http'
 
-const list = ref<ContractTemplate[]>([])
-const loading = ref(false)
 const showAdd = ref(false)
 const editing = ref(false)
 const form = ref<Partial<ContractTemplate>>({})
-
-async function load() {
-  loading.value = true
-  const r = await safe(getContractTemplates(), { list: [], total: 0 })
-  list.value = r.data?.list ?? []
-  loading.value = false
-}
+const { list, loading, error, reload } = useTable<ContractTemplate>(() => getContractTemplates())
 
 function edit(row: ContractTemplate) {
   editing.value = true
@@ -83,18 +77,16 @@ async function submit() {
   const r = editing.value
     ? await safe(updateContractTemplate(form.value.id!, form.value), {})
     : await safe(post('/contract/template', form.value), {})
-  if (okRes(r)) { ElMessage.success('操作成功'); showAdd.value = false; editing.value = false; form.value = {}; load() }
+  if (okRes(r)) { ElMessage.success('操作成功'); showAdd.value = false; editing.value = false; form.value = {}; reload() }
   else ElMessage.error(msgOf(r))
 }
 
 async function remove(id: number) {
   await ElMessageBox.confirm('确认删除此模板？', '提示', { type: 'warning' })
   const r = await safe(deleteContractTemplate(id), {})
-  if (okRes(r)) { ElMessage.success('已删除'); load() }
+  if (okRes(r)) { ElMessage.success('已删除'); reload() }
   else ElMessage.error(msgOf(r))
 }
-
-onMounted(load)
 </script>
 
 <style scoped>

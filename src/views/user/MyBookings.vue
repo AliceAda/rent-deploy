@@ -2,6 +2,7 @@
   <div class="page-max">
     <el-card shadow="never">
       <h3>我的预约</h3>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="list" v-loading="loading" empty-text="暂无预约，去房源详情预约看房吧">
         <el-table-column label="房源" min-width="160">
           <template #default="{ row }">房源 #{{ row.houseId }}</template>
@@ -22,34 +23,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getMyBookings, cancelBooking, type BookingItem } from '@/api/booking'
+import { statusTag } from '@/utils/status'
 
-const list = ref<BookingItem[]>([])
-const loading = ref(false)
+const { list, loading, error, reload } = useTable<BookingItem>(() => getMyBookings())
 
 function statusType(s: string) {
-  if (s === '已确认') return 'success'
-  if (s === '已拒绝') return 'danger'
-  return 'warning' // 待确认
-}
-async function load() {
-  loading.value = true
-  const r = await safe(getMyBookings(), { list: [], total: 0 })
-  list.value = r.data?.list ?? []
-  loading.value = false
+  return statusTag('booking', s)
 }
 async function cancel(row: BookingItem) {
   await ElMessageBox.confirm('确认取消该看房预约？', '提示', { type: 'warning' })
   const r = await safe(cancelBooking(row.id), {})
   if (r.code === 0) {
     ElMessage.success('已取消')
-    load()
+    reload()
   } else {
     ElMessage.error(r.message || '取消失败')
   }
 }
-onMounted(load)
 </script>

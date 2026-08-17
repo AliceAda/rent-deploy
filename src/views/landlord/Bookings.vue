@@ -4,6 +4,7 @@
     <p class="sub">租客发来的看房申请，确认后请主动联系约定时间</p>
 
     <el-card shadow="never" class="card">
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="bookings" stripe v-loading="loading" empty-text="暂无预约">
         <el-table-column label="房源" min-width="140">
           <template #default="{ row }">{{ row.houseTitle || `房源#${row.houseId}` }}</template>
@@ -14,7 +15,7 @@
         <el-table-column prop="remark" label="备注" min-width="160" />
         <el-table-column label="状态" width="100">
           <template #default="{ row }">
-            <el-tag :type="row.status === '待确认' ? 'warning' : row.status === '已确认' ? 'success' : 'info'" size="small">
+            <el-tag :type="statusTag('booking', row.status)" size="small">
               {{ row.status }}
             </el-tag>
           </template>
@@ -62,32 +63,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { safe, okRes, msgOf } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getLandlordBookings, confirmBooking, rejectBooking, type BookingItem } from '@/api/booking'
+import { statusTag } from '@/utils/status'
 
 const router = useRouter()
-const bookings = ref<BookingItem[]>([])
-const loading = ref(false)
+const { list: bookings, loading, error, reload } = useTable<BookingItem>(() => getLandlordBookings())
 const submitting = ref(false)
 const showReject = ref(false)
 const rejectReason = ref('')
 const rejectTarget = ref<BookingItem | null>(null)
 
-async function load() {
-  loading.value = true
-  const r = await safe(getLandlordBookings(), { list: [], total: 0 })
-  bookings.value = r.data?.list ?? []
-  loading.value = false
-}
-
 async function confirm(row: BookingItem) {
   const r = await safe(confirmBooking(row.id), {})
   if (okRes(r)) {
     ElMessage.success('已确认，请尽快联系租客')
-    load()
+    reload()
   } else {
     ElMessage.error(msgOf(r))
   }
@@ -108,7 +103,7 @@ async function doReject() {
     ElMessage.info('已拒绝该预约')
     showReject.value = false
     rejectTarget.value = null
-    load()
+    reload()
   } else {
     ElMessage.error(msgOf(r))
   }
@@ -117,8 +112,6 @@ async function doReject() {
 function detail(row: BookingItem) {
   router.push(`/landlord/bookings/${row.id}`)
 }
-
-onMounted(load)
 </script>
 
 <style scoped>

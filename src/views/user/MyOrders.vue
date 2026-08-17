@@ -9,6 +9,7 @@
         <el-tab-pane label="进行中" name="active" />
         <el-tab-pane label="已完成" name="done" />
       </el-tabs>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="filtered" v-loading="loading" empty-text="暂无订单">
         <el-table-column prop="title" label="房源/服务" min-width="160" />
         <el-table-column prop="amount" label="金额" width="120">
@@ -30,22 +31,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { safe } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getMyOrders, payOrder, type OrderItem } from '@/api/order'
+import { statusTag } from '@/utils/status'
 
-const list = ref<OrderItem[]>([])
-const loading = ref(false)
 const tab = ref('all')
 const router = useRouter()
+const { list, loading, error, reload } = useTable<OrderItem>(() => getMyOrders())
 
 function statusType(s: string) {
-  if (s === '已支付' || s === '已完成') return 'success'
-  if (s === '待确认' || s === '待支付') return 'warning'
-  if (s === '已取消') return 'info'
-  return ''
+  return statusTag('order', s)
 }
 const filtered = computed(() => {
   if (tab.value === 'all') return list.value
@@ -57,19 +56,13 @@ const filtered = computed(() => {
   }
   return list.value.filter((o) => (map[tab.value] || []).includes(o.status))
 })
-async function load() {
-  loading.value = true
-  const r = await safe(getMyOrders(), { list: [], total: 0 })
-  list.value = r.data?.list ?? []
-  loading.value = false
-}
 async function pay(row: OrderItem) {
   const r = await safe(payOrder(row.orderId), {})
   if (r.code === 0 && r.data?.payUrl) {
     window.open(r.data.payUrl, '_blank')
   } else if (r.code === 0) {
     ElMessage.success('支付成功')
-    load()
+    reload()
   } else {
     ElMessage.error(r.message || '支付失败')
   }
@@ -77,5 +70,4 @@ async function pay(row: OrderItem) {
 function detail(row: OrderItem) {
   router.push('/orders/' + row.orderId)
 }
-onMounted(load)
 </script>

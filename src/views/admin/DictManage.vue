@@ -5,6 +5,7 @@
         <h3>数据字典</h3>
         <el-button type="primary" @click="showAdd = true">新增字典项</el-button>
       </div>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="list" v-loading="loading" empty-text="暂无字典数据">
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="name" label="名称" min-width="120" />
@@ -36,24 +37,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { get, post, put, del, safe, okRes, msgOf } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 
 interface DictItem { id: number; name: string; type: string; value: string; sort: number }
 
-const list = ref<DictItem[]>([])
-const loading = ref(false)
 const showAdd = ref(false)
 const editing = ref(false)
 const form = ref<Partial<DictItem>>({})
-
-async function load() {
-  loading.value = true
-  const r = await safe(get('/admin/dict'), { list: [], total: 0 })
-  list.value = (r.data as { list?: DictItem[] })?.list ?? []
-  loading.value = false
-}
+const { list, loading, error, reload } = useTable<DictItem>(() => get('/admin/dict'))
 
 function edit(row: DictItem) {
   editing.value = true
@@ -65,18 +59,16 @@ async function submit() {
   const r = editing.value
     ? await safe(put('/admin/dict', form.value), {})
     : await safe(post('/admin/dict', form.value), {})
-  if (okRes(r)) { ElMessage.success('操作成功'); showAdd.value = false; editing.value = false; form.value = {}; load() }
+  if (okRes(r)) { ElMessage.success('操作成功'); showAdd.value = false; editing.value = false; form.value = {}; reload() }
   else ElMessage.error(msgOf(r))
 }
 
 async function remove(id: number) {
   await ElMessageBox.confirm('确认删除此字典项？', '提示', { type: 'warning' })
   const r = await safe(del(`/admin/dict/${id}`), {})
-  if (okRes(r)) { ElMessage.success('已删除'); load() }
+  if (okRes(r)) { ElMessage.success('已删除'); reload() }
   else ElMessage.error(msgOf(r))
 }
-
-onMounted(load)
 </script>
 
 <style scoped>

@@ -37,6 +37,7 @@
           <el-button type="primary" size="small" @click="openCreate">生成账单</el-button>
         </div>
       </template>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="bills" stripe v-loading="loading" empty-text="暂无账单">
         <el-table-column label="账期" width="110">
           <template #default="{ row }">{{ row.period || '-' }}</template>
@@ -53,7 +54,7 @@
         </el-table-column>
         <el-table-column label="状态" width="100">
           <template #default="{ row }">
-            <el-tag :type="row.status === '已收' ? 'success' : row.status === '待收' ? 'warning' : 'danger'" size="small">
+            <el-tag :type="statusTag('bill', row.status)" size="small">
               {{ row.status }}
             </el-tag>
           </template>
@@ -101,17 +102,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, onMounted } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { safe, okRes, msgOf } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getLandlordBills, createLandlordBill, type BillItem } from '@/api/bill'
+import { statusTag } from '@/utils/status'
 
 const router = useRouter()
-const bills = ref<BillItem[]>([])
-const loading = ref(false)
 const submitting = ref(false)
 const showCreate = ref(false)
+const { list: bills, loading, error, reload } = useTable<BillItem>(() => getLandlordBills())
 
 const form = reactive({
   houseId: 1,
@@ -126,13 +128,6 @@ const total = computed(() => bills.value.reduce((s, b) => s + b.amount, 0))
 const paid = computed(() => bills.value.reduce((s, b) => s + (b.paid ?? 0), 0))
 const due = computed(() => bills.value.filter((b) => b.status === '待收').reduce((s, b) => s + b.amount, 0))
 const overdue = computed(() => bills.value.filter((b) => b.status === '逾期').reduce((s, b) => s + (b.amount - (b.paid ?? 0)), 0))
-
-async function load() {
-  loading.value = true
-  const r = await safe(getLandlordBills(), { list: [], total: 0 })
-  bills.value = r.data?.list ?? []
-  loading.value = false
-}
 
 function openCreate() {
   form.houseId = 1
@@ -162,7 +157,7 @@ async function doCreate() {
   if (okRes(r)) {
     ElMessage.success('账单已生成')
     showCreate.value = false
-    load()
+    reload()
   } else {
     ElMessage.error(msgOf(r))
   }
@@ -171,8 +166,6 @@ async function doCreate() {
 function detail(row: BillItem) {
   router.push(`/landlord/bills/${row.id}`)
 }
-
-onMounted(load)
 </script>
 
 <style scoped>

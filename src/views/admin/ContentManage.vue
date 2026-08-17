@@ -10,6 +10,7 @@
       <el-input v-model="kw" placeholder="搜索标题" style="width: 240px" :prefix-icon="Search" />
       <el-button type="primary" @click="openNew">+ 新建{{ tab }}</el-button>
     </div>
+    <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
     <el-table :data="filtered" border v-loading="loading">
       <el-table-column prop="title" label="标题" min-width="220" />
       <el-table-column prop="type" label="分类" width="110" />
@@ -48,10 +49,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, reactive } from 'vue'
+import { computed, ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { safe, okRes } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import {
   getAdminContents,
   createAdminContent,
@@ -61,22 +63,14 @@ import {
   type ContentItem
 } from '@/api/admin'
 
-const list = ref<ContentItem[]>([])
-const loading = ref(false)
 const submitting = ref(false)
 const tab = ref('公告')
+const { list, loading, error, reload } = useTable<ContentItem>(() => getAdminContents())
 const kw = ref('')
 const dialog = ref(false)
 const editingId = ref<number | null>(null)
 const dialogTitle = computed(() => editingId.value ? '编辑' + tab.value : '新建' + tab.value)
 const form = reactive({ title: '', body: '', type: '' })
-
-async function fetch() {
-  loading.value = true
-  const res = await safe(getAdminContents(), [])
-  if (okRes(res)) list.value = res.data
-  loading.value = false
-}
 
 const filtered = computed(() => {
   let items = list.value.filter((i) => i.type === tab.value)
@@ -104,10 +98,10 @@ async function saveContent() {
   const payload = { title: form.title, body: form.body, type: form.type }
   if (editingId.value) {
     const res = await safe(updateAdminContent(editingId.value, payload), {})
-    if (okRes(res)) { ElMessage.success('已更新'); await fetch() }
+    if (okRes(res)) { ElMessage.success('已更新'); await reload() }
   } else {
     const res = await safe(createAdminContent(payload), {})
-    if (okRes(res)) { ElMessage.success('已保存'); await fetch() }
+    if (okRes(res)) { ElMessage.success('已保存'); await reload() }
   }
   submitting.value = false
   dialog.value = false
@@ -124,8 +118,6 @@ async function doPublish(row: ContentItem) {
   if (okRes(res)) { row.status = '已发布'; ElMessage.success(`已发布「${row.title}」`) }
   submitting.value = false
 }
-
-onMounted(fetch)
 </script>
 
 <style scoped>

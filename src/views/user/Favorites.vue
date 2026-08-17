@@ -2,6 +2,7 @@
   <div class="page-max">
     <el-card shadow="never">
       <h3>我的收藏</h3>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <div v-loading="loading">
         <div v-if="list.length" class="fav-grid">
           <div v-for="item in list" :key="item.id" class="fav-card" @click="goDetail(item.id)">
@@ -24,22 +25,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { safe } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getMyCollects, removeCollect, type HouseItem } from '@/api/house'
 
-const list = ref<HouseItem[]>([])
-const loading = ref(false)
 const router = useRouter()
-
-async function load() {
-  loading.value = true
-  const r = await safe(getMyCollects(), { list: [], total: 0 })
-  list.value = r.data?.list ?? []
-  loading.value = false
-}
+const { list, loading, error } = useTable<HouseItem>(() => getMyCollects())
 
 function goDetail(id: number) {
   router.push(`/detail/${id}`)
@@ -54,8 +47,6 @@ async function remove(id: number) {
     ElMessage.error(r.message || '操作失败')
   }
 }
-
-onMounted(load)
 </script>
 
 <style scoped>

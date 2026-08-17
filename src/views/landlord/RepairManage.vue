@@ -6,7 +6,7 @@
           <h3>工单处理</h3>
           <p class="sub">处理租客提交的报修与投诉工单</p>
         </div>
-        <el-radio-group v-model="statusTab" size="small" @change="load">
+        <el-radio-group v-model="statusTab" size="small" @change="reload">
           <el-radio-button label="all" value="all">全部</el-radio-button>
           <el-radio-button label="待处理" value="待处理">待处理</el-radio-button>
           <el-radio-button label="处理中" value="处理中">处理中</el-radio-button>
@@ -14,6 +14,7 @@
         </el-radio-group>
       </div>
 
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="list" v-loading="loading" empty-text="暂无工单">
         <el-table-column prop="ticketId" label="工单号" width="100" />
         <el-table-column prop="type" label="类型" width="90" />
@@ -61,29 +62,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { safe } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getWorkOrders, handleWorkOrder, type WorkOrderItem } from '@/api/workorder'
+import { statusTag } from '@/utils/status'
 
-const list = ref<WorkOrderItem[]>([])
-const loading = ref(false)
 const statusTab = ref('all')
+const { list, loading, error, reload } = useTable<WorkOrderItem>(({ page, size }) =>
+  getWorkOrders(statusTab.value === 'all' ? undefined : statusTab.value)
+)
 const dialogVisible = ref(false)
 const current = ref<WorkOrderItem>({} as WorkOrderItem)
 const handleResult = ref('')
 
 function statusType(s: string) {
-  if (s === '已完成') return 'success'
-  if (s === '处理中') return 'warning'
-  return 'danger'
-}
-async function load() {
-  loading.value = true
-  const status = statusTab.value === 'all' ? undefined : statusTab.value
-  const r = await safe(getWorkOrders(status), { list: [], total: 0 })
-  list.value = r.data?.list ?? []
-  loading.value = false
+  return statusTag('workorder', s)
 }
 function openHandle(row: WorkOrderItem) {
   current.value = row
@@ -104,12 +99,11 @@ async function submitHandle() {
   if (r.code === 0) {
     ElMessage.success('处理成功')
     dialogVisible.value = false
-    load()
+    reload()
   } else {
     ElMessage.error(r.message || '提交失败')
   }
 }
-onMounted(load)
 </script>
 
 <style scoped>

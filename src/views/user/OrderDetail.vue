@@ -111,6 +111,7 @@ import {
   renewOrder, subleaseOrder, terminateOrder, getOrderStatusLog,
   type OrderDetail, type StatusLog
 } from '@/api/order'
+import { statusTag } from '@/utils/status'
 
 const route = useRoute()
 const router = useRouter()
@@ -126,10 +127,7 @@ const subleasePhone = ref('')
 const subleaseRemark = ref('')
 
 function statusType(s: string) {
-  if (s === '已支付' || s === '已完成') return 'success'
-  if (s === '待确认' || s === '待支付') return 'warning'
-  if (s === '已取消') return 'info'
-  return ''
+  return statusTag('order', s)
 }
 
 async function load() {

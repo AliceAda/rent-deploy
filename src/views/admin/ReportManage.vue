@@ -2,11 +2,12 @@
   <div class="page-max">
     <el-card shadow="never">
       <h3>房源举报管理</h3>
-      <el-radio-group v-model="statusTab" size="small" @change="load" style="margin-bottom:12px">
+      <el-radio-group v-model="statusTab" size="small" @change="reload" style="margin-bottom:12px">
         <el-radio-button value="all">全部</el-radio-button>
         <el-radio-button value="待处理">待处理</el-radio-button>
         <el-radio-button value="已处理">已处理</el-radio-button>
       </el-radio-group>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="list" v-loading="loading" empty-text="暂无举报">
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="houseTitle" label="房源" min-width="160" />
@@ -48,26 +49,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { safe, okRes, msgOf, get } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { handleReport, getReportDetail, type ReportItem } from '@/api/risk'
 
-const list = ref<ReportItem[]>([])
-const loading = ref(false)
 const statusTab = ref('all')
+const { list, loading, error, reload } = useTable<ReportItem>(({ page, size }) =>
+  get('/admin/house/report', statusTab.value === 'all' ? undefined : { status: statusTab.value })
+)
 const showHandle = ref(false)
 const current = ref<ReportItem | null>(null)
 const handleResult = ref('')
 const handleStatus = ref('已处理')
-
-async function load() {
-  loading.value = true
-  const status = statusTab.value === 'all' ? undefined : statusTab.value
-  const r = await safe(get('/admin/house/report', status ? { status } : undefined), { list: [], total: 0 })
-  list.value = (r.data as { list?: ReportItem[] })?.list ?? []
-  loading.value = false
-}
 
 function handle(row: ReportItem) {
   current.value = row
@@ -88,9 +83,7 @@ async function viewDetail(row: ReportItem) {
 async function submit() {
   if (!current.value) return
   const r = await safe(handleReport({ id: current.value.id, handleResult: handleResult.value, status: handleStatus.value }), {})
-  if (okRes(r)) { ElMessage.success('已处理'); showHandle.value = false; load() }
+  if (okRes(r)) { ElMessage.success('已处理'); showHandle.value = false; reload() }
   else ElMessage.error(msgOf(r))
 }
-
-onMounted(load)
 </script>

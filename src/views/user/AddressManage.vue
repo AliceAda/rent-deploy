@@ -5,6 +5,7 @@
         <h3>地址管理</h3>
         <el-button type="primary" size="small" @click="openAdd">+ 新增地址</el-button>
       </div>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-card v-for="a in list" :key="a.id" shadow="never" class="addr">
         <div class="row">
           <div>
@@ -49,9 +50,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import {
   getMyAddresses,
   createAddress,
@@ -61,10 +63,10 @@ import {
   type AddressItem
 } from '@/api/address'
 
-const list = ref<AddressItem[]>([])
 const show = ref(false)
 const editing = ref(false)
 const f = ref<Partial<AddressItem> & { id?: number }>({ isDefault: false })
+const { list, error, reload } = useTable<AddressItem>(() => getMyAddresses())
 
 // 手机号脱敏：15012348279 → 150****8279
 function maskPhone(p?: string) {
@@ -72,10 +74,6 @@ function maskPhone(p?: string) {
   return p.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
 }
 
-async function load() {
-  const r = await safe(getMyAddresses(), { list: [], total: 0 })
-  list.value = r.data?.list ?? []
-}
 function openAdd() {
   editing.value = false
   f.value = { isDefault: false }
@@ -94,23 +92,22 @@ async function save() {
   if (r.code === 0) {
     ElMessage.success('已保存')
     show.value = false
-    load()
+    reload()
   } else {
     ElMessage.error(r.message || '保存失败')
   }
 }
 async function setDefault(a: AddressItem) {
   const r = await safe(setDefaultAddress(a.id), {})
-  if (r.code === 0) load()
+  if (r.code === 0) reload()
   else ElMessage.error(r.message || '操作失败')
 }
 async function remove(a: AddressItem) {
   await ElMessageBox.confirm('确认删除该地址？', '提示', { type: 'warning' })
   const r = await safe(deleteAddress(a.id), {})
-  if (r.code === 0) load()
+  if (r.code === 0) reload()
   else ElMessage.error(r.message || '删除失败')
 }
-onMounted(load)
 </script>
 
 <style scoped>

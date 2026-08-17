@@ -6,7 +6,7 @@
           <h3>合同管理</h3>
           <p class="sub">查看租客签署的所有电子合同</p>
         </div>
-        <el-radio-group v-model="statusTab" size="small" @change="load">
+        <el-radio-group v-model="statusTab" size="small" @change="reload">
           <el-radio-button label="all" value="all">全部</el-radio-button>
           <el-radio-button label="待签署" value="待签署">待签署</el-radio-button>
           <el-radio-button label="生效中" value="生效中">生效中</el-radio-button>
@@ -14,6 +14,7 @@
         </el-radio-group>
       </div>
 
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="list" v-loading="loading" empty-text="暂无合同">
         <el-table-column prop="contractNo" label="合同号" width="180" />
         <el-table-column label="房源" min-width="150">
@@ -46,35 +47,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { safe } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getLandlordContracts, getContractDetail, type ContractItem } from '@/api/contract'
+import { statusTag } from '@/utils/status'
 
-const list = ref<ContractItem[]>([])
-const loading = ref(false)
 const statusTab = ref('all')
+const { list: all, loading, error, reload } = useTable<ContractItem>(() => getLandlordContracts())
+// 状态 Tab 为前端过滤（接口不支持下发筛选）
+const list = computed(() => all.value.filter((c) => statusTab.value === 'all' || c.status === statusTab.value))
 const detailVisible = ref(false)
 const detail = ref<ContractItem>({} as ContractItem)
 
 function statusType(s: string) {
-  if (s === '生效中') return 'success'
-  if (s === '待签署') return 'warning'
-  return 'info'
-}
-async function load() {
-  loading.value = true
-  const r = await safe(getLandlordContracts(), { list: [], total: 0 })
-  list.value = (r.data?.list ?? []).filter(
-    (c) => statusTab.value === 'all' || c.status === statusTab.value
-  )
-  loading.value = false
+  return statusTag('contract', s)
 }
 async function showDetail(id: number) {
   const r = await safe(getContractDetail(id), {} as ContractItem)
   detail.value = r.data ?? ({} as ContractItem)
   detailVisible.value = true
 }
-onMounted(load)
 </script>
 
 <style scoped>

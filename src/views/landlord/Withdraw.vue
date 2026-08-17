@@ -5,7 +5,7 @@
         <h3>提现管理</h3>
         <el-button type="primary" @click="showWithdraw = true">申请提现</el-button>
       </div>
-      <el-radio-group v-model="statusTab" size="small" @change="load">
+      <el-radio-group v-model="statusTab" size="small" @change="reload">
         <el-radio-button value="all">全部</el-radio-button>
         <el-radio-button value="待审核">待审核</el-radio-button>
         <el-radio-button value="已通过">已通过</el-radio-button>
@@ -14,6 +14,7 @@
     </el-card>
 
     <el-card shadow="never">
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
       <el-table :data="list" v-loading="loading" empty-text="暂无提现记录">
         <el-table-column prop="id" label="提现单号" width="100" />
         <el-table-column prop="amount" label="金额" width="120" align="right">
@@ -50,30 +51,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { safe, okRes, msgOf } from '@/api/http'
+import { useTable } from '@/composables/useTable'
 import { getWithdrawList, createWithdraw, getWithdrawDetail, type WithdrawItem } from '@/api/pay'
+import { statusTag } from '@/utils/status'
 
-const list = ref<WithdrawItem[]>([])
-const loading = ref(false)
 const statusTab = ref('all')
+const { list, loading, error, reload } = useTable<WithdrawItem>(({ page, size }) =>
+  getWithdrawList(statusTab.value === 'all' ? undefined : statusTab.value)
+)
 const showWithdraw = ref(false)
 const submitting = ref(false)
 const form = ref({ amount: 0, bankCard: '' })
 
 function statusType(s: string) {
-  if (s === '已通过') return 'success'
-  if (s === '已驳回') return 'danger'
-  return 'warning'
-}
-
-async function load() {
-  loading.value = true
-  const status = statusTab.value === 'all' ? undefined : statusTab.value
-  const r = await safe(getWithdrawList(status), { list: [], total: 0 })
-  list.value = r.data?.list ?? []
-  loading.value = false
+  return statusTag('withdraw', s)
 }
 
 async function submit() {
@@ -81,7 +75,7 @@ async function submit() {
   submitting.value = true
   const r = await safe(createWithdraw(form.value), {})
   submitting.value = false
-  if (okRes(r)) { ElMessage.success('提现申请已提交'); showWithdraw.value = false; form.value = { amount: 0, bankCard: '' }; load() }
+  if (okRes(r)) { ElMessage.success('提现申请已提交'); showWithdraw.value = false; form.value = { amount: 0, bankCard: '' }; reload() }
   else ElMessage.error(msgOf(r))
 }
 
@@ -91,8 +85,6 @@ async function viewDetail(id: number) {
     ElMessage.info(`提现单 #${r.data.id}，金额 ¥${r.data.amount}，状态：${r.data.status}`)
   }
 }
-
-onMounted(load)
 </script>
 
 <style scoped>

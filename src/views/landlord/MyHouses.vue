@@ -69,6 +69,7 @@ import { Search } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useLandlordStore } from '@/store/landlord'
 import type { House } from '@/mock/data'
+import { statusTag } from '@/utils/status'
 
 const landlord = useLandlordStore()
 const router = useRouter()
@@ -84,7 +85,7 @@ const list = computed(() =>
 )
 
 function statusType(s: string) {
-  return s === '可租' ? 'success' : s === '待审核' ? 'warning' : s === '已租' ? 'primary' : s === '违规' ? 'danger' : 'info'
+  return statusTag('house', s)
 }
 function goDetail(row: House) {
   router.push('/detail/' + row.id)

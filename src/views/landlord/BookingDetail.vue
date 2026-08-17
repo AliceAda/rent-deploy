@@ -47,6 +47,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { safe, okRes, msgOf } from '@/api/http'
 import { getBookingDetail, confirmBooking, rejectBooking, type BookingItem } from '@/api/booking'
+import { statusTag } from '@/utils/status'
 
 const route = useRoute()
 const router = useRouter()
@@ -57,10 +58,7 @@ const showReject = ref(false)
 const rejectReason = ref('')
 
 function statusType(s: string) {
-  if (s === '已确认') return 'success'
-  if (s === '已拒绝') return 'danger'
-  if (s === '已取消') return 'info'
-  return 'warning'
+  return statusTag('booking', s)
 }
 
 async function load() {

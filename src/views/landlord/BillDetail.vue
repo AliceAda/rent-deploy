@@ -38,6 +38,7 @@ import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe, okRes, msgOf } from '@/api/http'
 import { getLandlordBillDetail, payLandlordBill, type BillItem } from '@/api/bill'
+import { statusTag } from '@/utils/status'
 
 const route = useRoute()
 const billId = Number(route.params.id)
@@ -45,9 +46,7 @@ const bill = ref<BillItem | null>(null)
 const loading = ref(false)
 
 function statusType(s: string) {
-  if (s === '已支付') return 'success'
-  if (s === '已逾期') return 'danger'
-  return 'warning'
+  return statusTag('bill', s)
 }
 
 async function load() {

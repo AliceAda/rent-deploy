@@ -96,6 +96,7 @@ import {
   renewContract, terminateContract,
   type ContractDetail, type ContractAttachment, type SignLog
 } from '@/api/contract'
+import { statusTag } from '@/utils/status'
 
 const route = useRoute()
 const contractId = Number(route.params.id)
@@ -107,10 +108,7 @@ const showRenew = ref(false)
 const renewDate = ref('')
 
 function statusType(s: string) {
-  if (['已生效','生效中','已完成'].includes(s)) return 'success'
-  if (['待签署','待确认'].includes(s)) return 'warning'
-  if (['已终止','已过期'].includes(s)) return 'info'
-  return ''
+  return statusTag('contract', s)
 }
 
 async function load() {
