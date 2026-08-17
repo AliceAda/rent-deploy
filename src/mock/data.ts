@@ -174,3 +174,67 @@ export const landlordBills: LandlordBill[] = [
 ]
 
 // (房东合同数据已迁移至独立合同页，接入 /contract/landlord，此处不再保留 mock)
+
+// ===== 地区级联数据（省→市→区，租客端顶栏定位选择） =====
+// 顶栏级联优先查后端 /house/region（逐级 parentId），本数据为后端未就绪时的本地回退。
+
+export interface Region {
+  name: string
+  children?: Region[]
+}
+
+export const regions: Region[] = [
+  {
+    name: '北京市',
+    children: [
+      {
+        name: '北京市',
+        children: [{ name: '朝阳区' }, { name: '昌平区' }, { name: '海淀区' }, { name: '大兴区' }, { name: '东城区' }, { name: '丰台区' }]
+      }
+    ]
+  },
+  {
+    name: '上海市',
+    children: [
+      {
+        name: '上海市',
+        children: [{ name: '浦东新区' }, { name: '徐汇区' }, { name: '静安区' }, { name: '长宁区' }, { name: '闵行区' }]
+      }
+    ]
+  },
+  {
+    name: '广东省',
+    children: [
+      {
+        name: '广州市',
+        children: [{ name: '天河区' }, { name: '越秀区' }, { name: '海珠区' }, { name: '番禺区' }]
+      },
+      {
+        name: '深圳市',
+        children: [{ name: '南山区' }, { name: '福田区' }, { name: '罗湖区' }, { name: '宝安区' }]
+      }
+    ]
+  },
+  {
+    name: '浙江省',
+    children: [
+      {
+        name: '杭州市',
+        children: [{ name: '西湖区' }, { name: '滨江区' }, { name: '余杭区' }, { name: '拱墅区' }]
+      },
+      {
+        name: '宁波市',
+        children: [{ name: '鄞州区' }, { name: '海曙区' }, { name: '江北区' }]
+      }
+    ]
+  },
+  {
+    name: '四川省',
+    children: [
+      {
+        name: '成都市',
+        children: [{ name: '锦江区' }, { name: '武侯区' }, { name: '高新区' }, { name: '成华区' }]
+      }
+    ]
+  }
+]

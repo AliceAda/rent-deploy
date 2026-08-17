@@ -4,7 +4,61 @@
     <header class="topbar">
       <div class="top-inner">
         <router-link to="/home" class="logo"><span class="dot">租</span>安居易租</router-link>
-        <div class="city">📍 {{ store.city }} <span class="caret">▾</span></div>
+        <el-popover
+          v-model:visible="showCity"
+          placement="bottom-start"
+          trigger="click"
+          :width="620"
+          popper-class="region-pop"
+          @show="onPopShow"
+        >
+          <div class="region-picker">
+            <div class="col">
+              <div class="col-title">省份</div>
+              <div
+                v-for="p in provinceList"
+                :key="p.id ?? p.name"
+                class="opt"
+                :class="{ on: p.name === store.province }"
+                @click="onProvince(p)"
+              >{{ p.name }}</div>
+              <div v-if="provinceLoading && !provinceList.length" class="col-empty">加载中…</div>
+              <div v-if="!provinceLoading && !provinceList.length" class="col-empty">暂无数据</div>
+            </div>
+            <div class="col">
+              <div class="col-title">城市</div>
+              <div
+                v-for="c in cityList"
+                :key="c.id ?? c.name"
+                class="opt"
+                :class="{ on: c.name === store.city }"
+                @click="onCity(c)"
+              >{{ c.name }}</div>
+              <div v-if="cityLoading && !cityList.length" class="col-empty">加载中…</div>
+              <div v-if="!selProvince && !cityLoading" class="col-empty">请先选择省份</div>
+              <div v-if="selProvince && !cityLoading && !cityList.length" class="col-empty">暂无数据</div>
+            </div>
+            <div class="col">
+              <div class="col-title">区域</div>
+              <div
+                v-for="d in districtList"
+                :key="d.id ?? d.name"
+                class="opt"
+                :class="{ on: d.name === store.district }"
+                @click="onDistrict(d)"
+              >{{ d.name }}</div>
+              <div v-if="districtLoading && !districtList.length" class="col-empty">加载中…</div>
+              <div v-if="!selCity && !districtLoading" class="col-empty">请先选择城市</div>
+              <div v-if="selCity && !districtLoading && !districtList.length" class="col-empty">暂无数据</div>
+            </div>
+          </div>
+          <template #reference>
+            <div class="city">
+              📍 {{ store.cityShort }}<span v-if="store.district" class="sub"> · {{ store.district }}</span>
+              <span class="caret">▾</span>
+            </div>
+          </template>
+        </el-popover>
         <el-input
           v-model="keyword"
           placeholder="输入小区 / 商圈 / 地铁站找房"
@@ -82,11 +136,118 @@ import { ref } from 'vue'
 import { useAppStore } from '@/store'
 import { useAuthStore } from '@/store/auth'
 import { useRouter } from 'vue-router'
+import { safe, toList } from '@/api/http'
+import { getRegions } from '@/api/house'
+import { regions as mockRegions } from '@/mock/data'
+
+// 级联节点：有 id 时逐级查库（/house/region?parentId=），无 id / 查库失败时用 children（本地 mock 回退）
+interface RegionNode {
+  id?: number
+  name: string
+  children?: RegionNode[]
+}
 
 const store = useAppStore()
 const auth = useAuthStore()
 const router = useRouter()
 const keyword = ref('')
+const showCity = ref(false)
+
+const provinceList = ref<RegionNode[]>([])
+const cityList = ref<RegionNode[]>([])
+const districtList = ref<RegionNode[]>([])
+const provinceLoading = ref(false)
+const cityLoading = ref(false)
+const districtLoading = ref(false)
+// 本地选中态（与 store 定位保持一致，弹层内高亮用）
+const selProvince = ref<RegionNode | null>({ name: store.province })
+const selCity = ref<RegionNode | null>({ name: store.city })
+const selDistrict = ref<RegionNode | null>(store.district ? { name: store.district } : null)
+
+// 后端返回归一化为 { id, name } 列表（兼容数组 / { list, total } 两种形态）
+function mapRows(data: unknown): RegionNode[] {
+  const { list } = toList<Record<string, unknown>>(data)
+  return (list as Record<string, unknown>[])
+    .map((r) => ({ id: typeof r?.id === 'number' ? (r.id as number) : undefined, name: String(r?.name ?? '') }))
+    .filter((r) => r.name)
+}
+// 数据库未就绪时的本地回退：按名称取省 / 市下一级
+function mockChildrenOf(provinceName: string, cityName?: string): RegionNode[] {
+  const p = mockRegions.find((r) => r.name === provinceName)
+  if (!p) return []
+  if (!cityName) return (p.children ?? []) as RegionNode[]
+  const c = p.children?.find((x) => x.name === cityName)
+  return (c?.children ?? []) as RegionNode[]
+}
+
+// 打开弹层：首拉全部一级省份（查库失败回退本地 mock），并恢复已选定位的级联列
+async function onPopShow() {
+  if (!provinceList.value.length) {
+    provinceLoading.value = true
+    const res = await safe(getRegions(), null)
+    provinceLoading.value = false
+    provinceList.value = res.code === 0 ? mapRows(res.data) : (mockRegions as unknown as RegionNode[])
+  }
+  if (selProvince.value && !cityList.value.length) await ensureCityList(selProvince.value)
+  if (selCity.value && !districtList.value.length) await ensureDistrictList(selCity.value, selProvince.value?.name ?? '')
+}
+
+async function ensureCityList(province: RegionNode | null) {
+  cityList.value = []
+  if (!province) return
+  // mock 自带 children 直接展示；否则按 id 查库，失败再回退 mock
+  if (province.children?.length) {
+    cityList.value = province.children as RegionNode[]
+    return
+  }
+  cityLoading.value = true
+  let rows: RegionNode[] = []
+  if (province.id != null) {
+    const res = await safe(getRegions(province.id), null)
+    if (res.code === 0) rows = mapRows(res.data)
+  }
+  cityLoading.value = false
+  if (!rows.length) rows = mockChildrenOf(province.name)
+  cityList.value = rows
+}
+
+async function ensureDistrictList(city: RegionNode | null, provinceName: string) {
+  districtList.value = []
+  if (!city) return
+  if (city.children?.length) {
+    districtList.value = city.children as RegionNode[]
+    return
+  }
+  districtLoading.value = true
+  let rows: RegionNode[] = []
+  if (city.id != null) {
+    const res = await safe(getRegions(city.id), null)
+    if (res.code === 0) rows = mapRows(res.data)
+  }
+  districtLoading.value = false
+  if (!rows.length) rows = mockChildrenOf(provinceName, city.name)
+  districtList.value = rows
+}
+
+async function onProvince(p: RegionNode) {
+  selProvince.value = p
+  selCity.value = null
+  selDistrict.value = null
+  await ensureCityList(p)
+}
+async function onCity(c: RegionNode) {
+  selCity.value = c
+  selDistrict.value = null
+  store.setLocation(selProvince.value?.name ?? '', c.name, '')
+  await ensureDistrictList(c, selProvince.value?.name ?? '')
+}
+// 选到区一级即生效：写入定位并跳转找房列表
+function onDistrict(d: RegionNode) {
+  selDistrict.value = d
+  store.setLocation(selProvince.value?.name ?? '', selCity.value?.name ?? '', d.name)
+  showCity.value = false
+  router.push({ path: '/list', query: { city: store.cityShort, district: d.name } })
+}
 
 function onSearch() {
   const q = keyword.value.trim()
@@ -149,6 +310,12 @@ function onUserCmd(cmd: string) {
 }
 .city .caret {
   font-size: 10px;
+}
+.city .sub {
+  color: var(--brand);
+}
+.city:hover {
+  color: var(--brand);
 }
 .search {
   flex: 1;
@@ -227,5 +394,46 @@ function onUserCmd(cmd: string) {
   main {
     padding-bottom: 70px;
   }
+}
+</style>
+
+<!-- el-popover 内容挂载在 body 下，样式需全局生效 -->
+<style>
+.region-picker {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+.region-picker .col {
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px;
+}
+.region-picker .col-title {
+  font-size: 12px;
+  color: var(--sub);
+  padding: 4px 8px;
+}
+.region-picker .opt {
+  padding: 7px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.region-picker .opt:hover {
+  background: var(--brand-s);
+  color: var(--brand);
+}
+.region-picker .opt.on {
+  background: var(--brand);
+  color: #fff;
+  font-weight: 600;
+}
+.region-picker .col-empty {
+  padding: 10px 8px;
+  font-size: 12px;
+  color: var(--sub);
 }
 </style>

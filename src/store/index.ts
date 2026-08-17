@@ -3,8 +3,10 @@ import {
   houses as houseData,
   myHouses as myHouseData,
   landlordBookings as bookingSeed,
+  regions as regionData,
   type House,
-  type Booking
+  type Booking,
+  type Region
 } from '@/mock/data'
 
 // 租客在线签约生成的合同（与房源一致，存于 app store 单一事实源）
@@ -24,7 +26,11 @@ export interface TenantContract {
 // 看房预约、签约合同同样归 app store 管理，保证租客提交与房东查看是同一份数据。
 export const useAppStore = defineStore('app', {
   state: () => ({
-    city: '北京',
+    // 顶栏定位选择（省→市→区，city 为全名如「北京市」，展示/匹配用 cityShort）
+    regions: regionData as Region[],
+    province: '北京市',
+    city: '北京市',
+    district: '',
     houses: [...houseData, ...myHouseData] as House[],
     collects: new Set<number>(),
     // 看房预约：租客提交与房东查看共用（单一事实源）
@@ -33,6 +39,10 @@ export const useAppStore = defineStore('app', {
     contracts: [] as TenantContract[]
   }),
   getters: {
+    // 「北京市」→「北京」：顶栏/首页展示与房源 city 字段匹配
+    cityShort(state): string {
+      return state.city.replace(/[省市]$/, '')
+    },
     collectList(state): House[] {
       return state.houses.filter((h) => state.collects.has(h.id))
     },
@@ -42,6 +52,12 @@ export const useAppStore = defineStore('app', {
     }
   },
   actions: {
+    // 顶栏定位选择：省→市→区逐级下钻，district 为空表示不限区域
+    setLocation(province: string, city: string, district = '') {
+      this.province = province
+      this.city = city
+      this.district = district
+    },
     toggleCollect(id: number) {
       if (this.collects.has(id)) this.collects.delete(id)
       else this.collects.add(id)
