@@ -6,6 +6,7 @@ import { Iphone, Lock, User, Search, Edit, Delete, Star, StarFilled, Plus, Bell,
 import App from './App.vue'
 import router from './router'
 import { useAuthStore } from './store/auth'
+import { setUnauthorizedHandler } from './api/http'
 import './styles/index.css'
 
 const app = createApp(App)
@@ -21,4 +22,15 @@ app.use(createPinia())
 useAuthStore().init()
 app.use(router)
 app.use(ElementPlus)
+
+// 任一接口返回 401 时统一登出并跳转登录页（保留来源地址）
+setUnauthorizedHandler(() => {
+  const auth = useAuthStore()
+  if (auth.isLoggedIn) {
+    const redirect = router.currentRoute.value.fullPath
+    auth.logout()
+    router.push({ path: '/login', query: redirect && redirect !== '/' ? { redirect } : {} })
+  }
+})
+
 app.mount('#app')
