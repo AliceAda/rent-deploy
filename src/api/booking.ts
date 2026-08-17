@@ -34,6 +34,10 @@ export const updateBooking = (id: number, data: Partial<BookingItem>) => put(`/b
 /** 取消预约 */
 export const cancelBooking = (id: number) => post(`/booking/${id}/cancel`)
 
+/** 提交看房预约 */
+export const createBooking = (data: { houseId: number; time?: string; remark?: string }) =>
+  post<BookingItem>('/booking', data)
+
 // ===== 预约接口（房东端） =====
 
 /** 查询房东预约列表 */

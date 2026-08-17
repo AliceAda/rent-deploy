@@ -3,12 +3,8 @@
     <h3>工作台</h3>
     <p class="sub">房东经营概览，随时掌握房源与收益动态</p>
 
-    <el-alert
+    <DemoBanner
       v-if="isDemo"
-      type="warning"
-      show-icon
-      :closable="false"
-      style="margin-bottom: 14px"
       title="当前为演示数据（工作台接口未就绪）"
       description="各项指标已回退到本地演示数据，接入后端后自动切换为真实数据。"
     />
@@ -78,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useLandlordStore } from '@/store/landlord'
 import { landlordBills } from '@/mock/data'
 import { getLandlordHouses } from '@/api/house'
@@ -86,6 +82,7 @@ import { getLandlordBookings, type BookingItem } from '@/api/booking'
 import { getLandlordBills, type BillItem } from '@/api/bill'
 import { useDataSource } from '@/composables/useDataSource'
 import { statusTag } from '@/utils/status'
+import DemoBanner from '@/components/DemoBanner.vue'
 
 const landlord = useLandlordStore()
 
@@ -128,6 +125,13 @@ const bills = useDataSource(
 
 const loading = computed(() => houses.loading.value || bookings.loading.value || bills.loading.value)
 const isDemo = computed(() => houses.isDemo.value || bookings.isDemo.value || bills.isDemo.value)
+
+// useDataSource 不会自动加载，挂载时显式触发（接口就绪后即切真实数据）
+onMounted(() => {
+  houses.load()
+  bookings.load()
+  bills.load()
+})
 
 const totalHouses = computed(() => houses.data.value.list.length)
 const rentableCount = computed(() => houses.data.value.list.filter((h) => h.status === '可租').length)

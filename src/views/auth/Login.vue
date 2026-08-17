@@ -54,6 +54,16 @@
           </el-button>
         </el-form>
 
+        <!-- 第三方登录（市面标配） -->
+        <div class="oauth">
+          <div class="oauth-divider"><span>其他登录方式</span></div>
+          <div class="oauth-icons">
+            <button class="oauth-ico wechat" title="微信登录" @click="oauth('微信')">微</button>
+            <button class="oauth-ico qq" title="QQ 登录" @click="oauth('QQ')">Q</button>
+            <button class="oauth-ico weibo" title="微博登录" @click="oauth('微博')">博</button>
+          </div>
+        </div>
+
         <!-- 演示账号提示 -->
         <div class="demo">
           <div class="demo-t">演示账号（密码均为 123456）</div>
@@ -68,6 +78,20 @@
         </div>
       </div>
     </main>
+
+    <!-- 第三方扫码登录（演示：自动通过） -->
+    <el-dialog v-model="oauthVisible" :title="oauthName + ' 扫码登录'" width="320px" align-center>
+      <div class="qr-scan">
+        <div class="qr-box">
+          <div class="qr-svg"></div>
+          <div class="qr-wait">
+            <span class="spin"></span>
+            等待扫码
+          </div>
+        </div>
+        <p class="qr-tip">请使用{{ oauthName }} App 扫描二维码（演示环境自动通过，登录演示租客账号）</p>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -106,6 +130,24 @@ const rules: FormRules = {
 
 function fill(phone: string) {
   form.phone = phone
+}
+
+// 第三方扫码登录（演示）：弹层等待 2.5s 后自动以演示租客身份登录
+const oauthVisible = ref(false)
+const oauthName = ref('')
+function oauth(name: string) {
+  oauthName.value = name
+  oauthVisible.value = true
+  setTimeout(async () => {
+    if (!oauthVisible.value) return
+    const res = await auth.login('13800000001', '123456', 'tenant')
+    oauthVisible.value = false
+    if (res.ok) {
+      ElMessage.success(oauthName.value + '登录成功')
+      const redirect = (route.query.redirect as string) || ROLE_HOME[auth.user!.role]
+      router.replace(redirect)
+    }
+  }, 2600)
 }
 
 function toRegister() {
@@ -237,6 +279,103 @@ async function onSubmit() {
 }
 .submit {
   width: 100%;
+}
+.oauth {
+  margin-top: 20px;
+}
+.oauth-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--sub);
+  font-size: 12px;
+}
+.oauth-divider::before,
+.oauth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.oauth-icons {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  margin-top: 14px;
+}
+.oauth-ico {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.oauth-ico:hover {
+  transform: scale(1.1);
+}
+.oauth-ico.wechat {
+  background: #22b35e;
+}
+.oauth-ico.qq {
+  background: #12b7f5;
+}
+.oauth-ico.weibo {
+  background: #ff7d3c;
+}
+.qr-scan {
+  text-align: center;
+}
+.qr-box {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  margin: 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+.qr-svg {
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(#1f2329 2px, transparent 2px) 0 0/12px 12px,
+    linear-gradient(90deg, #1f2329 2px, transparent 2px) 0 0/12px 12px;
+  border-radius: 9px;
+}
+.qr-wait {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--ink);
+}
+.spin {
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--line);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.qr-tip {
+  margin: 12px 0 0;
+  color: var(--sub);
+  font-size: 12px;
 }
 .demo {
   margin-top: 22px;

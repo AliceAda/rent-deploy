@@ -1,11 +1,7 @@
 <template>
   <div>
-    <el-alert
+    <DemoBanner
       v-if="isDemo"
-      type="warning"
-      show-icon
-      :closable="false"
-      style="margin-bottom: 14px"
       title="当前为演示数据（工作台接口未就绪）"
       description="指标卡与图表已回退到本地演示数据，接入后端后自动切换为真实数据。"
     />
@@ -63,6 +59,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 import { getDashboardToday, getGmvStat, getStockStat } from '@/api/admin'
 import { dashboard } from '@/mock/data'
 import { useDataSource } from '@/composables/useDataSource'
+import DemoBanner from '@/components/DemoBanner.vue'
 
 // 注册 ECharts 用到的模块（tree-shaking 按需加载）
 use([LineChart, PieChart, FunnelChart, TooltipComponent, GridComponent, LegendComponent, CanvasRenderer])

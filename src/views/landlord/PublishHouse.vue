@@ -127,6 +127,8 @@ import { Plus } from '@element-plus/icons-vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { useLandlordStore } from '@/store/landlord'
 import { useAuthStore } from '@/store/auth'
+import { safe } from '@/api/http'
+import { createLandlordHouse } from '@/api/house'
 import type { House } from '@/mock/data'
 
 const landlord = useLandlordStore()
@@ -172,41 +174,52 @@ function reset() {
 
 function onSubmit() {
   if (!formRef.value) return
-  formRef.value.validate((valid) => {
+  formRef.value.validate(async (valid) => {
     if (!valid) return
     loading.value = true
-    setTimeout(() => {
-      const id = Math.max(0, ...landlord.myHouses.map((h) => h.id)) + 1
-      const house: House = {
-        id,
-        title: form.title,
-        city: form.city,
-        district: form.district,
-        rentType: form.rentType,
-        layout: form.layout,
-        area: Number(form.area),
-        floor: form.floor,
-        orientation: form.orientation,
-        decoration: form.decoration,
-        price: Number(form.price),
-        depositType: form.depositType,
-        facilities: [...form.facilities],
-        tags: [...form.tags],
-        status: '待审核',
-        views: 0,
-        collectCount: 0,
-        grade: 0,
-        landlordId: auth.user?.id ?? 2,
-        source: '房东自发布',
-        description: form.description,
-        x: 50,
-        y: 50
-      }
+    const house: House = {
+      id: 0,
+      title: form.title,
+      city: form.city,
+      district: form.district,
+      rentType: form.rentType,
+      layout: form.layout,
+      area: Number(form.area),
+      floor: form.floor,
+      orientation: form.orientation,
+      decoration: form.decoration,
+      price: Number(form.price),
+      depositType: form.depositType,
+      facilities: [...form.facilities],
+      tags: [...form.tags],
+      status: '待审核',
+      views: 0,
+      collectCount: 0,
+      grade: 0,
+      landlordId: auth.user?.id ?? 2,
+      source: '房东自发布',
+      description: form.description,
+      x: 50,
+      y: 50
+    }
+    // 提交到内存库：审核通过前仅后台可见，租客端列表按 status 过滤
+    const r = await safe(
+      createLandlordHouse({
+        title: house.title, city: house.city, district: house.district, rentType: house.rentType,
+        layout: house.layout, area: house.area, floor: house.floor, orientation: house.orientation,
+        decoration: house.decoration, price: house.price, depositType: house.depositType,
+        facilities: house.facilities, tags: house.tags, description: house.description
+      }),
+      null
+    )
+    if (r.code !== 0) {
+      // 回退：MSW/后端不可用时写入本地 store，演示仍可用
+      house.id = Math.max(0, ...landlord.myHouses.map((h) => h.id)) + 1
       landlord.addHouse(house)
-      loading.value = false
-      ElMessage.success('已提交，等待平台审核')
-      router.push('/landlord/my-houses')
-    }, 500)
+    }
+    loading.value = false
+    ElMessage.success('已提交，等待平台审核')
+    router.push('/landlord/my-houses')
   })
 }
 </script>

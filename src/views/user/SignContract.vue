@@ -1,5 +1,11 @@
 <template>
-  <div class="page-max" v-if="house">
+  <div class="page-max" v-loading="houseLoading">
+    <div v-if="house">
+    <div class="sec-head sign-head">
+      <span class="bar"></span>
+      <h3 class="serif">在线签约</h3>
+      <span class="eyebrow">ELECTRONIC CONTRACT · 全程留痕存证</span>
+    </div>
     <el-card shadow="never">
       <el-steps :active="step" align-center finish-status="success">
         <el-step title="确认房源与租期" />
@@ -49,7 +55,7 @@
         <el-table :data="feeRows" border>
           <el-table-column prop="item" label="费用项" />
           <el-table-column prop="amount" label="金额" align="right">
-            <template #default="{ row }">¥{{ row.amount.toLocaleString() }}</template>
+            <template #default="{ row }"><span class="mono">¥{{ row.amount.toLocaleString() }}</span></template>
           </el-table-column>
           <el-table-column prop="note" label="说明" />
         </el-table>
@@ -82,7 +88,8 @@
       </div>
 
       <!-- 成功 -->
-      <el-result v-if="done" icon="success" title="签约成功" sub-title="合同已生成并存证，可前往「我的-合同」查看">
+      <el-result v-if="done" title="签约成功" sub-title="合同已生成并存证，可前往「我的-合同」查看">
+        <template #icon><span class="seal wide">已签约</span></template>
         <template #extra>
           <el-button type="primary" @click="goMine">查看我的合同</el-button>
         </template>
@@ -94,21 +101,33 @@
         <el-button v-if="step < 3" type="primary" @click="next">下一步</el-button>
       </div>
     </el-card>
+    </div>
+    <el-empty v-else-if="!houseLoading" description="房源不存在" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, onMounted } from 'vue'
+import { computed, reactive, ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAppStore } from '@/store'
 import { safe } from '@/api/http'
-import { getRentPeriod, type RentPeriod } from '@/api/order'
-import { getContractTemplates, type ContractTemplate } from '@/api/contract'
+import { getRentPeriod, createOrder, type RentPeriod } from '@/api/order'
+import { getContractTemplates, signContract, type ContractTemplate } from '@/api/contract'
+import { resolveHouse } from '@/utils/house'
+import type { House } from '@/mock/data'
 
 const route = useRoute()
 const router = useRouter()
 const store = useAppStore()
-const house = computed(() => store.houses.find((h) => h.id === Number(route.params.id)))
+// API-first + store 回退（与详情页同一数据策略）
+const house = ref<House | null>(null)
+const houseLoading = ref(false)
+async function loadHouse() {
+  houseLoading.value = true
+  house.value = await resolveHouse(Number(route.params.id))
+  houseLoading.value = false
+}
+watch(() => route.params.id, loadHouse)
 
 const step = ref(0)
 const done = ref(false)
@@ -151,7 +170,10 @@ async function loadOptions() {
   templates.value = t.data?.list ?? []
 }
 
-onMounted(loadOptions)
+onMounted(() => {
+  loadOptions()
+  loadHouse()
+})
 
 function next() {
   if (step.value === 1 && (!form.name || !form.phone || !form.idcard)) {
@@ -162,15 +184,40 @@ function next() {
   }
   step.value++
 }
-function pay() {
+function endOf(start: string, months: number): string {
+  const d = new Date(start + 'T00:00:00')
+  d.setMonth(d.getMonth() + months)
+  return d.toISOString().slice(0, 10)
+}
+
+async function pay() {
   if (!house.value) return
   const h = house.value
+  const start = String(form.start || new Date().toISOString().slice(0, 10))
+  const payload = {
+    houseId: h.id,
+    rentType: h.rentType,
+    amount: firstTotal.value,
+    startDate: start,
+    endDate: endOf(start, form.term)
+  }
+  // 先建订单再签约：MSW 内存库会联动生成合同、把房源置为已租、并给房东生成首期账单
+  const r = await safe(createOrder(payload), null)
+  const orderId = (r.data as { orderId?: number } | null | undefined)?.orderId
+  if (r.code === 0 && orderId) {
+    const s = await safe(signContract({ orderId, templateId: form.templateId }), null)
+    if (s.code === 0) {
+      done.value = true
+      return
+    }
+  }
+  // 回退：MSW/后端不可用时写入本地 store，演示仍可用
   store.addContract({
     id: Date.now(),
     houseId: h.id,
     houseTitle: h.title,
     term: form.term,
-    start: String(form.start || new Date().toISOString().slice(0, 10)),
+    start,
     amount: firstTotal.value,
     status: '生效中',
     createdAt: new Date().toISOString()
@@ -198,6 +245,10 @@ function goMine() {
 .total b {
   color: var(--orange);
   font-size: 20px;
+  font-family: var(--font-mono);
+}
+.sign-head {
+  margin: 0 0 14px;
 }
 .actions {
   display: flex;

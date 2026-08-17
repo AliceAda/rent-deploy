@@ -30,9 +30,16 @@ import { ElMessage } from 'element-plus'
 import { safe } from '@/api/http'
 import { useTable } from '@/composables/useTable'
 import { getMyCollects, removeCollect, type HouseItem } from '@/api/house'
+import { useAppStore } from '@/store'
 
 const router = useRouter()
-const { list, loading, error } = useTable<HouseItem>(() => getMyCollects())
+const store = useAppStore()
+// API-first + store 回退：接口就绪用真实收藏，未就绪回退本地演示收藏
+const { list, loading, error } = useTable<HouseItem>(async () => {
+  const r = await safe(getMyCollects(), null)
+  if (r.code === 0) return r
+  return { code: 0, data: { list: store.collectList, total: store.collectList.length } }
+})
 
 function goDetail(id: number) {
   router.push(`/detail/${id}`)
@@ -59,5 +66,5 @@ async function remove(id: number) {
 .title { font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .meta { font-size: 12px; color: var(--el-text-color-secondary); margin: 4px 0; }
 .bottom { display: flex; justify-content: space-between; align-items: center; }
-.price { color: #f56c6c; font-weight: 600; font-size: 14px; }
+.price { color: var(--orange); font-weight: 600; font-size: 14px; }
 </style>

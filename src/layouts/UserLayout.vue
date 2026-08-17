@@ -3,7 +3,10 @@
     <!-- 顶部导航 -->
     <header class="topbar">
       <div class="top-inner">
-        <router-link to="/home" class="logo"><span class="dot">租</span>安居易租</router-link>
+        <router-link to="/home" class="logo">
+          <span class="mark">租</span>
+          <span class="wordmark serif">安居易租</span>
+        </router-link>
         <el-popover
           v-model:visible="showCity"
           placement="bottom-start"
@@ -59,16 +62,19 @@
             </div>
           </template>
         </el-popover>
-        <el-input
+        <el-autocomplete
           v-model="keyword"
+          :fetch-suggestions="querySuggest"
           placeholder="输入小区 / 商圈 / 地铁站找房"
           class="search"
+          clearable
+          @select="onPick"
           @keyup.enter="onSearch"
         >
           <template #append>
             <el-button @click="onSearch">搜索</el-button>
           </template>
-        </el-input>
+        </el-autocomplete>
         <nav class="nav-tabs">
           <router-link to="/home" custom v-slot="{ navigate, isActive }">
             <button :class="{ active: isActive }" @click="navigate">首页</button>
@@ -138,6 +144,7 @@ import { useAuthStore } from '@/store/auth'
 import { useRouter } from 'vue-router'
 import { safe, toList } from '@/api/http'
 import { getRegions } from '@/api/house'
+import { getSuggest } from '@/api/search'
 import { regions as mockRegions } from '@/mock/data'
 
 // 级联节点：有 id 时逐级查库（/house/region?parentId=），无 id / 查库失败时用 children（本地 mock 回退）
@@ -254,6 +261,17 @@ function onSearch() {
   if (q) router.push({ path: '/list', query: { q } })
   else router.push('/list')
 }
+
+// 搜索联想（/search/suggest）：输入时下拉建议，点选直达找房列表
+async function querySuggest(q: string, cb: (list: unknown[]) => void) {
+  if (!q.trim()) return cb([])
+  const r = await safe(getSuggest(q.trim()), null)
+  const rows = (r.code === 0 ? (r.data as { list?: { keyword: string }[] } | null)?.list : undefined) ?? []
+  cb(rows.map((s) => ({ value: s.keyword })).slice(0, 8))
+}
+function onPick(item: { value: string }) {
+  router.push({ path: '/list', query: { q: item.value } })
+}
 function goLandlord() {
   if (auth.isLoggedIn && auth.user?.role === 'landlord') router.push('/landlord/dashboard')
   else router.push({ path: '/login', query: { role: 'landlord' } })
@@ -285,28 +303,41 @@ function onUserCmd(cmd: string) {
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-weight: 700;
   font-size: 18px;
-  color: var(--brand);
+  color: var(--ink);
 }
-.logo .dot {
-  width: 22px;
-  height: 22px;
+.logo .mark {
+  width: 30px;
+  height: 30px;
   border-radius: 6px;
-  background: linear-gradient(135deg, var(--brand), #5a86ff);
+  background: var(--seal);
+  color: var(--seal-ink);
   display: grid;
   place-items: center;
-  color: #fff;
-  font-size: 13px;
+  font-family: var(--font-kai);
+  font-size: 15px;
+  transform: rotate(-3deg);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 1px 3px rgba(226, 72, 61, 0.35);
+}
+.logo .wordmark {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 .city {
   display: flex;
   align-items: center;
-  gap: 4px;
-  color: var(--sub);
+  gap: 5px;
+  color: var(--ink);
   font-weight: 600;
   cursor: pointer;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 12px;
+  background: var(--panel);
+  transition: 0.15s;
 }
 .city .caret {
   font-size: 10px;
@@ -315,6 +346,7 @@ function onUserCmd(cmd: string) {
   color: var(--brand);
 }
 .city:hover {
+  border-color: var(--brand);
   color: var(--brand);
 }
 .search {
@@ -323,20 +355,25 @@ function onUserCmd(cmd: string) {
 }
 .nav-tabs {
   display: flex;
-  gap: 6px;
+  gap: 2px;
 }
 .nav-tabs button {
   background: transparent;
   color: var(--sub);
   padding: 8px 14px;
-  border-radius: 8px;
   font-weight: 600;
   border: none;
   cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: 0.15s;
+}
+.nav-tabs button:hover {
+  color: var(--ink);
 }
 .nav-tabs button.active {
-  background: var(--brand-s);
   color: var(--brand);
+  border-bottom-color: var(--brand);
 }
 .login {
   margin-left: auto;

@@ -9,7 +9,7 @@
               <template v-else>{{ auth.user?.name?.[0] }}</template>
             </div>
             <div class="who">
-              <b>{{ auth.user?.name }}</b>
+              <b class="serif">{{ auth.user?.name }}</b>
               <div class="text-sub">{{ auth.roleName }}</div>
             </div>
           </div>
@@ -65,7 +65,11 @@
         </div>
 
         <el-card shadow="never">
-          <h3>数据概览</h3>
+          <div class="sec-head">
+            <span class="bar"></span>
+            <h3 class="serif">数据概览</h3>
+            <span class="eyebrow">MY REGISTRY · 我的档案</span>
+          </div>
           <el-row :gutter="12" class="stats">
             <el-col :span="6" v-for="s in stats" :key="s.k">
               <div class="stat"><b>{{ s.v }}</b><small>{{ s.k }}</small></div>
@@ -147,6 +151,7 @@ onMounted(() => center.loadAll())
   font-size: 22px;
   color: var(--brand);
   display: block;
+  font-family: var(--font-mono);
 }
 .stats .stat small {
   color: var(--sub);

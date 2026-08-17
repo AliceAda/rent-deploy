@@ -8,6 +8,11 @@ import { safe } from '@/api/http'
  * 并通过 `isDemo` 标记当前是否处于「演示数据」状态，页面据此展示「演示数据」角标。
  * 接真后端后无需改动页面，仅删除 fallback 参数即可。
  *
+ * 注意：返回对象中的 ref 是嵌套在普通对象里的，模板不会自动解包，
+ * 因此调用方必须解构出顶层 ref（与 useTable 用法一致）：
+ *   const { data, isDemo, loading, load } = useDataSource(...)
+ * 模板里用 `isDemo` / `loading`，脚本里用 `data.value`。
+ *
  * @param fetch 请求函数（返回 safe 包装的 ApiResp）
  * @param fallback 后端不可用时的本地演示数据
  */

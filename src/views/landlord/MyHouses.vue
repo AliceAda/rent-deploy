@@ -22,7 +22,8 @@
         </el-select>
       </div>
 
-      <el-table :data="list" stripe>
+      <el-alert v-if="error" type="warning" :title="'加载失败：' + error" show-icon :closable="false" style="margin-bottom: 12px" />
+      <el-table :data="list" stripe v-loading="loading">
         <el-table-column prop="title" label="房源标题" min-width="180" />
         <el-table-column prop="district" label="区域" width="90" />
         <el-table-column prop="layout" label="户型" width="90" />
@@ -44,14 +45,14 @@
               text
               type="warning"
               size="small"
-              @click="landlord.setStatus(row.id, '已下架')"
+              @click="toggleStatus(row, '已下架')"
             >下架</el-button>
             <el-button
               v-if="row.status === '已下架'"
               text
               type="primary"
               size="small"
-              @click="landlord.setStatus(row.id, '可租')"
+              @click="toggleStatus(row, '可租')"
             >上架</el-button>
             <el-button text type="danger" size="small" @click="remove(row)">删除</el-button>
           </template>
@@ -68,6 +69,9 @@ import { useRouter } from 'vue-router'
 import { Search } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useLandlordStore } from '@/store/landlord'
+import { safe } from '@/api/http'
+import { useTable } from '@/composables/useTable'
+import { getLandlordHouses, deleteHouse, updateLandlordHouseStatus } from '@/api/house'
 import type { House } from '@/mock/data'
 import { statusTag } from '@/utils/status'
 
@@ -75,9 +79,11 @@ const landlord = useLandlordStore()
 const router = useRouter()
 const kw = ref('')
 const statusFilter = ref('')
+// API-first + store 回退：内存库里的「我的房源」（含新发布）实时可见
+const { list: all, loading, error, reload } = useTable<House>(() => getLandlordHouses())
 
 const list = computed(() =>
-  landlord.myHouses.filter(
+  all.value.filter(
     (h) =>
       (!kw.value || h.title.includes(kw.value)) &&
       (!statusFilter.value || h.status === statusFilter.value)
@@ -90,13 +96,21 @@ function statusType(s: string) {
 function goDetail(row: House) {
   router.push('/detail/' + row.id)
 }
-function remove(row: House) {
-  ElMessageBox.confirm('确认删除房源「' + row.title + '」？', '提示', { type: 'warning' })
-    .then(() => {
-      landlord.removeHouse(row.id)
-      ElMessage.success('已删除')
-    })
-    .catch(() => {})
+async function remove(row: House) {
+  try {
+    await ElMessageBox.confirm('确认删除房源「' + row.title + '」？', '提示', { type: 'warning' })
+  } catch {
+    return
+  }
+  const r = await safe(deleteHouse(row.id), null)
+  if (r.code !== 0) landlord.removeHouse(row.id) // 回退本地 store
+  ElMessage.success('已删除')
+  reload()
+}
+async function toggleStatus(row: House, status: string) {
+  const r = await safe(updateLandlordHouseStatus(row.id, status), null)
+  if (r.code !== 0) landlord.setStatus(row.id, status as House['status']) // 回退本地 store
+  reload()
 }
 </script>
 

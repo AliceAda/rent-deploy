@@ -27,6 +27,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'home', name: 'home', component: () => import('@/views/user/Home.vue'), meta: { title: '首页' } },
       { path: 'list', name: 'list', component: () => import('@/views/user/HouseList.vue'), meta: { title: '找房' } },
       { path: 'detail/:id', name: 'detail', component: () => import('@/views/user/HouseDetail.vue'), meta: { title: '房源详情' } },
+      { path: 'compare', name: 'compare', component: () => import('@/views/user/Compare.vue'), meta: { title: '房源对比' } },
       { path: 'sign/:id', name: 'sign', component: () => import('@/views/user/SignContract.vue'), meta: { title: '在线签约', requiresAuth: true } },
       { path: 'mine', name: 'mine', component: () => import('@/views/user/Mine.vue'), meta: { title: '我的', requiresAuth: true } },
       { path: 'profile', name: 'profile', component: () => import('@/views/user/EditProfile.vue'), meta: { title: '编辑资料', requiresAuth: true } },
