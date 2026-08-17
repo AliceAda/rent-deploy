@@ -51,6 +51,7 @@ const STORAGE_KEY = 'ajy_auth'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: '' as string,
+    refreshToken: '' as string,
     user: null as AuthUser | null
   }),
   getters: {
@@ -67,9 +68,10 @@ export const useAuthStore = defineStore('auth', {
       try {
         const raw = localStorage.getItem(STORAGE_KEY)
         if (raw) {
-          const p = JSON.parse(raw) as { token: string; user: AuthUser }
+          const p = JSON.parse(raw) as { token: string; refreshToken?: string; user: AuthUser }
           if (p && p.token && p.user) {
             this.token = p.token
+            this.refreshToken = p.refreshToken ?? ''
             this.user = p.user
           }
         }
@@ -79,11 +81,17 @@ export const useAuthStore = defineStore('auth', {
     },
     persist() {
       if (this.token && this.user) {
-        const p = { token: this.token, user: this.user }
+        const p = { token: this.token, refreshToken: this.refreshToken, user: this.user }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(p))
       } else {
         localStorage.removeItem(STORAGE_KEY)
       }
+    },
+    // 刷新 token 成功后的会话写入（http 层 401 重放时调用）
+    setSession(token: string, refreshToken = '') {
+      this.token = token
+      this.refreshToken = refreshToken
+      this.persist()
     },
     // 发送短信验证码 → 后端 /api/auth/sms/send
     async sendCode(phone: string, type: SmsType): Promise<{ ok: boolean; msg?: string }> {
@@ -117,9 +125,25 @@ export const useAuthStore = defineStore('auth', {
           password: payload.password
         })
         if (res.code === 0) {
-          // 注册成功自动登录（后端 register 不返回 token/user，用表单信息兜底）
-          this.token = 'jwt-' + Date.now()
-          this.user = { id: 0, name: payload.name, phone: payload.phone, role: payload.role }
+          // 注册成功自动登录：优先用同一账号调 login 换真实 token（后端 register 不返回 token）
+          const loginRes = await apiLogin({ phone: payload.phone, password: payload.password })
+          if (loginRes.code === 0 && loginRes.data?.token) {
+            const u = loginRes.data.userInfo
+            const backendRole = u?.role as UserRole | undefined
+            this.token = loginRes.data.token
+            this.refreshToken = loginRes.data.refreshToken ?? ''
+            this.user = {
+              id: u?.id ?? 0,
+              name: u?.name || payload.name,
+              phone: payload.phone,
+              role: backendRole && ['tenant', 'landlord', 'agent', 'admin'].includes(backendRole) ? backendRole : payload.role
+            }
+          } else {
+            // 登录接口不可用：本地演示会话兜底
+            this.token = 'jwt-' + Date.now()
+            this.refreshToken = ''
+            this.user = { id: 0, name: payload.name, phone: payload.phone, role: payload.role }
+          }
           this.persist()
           return { ok: true }
         }
@@ -140,12 +164,15 @@ export const useAuthStore = defineStore('auth', {
         if (res.code === 0 && res.data && res.data.token) {
           const u: LoginResult['userInfo'] = res.data.userInfo
           this.token = res.data.token
+          // 角色以后端返回为准（表单所选角色仅作后端未返回时的兜底），避免越权跳转
+          const backendRole = u?.role as UserRole | undefined
           this.user = {
             id: u?.id ?? 0,
             name: u?.name || phone,
             phone,
-            role
+            role: backendRole && ['tenant', 'landlord', 'agent', 'admin'].includes(backendRole) ? backendRole : role
           }
+          this.refreshToken = res.data.refreshToken ?? ''
           this.persist()
           return { ok: true }
         }
@@ -176,6 +203,7 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       // 后端未实现 /api/auth/logout，先清本地登录态
       this.token = ''
+      this.refreshToken = ''
       this.user = null
       this.persist()
     },
