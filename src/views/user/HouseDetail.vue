@@ -52,6 +52,39 @@
       </el-col>
     </el-row>
 
+    <!-- 价格历史 / 房间信息 / 看房日程 -->
+    <el-card shadow="never" class="extra">
+      <el-tabs v-model="extraTab">
+        <el-tab-pane label="价格历史" name="price">
+          <ul v-if="priceHistory.length" class="simple-list">
+            <li v-for="(p, i) in priceHistory" :key="i">
+              <span class="text-sub">{{ p.date }}</span>
+              <b class="price-text">¥{{ p.price }}/月</b>
+            </li>
+          </ul>
+          <el-empty v-else description="暂无价格历史" :image-size="60" />
+        </el-tab-pane>
+        <el-tab-pane label="房间信息" name="rooms">
+          <el-table :data="rooms" empty-text="暂无房间信息" size="small">
+            <el-table-column prop="name" label="房间" min-width="120" />
+            <el-table-column prop="area" label="面积(㎡)" width="100" />
+            <el-table-column prop="orientation" label="朝向" width="100" />
+            <el-table-column prop="price" label="价格(元/月)" width="120" />
+            <el-table-column prop="status" label="状态" width="100" />
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="看房日程" name="schedule">
+          <ul v-if="schedule.length" class="simple-list">
+            <li v-for="s in schedule" :key="s.id">
+              <span class="text-sub">{{ s.date }} · {{ s.timeSlot }}</span>
+              <el-tag size="small">{{ s.status }}</el-tag>
+            </li>
+          </ul>
+          <el-empty v-else description="暂无看房日程" :image-size="60" />
+        </el-tab-pane>
+      </el-tabs>
+    </el-card>
+
     <!-- 底部常驻 CTA -->
     <div class="cta">
       <el-button size="large" :type="store.isCollected(house.id) ? 'warning' : 'default'" @click="store.toggleCollect(house.id)">
@@ -59,6 +92,7 @@
       </el-button>
       <el-button size="large" @click="goBooking">📅 预约看房</el-button>
       <el-button size="large" type="primary" @click="goSign">✍️ 在线签约</el-button>
+      <el-button size="large" type="danger" plain @click="reportVisible = true">🚩 举报</el-button>
     </div>
 
     <!-- 预约看房弹窗：需登录 → 选时间/备注 → 提交成功 -->
@@ -77,16 +111,36 @@
         <el-button type="primary" @click="submitBooking">提交预约</el-button>
       </template>
     </el-dialog>
+
+    <!-- 举报弹窗 -->
+    <el-dialog v-model="reportVisible" title="举报房源" width="440px">
+      <el-form label-width="72px">
+        <el-form-item label="房源"><span>{{ house?.title }}</span></el-form-item>
+        <el-form-item label="举报原因">
+          <el-input v-model="reportReason" type="textarea" :rows="3" placeholder="请说明举报原因，如虚假房源、违规信息等" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="reportVisible = false">取消</el-button>
+        <el-button type="danger" @click="submitReport">提交举报</el-button>
+      </template>
+    </el-dialog>
   </div>
   <el-empty v-else description="房源不存在" />
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useAppStore } from '@/store'
 import { useAuthStore } from '@/store/auth'
+import { safe } from '@/api/http'
+import {
+  getPriceHistory, getHouseRooms, getHouseSchedule,
+  recordView, reportHouse,
+  type PriceHistory, type HouseRoom, type ScheduleItem
+} from '@/api/house'
 
 const route = useRoute()
 const router = useRouter()
@@ -132,6 +186,48 @@ function submitBooking() {
   bookingForm.value = { time: '', remark: '' }
   ElMessage.success('预约申请已提交，房东会尽快确认')
 }
+
+// 价格历史 / 房间信息 / 看房日程
+const extraTab = ref('price')
+const priceHistory = ref<PriceHistory[]>([])
+const rooms = ref<HouseRoom[]>([])
+const schedule = ref<ScheduleItem[]>([])
+
+async function loadExtra() {
+  const [p, r, s] = await Promise.all([
+    safe(getPriceHistory(id.value), { list: [], total: 0 }),
+    safe(getHouseRooms(id.value), { list: [], total: 0 }),
+    safe(getHouseSchedule(id.value), { list: [], total: 0 })
+  ])
+  priceHistory.value = p.data?.list ?? []
+  rooms.value = r.data?.list ?? []
+  schedule.value = s.data?.list ?? []
+}
+
+// 举报
+const reportVisible = ref(false)
+const reportReason = ref('')
+async function submitReport() {
+  if (!reportReason.value.trim()) {
+    ElMessage.warning('请输入举报原因')
+    return
+  }
+  const r = await safe(reportHouse({ houseId: id.value, reason: reportReason.value }), {})
+  if (r.code === 0) {
+    ElMessage.success('举报已提交，平台会尽快处理')
+    reportVisible.value = false
+    reportReason.value = ''
+  } else {
+    ElMessage.error(r.message || '举报失败')
+  }
+}
+
+onMounted(() => {
+  if (id.value) {
+    safe(recordView(id.value), {})
+    loadExtra()
+  }
+})
 </script>
 
 <style scoped>
@@ -207,6 +303,27 @@ function submitBooking() {
 }
 .fee {
   margin-top: 14px;
+}
+.extra {
+  margin-top: 16px;
+}
+.simple-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.simple-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.simple-list li:last-child {
+  border-bottom: none;
+}
+.price-text {
+  color: var(--orange);
 }
 .cta {
   position: sticky;

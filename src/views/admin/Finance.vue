@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="toolbar">
+      <el-button type="primary" :loading="reconciling" @click="doReconcile">财务对账</el-button>
+    </div>
+
     <el-row :gutter="14">
       <el-col :span="6" v-for="s in sums" :key="s.k">
         <el-card shadow="hover" class="sum">
@@ -10,7 +14,8 @@
     </el-row>
 
     <el-card shadow="never" class="block">
-      <template #header><b>分账与结算</b>（平台抽佣 + 房东 + 经纪人）</template>
+      <el-tabs v-model="finTab">
+        <el-tab-pane label="分账与结算（平台抽佣 + 房东 + 经纪人）" name="settle">
       <el-table :data="finances" border v-loading="loading">
         <el-table-column prop="settleNo" label="结算单号" width="150" />
         <el-table-column prop="bizDesc" label="业务" min-width="150" />
@@ -33,6 +38,25 @@
         </el-table-column>
       </el-table>
       <el-empty v-if="!loading && finances.length === 0" description="暂无结算数据" />
+        </el-tab-pane>
+        <el-tab-pane label="支付记录" name="payment">
+          <el-table :data="payments" border v-loading="paymentLoading">
+            <el-table-column prop="id" label="ID" width="70" />
+            <el-table-column prop="payNo" label="支付单号" width="160" />
+            <el-table-column prop="orderNo" label="订单号" width="160" />
+            <el-table-column prop="payer" label="付款人" width="100" />
+            <el-table-column label="金额" width="110"><template #default="{ row }">¥{{ row.amount?.toLocaleString() }}</template></el-table-column>
+            <el-table-column prop="method" label="支付方式" width="110" />
+            <el-table-column label="状态" width="100">
+              <template #default="{ row }">
+                <el-tag :type="row.status === '成功' ? 'success' : row.status === '失败' ? 'danger' : 'warning'" size="small">{{ row.status }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="payTime" label="支付时间" width="160" />
+          </el-table>
+          <el-empty v-if="!paymentLoading && payments.length === 0" description="暂无支付记录" />
+        </el-tab-pane>
+      </el-tabs>
     </el-card>
 
     <el-dialog v-model="detailVisible" title="分账明细" width="520px">
@@ -52,8 +76,19 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { safe, okRes } from '@/api/http'
+import { safe, okRes, post, get } from '@/api/http'
 import { getAdminFinances, withdrawFinance, disputeFinance, type FinanceItem } from '@/api/admin'
+
+interface PaymentItem {
+  id: number
+  payNo?: string
+  orderNo?: string
+  amount: number
+  method?: string
+  status?: string
+  payer?: string
+  payTime?: string
+}
 
 const list = ref<FinanceItem[]>([])
 const loading = ref(false)
@@ -61,11 +96,32 @@ const submitting = ref(false)
 const detailVisible = ref(false)
 const detail = ref<FinanceItem | null>(null)
 
+const finTab = ref('settle')
+const reconciling = ref(false)
+const payments = ref<PaymentItem[]>([])
+const paymentLoading = ref(false)
+
 async function fetch() {
   loading.value = true
   const res = await safe(getAdminFinances(), [])
   if (okRes(res)) list.value = res.data
   loading.value = false
+}
+async function fetchPayments() {
+  paymentLoading.value = true
+  const res = await safe(get<PaymentItem[]>('/admin/payments'), [])
+  if (okRes(res)) payments.value = res.data
+  paymentLoading.value = false
+}
+async function doReconcile() {
+  reconciling.value = true
+  const res = await safe(post('/finance/reconcile'), {})
+  if (okRes(res)) {
+    ElMessage.success('财务对账完成')
+    await fetch()
+    await fetchPayments()
+  }
+  reconciling.value = false
 }
 
 const finances = computed(() => list.value)
@@ -108,10 +164,14 @@ async function doDispute(row: FinanceItem) {
   submitting.value = false
 }
 
-onMounted(fetch)
+onMounted(() => {
+  fetch()
+  fetchPayments()
+})
 </script>
 
 <style scoped>
+.toolbar { margin-bottom: 14px; }
 .sum { text-align: center; }
 .sk { font-size: 13px; }
 .sv { font-size: 22px; font-weight: 800; color: var(--brand); margin-top: 4px; }

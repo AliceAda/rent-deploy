@@ -1,5 +1,10 @@
 <template>
   <el-card shadow="never">
+    <div class="bar">
+      <span class="text-sub" style="margin-right: 8px">独立页面：</span>
+      <el-button size="small" plain @click="goDict">数据字典</el-button>
+      <el-button size="small" plain @click="goConfig">系统配置</el-button>
+    </div>
     <el-tabs v-model="tab">
       <el-tab-pane label="角色权限 (RBAC)" name="role" />
       <el-tab-pane label="管理员" name="admin" />
@@ -150,6 +155,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe, okRes } from '@/api/http'
 import {
@@ -174,9 +180,17 @@ import {
   type SysParam
 } from '@/api/admin'
 
+const router = useRouter()
 const tab = ref('role')
 const loading = ref(false)
 const submitting = ref(false)
+
+function goDict() {
+  router.push('/admin/dict')
+}
+function goConfig() {
+  router.push('/admin/config')
+}
 
 // 角色
 const roles = ref<RoleItem[]>([])

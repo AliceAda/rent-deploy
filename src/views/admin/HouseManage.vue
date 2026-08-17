@@ -26,9 +26,10 @@
             <el-tag :type="statusType(row.status)" size="small">{{ row.status }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="260" fixed="right">
-          <template #default="{ row }">
-            <el-button v-if="row.status === '待审核'" size="small" type="success" @click="doAudit(row, '可租')">通过</el-button>
+        <el-table-column label="操作" width="300" fixed="right">
+        <template #default="{ row }">
+          <el-button v-if="row.status === '待审核'" size="small" type="primary" @click="openAudit(row)">审核</el-button>
+          <el-button v-if="row.status === '待审核'" size="small" type="success" @click="doAudit(row, '可租')">通过</el-button>
             <el-button v-if="row.status === '待审核'" size="small" type="danger" @click="openReject(row)">驳回</el-button>
             <el-button v-if="row.status === '可租'" size="small" type="warning" @click="doAudit(row, '违规')">违规下架</el-button>
             <el-button v-if="row.status === '已下架' || row.status === '违规'" size="small" type="primary" @click="doAudit(row, '可租')">重新上架</el-button>
@@ -57,14 +58,32 @@
           <el-button type="danger" :loading="submitting" @click="doReject">确认驳回</el-button>
         </template>
       </el-dialog>
+
+      <el-dialog v-model="auditDialogVisible" title="房源审核" width="420px">
+        <el-form label-width="80px">
+          <el-form-item label="审核结果">
+            <el-radio-group v-model="auditForm.status">
+              <el-radio value="已通过">通过</el-radio>
+              <el-radio value="已驳回">驳回</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item v-if="auditForm.status === '已驳回'" label="驳回原因">
+            <el-input v-model="auditForm.reason" type="textarea" :rows="3" placeholder="请输入驳回原因…" />
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <el-button @click="auditDialogVisible = false">取消</el-button>
+          <el-button type="primary" :loading="submitting" @click="submitAudit">确认</el-button>
+        </template>
+      </el-dialog>
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
-import { safe, okRes } from '@/api/http'
+import { safe, okRes, post } from '@/api/http'
 import { getAdminHouses, auditHouse, rejectHouse, type AdminHouse } from '@/api/admin'
 
 const list = ref<AdminHouse[]>([])
@@ -118,6 +137,36 @@ async function doReject() {
   submitting.value = false
   rejectVisible.value = false
   rejectTarget.value = null
+}
+
+const auditDialogVisible = ref(false)
+const auditTarget = ref<AdminHouse | null>(null)
+const auditForm = reactive({ status: '已通过', reason: '' })
+
+function openAudit(row: AdminHouse) {
+  auditTarget.value = row
+  auditForm.status = '已通过'
+  auditForm.reason = ''
+  auditDialogVisible.value = true
+}
+async function submitAudit() {
+  if (!auditTarget.value) return
+  if (auditForm.status === '已驳回' && !auditForm.reason) {
+    ElMessage.warning('请输入驳回原因')
+    return
+  }
+  submitting.value = true
+  const body = auditForm.status === '已驳回'
+    ? { status: '已驳回', reason: auditForm.reason }
+    : { status: '已通过' }
+  const res = await safe(post('/admin/house/' + auditTarget.value.id + '/audit', body), {})
+  if (okRes(res)) {
+    auditTarget.value.status = auditForm.status === '已通过' ? '可租' : '违规'
+    ElMessage.success(auditForm.status === '已通过' ? '审核通过' : '已驳回')
+  }
+  submitting.value = false
+  auditDialogVisible.value = false
+  auditTarget.value = null
 }
 function view(row: AdminHouse) {
   current.value = row

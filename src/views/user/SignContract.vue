@@ -25,6 +25,11 @@
               <el-radio :value="24">两年</el-radio>
             </el-radio-group>
           </el-form-item>
+          <el-form-item label="可租期">
+            <el-select v-model="form.rentPeriod" placeholder="选择可租期" style="width: 100%">
+              <el-option v-for="p in rentPeriods" :key="p.value" :label="p.label" :value="p.value" />
+            </el-select>
+          </el-form-item>
         </el-form>
       </div>
 
@@ -55,6 +60,11 @@
       <!-- Step 4 -->
       <div v-show="step === 3" class="step-body">
         <el-form label-width="100px">
+          <el-form-item label="合同模板">
+            <el-select v-model="form.templateId" placeholder="选择合同模板" style="width: 100%">
+              <el-option v-for="t in templates" :key="t.id" :label="t.name" :value="t.id" />
+            </el-select>
+          </el-form-item>
           <el-form-item label="签署方式">
             <el-radio-group v-model="form.signType">
               <el-radio value="face">人脸核验签署</el-radio>
@@ -88,9 +98,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAppStore } from '@/store'
+import { safe } from '@/api/http'
+import { getRentPeriod, type RentPeriod } from '@/api/order'
+import { getContractTemplates, type ContractTemplate } from '@/api/contract'
 
 const route = useRoute()
 const router = useRouter()
@@ -102,6 +115,8 @@ const done = ref(false)
 const form = reactive({
   start: '',
   term: 12,
+  rentPeriod: '',
+  templateId: undefined as number | undefined,
   name: '',
   phone: '',
   idcard: '',
@@ -121,6 +136,22 @@ const feeRows = computed(() => {
   ]
 })
 const firstTotal = computed(() => feeRows.value.reduce((s, r) => s + r.amount, 0))
+
+// 可租期 & 合同模板
+const rentPeriods = ref<RentPeriod['periods']>([])
+const templates = ref<ContractTemplate[]>([])
+
+async function loadOptions() {
+  if (!house.value) return
+  const [p, t] = await Promise.all([
+    safe(getRentPeriod(house.value.id), { periods: [] }),
+    safe(getContractTemplates(), { list: [], total: 0 })
+  ])
+  rentPeriods.value = p.data?.periods ?? []
+  templates.value = t.data?.list ?? []
+}
+
+onMounted(loadOptions)
 
 function next() {
   if (step.value === 1 && (!form.name || !form.phone || !form.idcard)) {

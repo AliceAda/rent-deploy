@@ -11,6 +11,8 @@
         <el-menu-item index="/landlord/contracts"><el-icon><Document /></el-icon>合同管理</el-menu-item>
         <el-menu-item index="/landlord/workorders"><el-icon><Service /></el-icon>工单处理</el-menu-item>
         <el-menu-item index="/landlord/bills"><el-icon><Money /></el-icon>账单</el-menu-item>
+        <el-menu-item index="/landlord/withdraw"><el-icon><Wallet /></el-icon>提现管理</el-menu-item>
+        <el-menu-item index="/landlord/profile"><el-icon><UserFilled /></el-icon>房东资料</el-menu-item>
       </el-menu>
     </el-aside>
 
@@ -63,7 +65,9 @@ import {
   Service,
   Money,
   Search,
-  Bell
+  Bell,
+  Wallet,
+  UserFilled
 } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/store/auth'
 import { useLandlordStore } from '@/store/landlord'

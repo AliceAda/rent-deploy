@@ -19,6 +19,23 @@
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column label="操作" width="180" fixed="right">
+          <template #default="{ row }">
+            <el-button
+              v-if="row.status === '已确认' || row.status === '已支付'"
+              text
+              type="primary"
+              size="small"
+              @click="checkin(row)"
+            >入住办理</el-button>
+            <el-button
+              text
+              type="primary"
+              size="small"
+              @click="detail(row)"
+            >详情</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </el-card>
   </div>
@@ -26,9 +43,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { safe } from '@/api/http'
-import { getLandlordOrders, type OrderItem } from '@/api/order'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { safe, okRes, msgOf } from '@/api/http'
+import { getLandlordOrders, checkinOrder, type OrderItem } from '@/api/order'
 
+const router = useRouter()
 const orders = ref<OrderItem[]>([])
 const loading = ref(false)
 
@@ -38,6 +58,21 @@ async function load() {
   orders.value = r.data?.list ?? []
   loading.value = false
 }
+
+async function checkin(row: OrderItem) {
+  const r = await safe(checkinOrder(row.orderId), {})
+  if (okRes(r)) {
+    ElMessage.success('入住办理成功')
+    load()
+  } else {
+    ElMessage.error(msgOf(r))
+  }
+}
+
+function detail(row: OrderItem) {
+  router.push(`/orders/${row.orderId}`)
+}
+
 onMounted(load)
 </script>
 

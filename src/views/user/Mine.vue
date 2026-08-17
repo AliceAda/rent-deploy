@@ -23,13 +23,18 @@
             <el-menu-item index="/bookings">📅 我的预约</el-menu-item>
             <el-menu-item index="/orders">📄 我的订单</el-menu-item>
             <el-menu-item index="/contracts">📑 我的合同</el-menu-item>
+            <el-menu-item index="/favorites">⭐ 我的收藏</el-menu-item>
+            <el-menu-item index="/history">👁️ 浏览历史</el-menu-item>
             <el-menu-item index="/bills">🧾 我的账单</el-menu-item>
+            <el-menu-item index="/pay-records">💳 支付记录</el-menu-item>
             <el-menu-item index="/repair">🔧 报修投诉</el-menu-item>
             <el-menu-item index="/address">📍 地址管理</el-menu-item>
             <el-menu-item index="/realname">🪪 实名认证</el-menu-item>
             <el-menu-item index="/points">🎁 积分优惠券</el-menu-item>
             <el-menu-item index="/review">📝 写评价</el-menu-item>
             <el-menu-item index="/notify">🔔 通知设置</el-menu-item>
+            <el-menu-item index="/security">🔐 密码安全</el-menu-item>
+            <el-menu-item index="/sessions">📱 登录会话</el-menu-item>
             <el-menu-item index="/account-cancel">🗑️ 账号注销</el-menu-item>
           </el-menu>
         </el-card>

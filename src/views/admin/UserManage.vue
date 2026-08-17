@@ -27,9 +27,10 @@
         </template>
       </el-table-column>
       <el-table-column prop="regTime" label="注册时间" width="120" />
-      <el-table-column label="操作" width="180" fixed="right">
+      <el-table-column label="操作" width="230" fixed="right">
         <template #default="{ row }">
-          <el-button size="small" plain @click="viewDetail(row)">详情</el-button>
+          <el-button size="small" plain @click="viewDetail(row)">查看</el-button>
+          <el-button size="small" type="primary" plain @click="goDetail(row)">详情</el-button>
           <el-button v-if="row.status === '正常'" size="small" type="danger" plain :loading="loadingId === row.id" @click="doFreeze(row)">冻结</el-button>
           <el-button v-else size="small" type="success" plain :loading="loadingId === row.id" @click="doUnfreeze(row)">解冻</el-button>
         </template>
@@ -55,9 +56,12 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe, okRes } from '@/api/http'
 import { getAdminUserList, toggleUserStatus, type AdminUser } from '@/api/admin'
+
+const router = useRouter()
 
 const list = ref<AdminUser[]>([])
 const loading = ref(false)
@@ -78,6 +82,9 @@ const rows = computed(() => (role.value === '全部' ? list.value : list.value.f
 function viewDetail(row: AdminUser) {
   current.value = row
   detailVisible.value = true
+}
+function goDetail(row: AdminUser) {
+  router.push(`/admin/users/${row.id}`)
 }
 async function doFreeze(row: AdminUser) {
   try {

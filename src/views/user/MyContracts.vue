@@ -11,9 +11,10 @@
         <el-table-column label="状态" width="120">
           <template #default="{ row }"><el-tag :type="statusType(row.status)">{{ row.status }}</el-tag></template>
         </el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column label="操作" width="160">
           <template #default="{ row }">
             <el-button size="small" text @click="view(row)">查看</el-button>
+            <el-button size="small" text type="primary" @click="viewDetail(row)">查看详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -23,12 +24,14 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { safe } from '@/api/http'
 import { getMyContracts, getContractDetail, type ContractItem } from '@/api/contract'
 
 const list = ref<ContractItem[]>([])
 const loading = ref(false)
+const router = useRouter()
 
 function statusType(s: string) {
   if (s === '生效中') return 'success'
@@ -49,6 +52,9 @@ function view(row: ContractItem) {
     if (res.code === 0) ElMessage.success('已加载合同详情（演示）')
     else ElMessage.error(res.message || '获取失败')
   })
+}
+function viewDetail(row: ContractItem) {
+  router.push('/contracts/' + row.id)
 }
 onMounted(load)
 </script>

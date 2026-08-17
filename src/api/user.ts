@@ -60,8 +60,8 @@ export const updateUserProfile = (data: UpdateProfileData) => put('/user/me', da
 
 // ===== 修改手机号 / 密码 =====
 
-/** 修改手机号（需新手机号验证码） */
-export const changePhone = (data: ChangePhoneData) => post('/user/phone/change', data)
+/** 换绑手机号（需新手机号验证码，对齐契约 POST /api/auth/bind-phone） */
+export const changePhone = (data: ChangePhoneData) => post('/auth/bind-phone', data)
 /** 修改密码（需旧密码 + 当前手机号验证码） */
 export const changePassword = (data: ChangePasswordData) => post('/user/password/change', data)
 

@@ -20,12 +20,14 @@
         </template>
       </el-table-column>
       <el-table-column prop="createdAt" label="创建时间" width="160" />
-      <el-table-column label="操作" width="280" fixed="right">
+      <el-table-column label="操作" width="340" fixed="right">
         <template #default="{ row }">
           <el-button v-if="row.status === '待分派'" size="small" type="primary" plain :loading="submitting" @click="doAssign(row)">分派</el-button>
           <el-button v-if="row.status === '处理中'" size="small" plain :loading="submitting" @click="openTransfer(row)">转派</el-button>
           <el-button v-if="row.status === '待回访'" size="small" type="success" plain :loading="submitting" @click="doVisit(row)">回访</el-button>
           <el-button v-if="row.status === '处理中' || row.status === '待回访'" size="small" plain @click="doDetail(row)">详情</el-button>
+          <el-button v-if="row.status !== '已关闭'" size="small" type="danger" plain :loading="submitting" @click="doClose(row)">关闭</el-button>
+          <el-button v-if="row.status === '已关闭'" size="small" type="success" plain :loading="submitting" @click="doReopen(row)">重开</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -65,6 +67,7 @@ import { computed, onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { safe, okRes } from '@/api/http'
 import { getAdminTickets, assignTicket, transferTicket, visitTicket, type AdminTicket } from '@/api/admin'
+import { closeTicket, reopenTicket } from '@/api/workorder'
 
 const list = ref<AdminTicket[]>([])
 const loading = ref(false)
@@ -127,6 +130,42 @@ async function doVisit(row: AdminTicket) {
 function doDetail(row: AdminTicket) {
   detail.value = row
   detailVisible.value = true
+}
+async function doClose(row: AdminTicket) {
+  try {
+    const { value } = await ElMessageBox.prompt('请输入关闭备注（可选）', `关闭工单 ${row.ticketNo}`, {
+      confirmButtonText: '确认关闭',
+      cancelButtonText: '取消',
+      type: 'warning',
+      inputPlaceholder: '关闭原因/备注…',
+      inputValidator: () => true
+    })
+    submitting.value = true
+    const res = await safe(closeTicket(row.id, value), {})
+    if (okRes(res)) {
+      row.status = '已关闭'
+      ElMessage.success(`工单 ${row.ticketNo} 已关闭`)
+    }
+    submitting.value = false
+  } catch { /* 取消 */ }
+}
+async function doReopen(row: AdminTicket) {
+  try {
+    const { value } = await ElMessageBox.prompt('请输入重开备注（可选）', `重开工单 ${row.ticketNo}`, {
+      confirmButtonText: '确认重开',
+      cancelButtonText: '取消',
+      type: 'info',
+      inputPlaceholder: '重开原因/备注…',
+      inputValidator: () => true
+    })
+    submitting.value = true
+    const res = await safe(reopenTicket(row.id, value), {})
+    if (okRes(res)) {
+      row.status = '处理中'
+      ElMessage.success(`工单 ${row.ticketNo} 已重开`)
+    }
+    submitting.value = false
+  } catch { /* 取消 */ }
 }
 
 onMounted(fetch)

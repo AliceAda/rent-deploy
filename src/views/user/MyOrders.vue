@@ -75,7 +75,7 @@ async function pay(row: OrderItem) {
   }
 }
 function detail(row: OrderItem) {
-  router.push('/contracts')
+  router.push('/orders/' + row.orderId)
 }
 onMounted(load)
 </script>

@@ -8,12 +8,33 @@
         <el-menu-item index="/admin/houses"><el-icon><House /></el-icon>房源管理</el-menu-item>
         <el-menu-item index="/admin/users"><el-icon><User /></el-icon>用户管理</el-menu-item>
         <el-menu-item index="/admin/trades"><el-icon><Tickets /></el-icon>交易管理</el-menu-item>
-        <el-menu-item index="/admin/contracts"><el-icon><Document /></el-icon>合同管理</el-menu-item>
-        <el-menu-item index="/admin/finance"><el-icon><Money /></el-icon>财务管理</el-menu-item>
+        <el-sub-menu index="contracts-group">
+          <template #title><el-icon><Document /></el-icon>合同管理</template>
+          <el-menu-item index="/admin/contracts">合同列表</el-menu-item>
+          <el-menu-item index="/admin/contract-templates">合同模板</el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="finance-group">
+          <template #title><el-icon><Money /></el-icon>财务管理</template>
+          <el-menu-item index="/admin/finance">财务概览</el-menu-item>
+          <el-menu-item index="/admin/refunds">退款审批</el-menu-item>
+          <el-menu-item index="/admin/withdrawals">提现审批</el-menu-item>
+        </el-sub-menu>
         <el-menu-item index="/admin/tickets"><el-icon><Service /></el-icon>工单管理</el-menu-item>
+        <el-sub-menu index="risk-group">
+          <template #title><el-icon><WarnTriangleFilled /></el-icon>风控管理</template>
+          <el-menu-item index="/admin/risk">风控中心</el-menu-item>
+          <el-menu-item index="/admin/reports">举报管理</el-menu-item>
+        </el-sub-menu>
         <el-menu-item index="/admin/content"><el-icon><Notebook /></el-icon>内容管理</el-menu-item>
+        <el-menu-item index="/admin/search"><el-icon><Search /></el-icon>搜索管理</el-menu-item>
+        <el-menu-item index="/admin/message-templates"><el-icon><Message /></el-icon>消息模板</el-menu-item>
         <el-menu-item index="/admin/statistics"><el-icon><TrendCharts /></el-icon>数据统计</el-menu-item>
-        <el-menu-item index="/admin/system"><el-icon><Setting /></el-icon>系统管理</el-menu-item>
+        <el-sub-menu index="system-group">
+          <template #title><el-icon><Setting /></el-icon>系统管理</template>
+          <el-menu-item index="/admin/system">系统设置</el-menu-item>
+          <el-menu-item index="/admin/dict">数据字典</el-menu-item>
+          <el-menu-item index="/admin/config">系统配置</el-menu-item>
+        </el-sub-menu>
       </el-menu>
     </el-aside>
 
@@ -56,7 +77,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { DataLine, House, User, Tickets, Document, Money, Service, Notebook, TrendCharts, Setting, Search, Bell } from '@element-plus/icons-vue'
+import { DataLine, House, User, Tickets, Document, Money, Service, Notebook, TrendCharts, Setting, Search, Bell, WarnTriangleFilled, Message } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/store/auth'
 
 const route = useRoute()
