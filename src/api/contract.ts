@@ -16,5 +16,9 @@ export interface ContractItem {
 /** 我的合同列表 */
 export const getMyContracts = () => get<{ list: ContractItem[]; total: number }>('/contract/my')
 
+/** 房东合同列表 */
+export const getLandlordContracts = () =>
+  get<{ list: ContractItem[]; total: number }>('/contract/landlord')
+
 /** 合同详情 */
-export const getContractDetail = (id: number) => get(`/contract/${id}`)
+export const getContractDetail = (id: number) => get<ContractItem>(`/contract/${id}`)

@@ -44,7 +44,7 @@ async function load() {
   loading.value = false
 }
 function view(row: ContractItem) {
-  const r = safe(getContractDetail(row.id), {})
+  const r = safe(getContractDetail(row.id), {} as ContractItem)
   r.then((res) => {
     if (res.code === 0) ElMessage.success('已加载合同详情（演示）')
     else ElMessage.error(res.message || '获取失败')

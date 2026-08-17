@@ -1,4 +1,4 @@
-import { get, post, put } from './http'
+import { get, post, put, del } from './http'
 
 // ===== 类型定义（与后端 DTO/VO 对齐） =====
 
@@ -40,6 +40,17 @@ export interface RealnameSubmitData {
   idCard: string
 }
 
+export interface AccountCancelStatus {
+  status: string // 未申请 / 审核中 / 已驳回 / 已注销
+  reason?: string
+  applyTime?: string
+  cancelAt?: string
+}
+
+export interface AccountCancelData {
+  reason: string
+}
+
 // ===== 用户资料 =====
 
 /** 查询当前用户资料 */
@@ -60,3 +71,12 @@ export const changePassword = (data: ChangePasswordData) => post('/user/password
 export const getRealnameStatus = () => get<RealnameStatus>('/user/realname')
 /** 提交实名认证 */
 export const submitRealname = (data: RealnameSubmitData) => post('/user/realname', data)
+
+// ===== 账号注销 =====
+
+/** 查询账号注销状态 */
+export const getAccountCancelStatus = () => get<AccountCancelStatus>('/user/account-cancel')
+/** 申请注销账号 */
+export const applyAccountCancel = (data: AccountCancelData) => post('/user/account-cancel', data)
+/** 撤销注销申请 */
+export const cancelAccountCancel = () => del('/user/account-cancel')

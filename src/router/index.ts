@@ -30,6 +30,8 @@ const routes: RouteRecordRaw[] = [
       { path: 'orders', name: 'orders', component: () => import('@/views/user/MyOrders.vue'), meta: { title: '我的订单', requiresAuth: true } },
       { path: 'contracts', name: 'contracts', component: () => import('@/views/user/MyContracts.vue'), meta: { title: '我的合同', requiresAuth: true } },
       { path: 'repair', name: 'repair', component: () => import('@/views/user/Repair.vue'), meta: { title: '报修投诉', requiresAuth: true } },
+      { path: 'bills', name: 'bills', component: () => import('@/views/user/MyBills.vue'), meta: { title: '我的账单', requiresAuth: true } },
+      { path: 'account-cancel', name: 'account-cancel', component: () => import('@/views/user/AccountCancel.vue'), meta: { title: '账号注销', requiresAuth: true } },
       { path: 'address', name: 'address', component: () => import('@/views/user/AddressManage.vue'), meta: { title: '地址管理', requiresAuth: true } },
       { path: 'realname', name: 'realname', component: () => import('@/views/user/Realname.vue'), meta: { title: '实名认证', requiresAuth: true } },
       { path: 'review', name: 'review', component: () => import('@/views/user/Review.vue'), meta: { title: '写评价', requiresAuth: true } },
@@ -65,7 +67,9 @@ const routes: RouteRecordRaw[] = [
       { path: 'my-houses', name: 'landlord-houses', component: () => import('@/views/landlord/MyHouses.vue'), meta: { title: '我的房源' } },
       { path: 'publish', name: 'landlord-publish', component: () => import('@/views/landlord/PublishHouse.vue'), meta: { title: '发布房源' } },
       { path: 'bookings', name: 'landlord-bookings', component: () => import('@/views/landlord/Bookings.vue'), meta: { title: '看房预约' } },
-      { path: 'orders', name: 'landlord-orders', component: () => import('@/views/landlord/Orders.vue'), meta: { title: '订单合同' } },
+      { path: 'orders', name: 'landlord-orders', component: () => import('@/views/landlord/Orders.vue'), meta: { title: '订单' } },
+      { path: 'contracts', name: 'landlord-contracts', component: () => import('@/views/landlord/Contracts.vue'), meta: { title: '合同管理' } },
+      { path: 'workorders', name: 'landlord-workorders', component: () => import('@/views/landlord/RepairManage.vue'), meta: { title: '工单处理' } },
       { path: 'bills', name: 'landlord-bills', component: () => import('@/views/landlord/Bills.vue'), meta: { title: '账单' } }
     ]
   },

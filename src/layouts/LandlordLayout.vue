@@ -7,7 +7,9 @@
         <el-menu-item index="/landlord/my-houses"><el-icon><House /></el-icon>我的房源</el-menu-item>
         <el-menu-item index="/landlord/publish"><el-icon><Plus /></el-icon>发布房源</el-menu-item>
         <el-menu-item index="/landlord/bookings"><el-icon><Calendar /></el-icon>看房预约</el-menu-item>
-        <el-menu-item index="/landlord/orders"><el-icon><Tickets /></el-icon>订单合同</el-menu-item>
+        <el-menu-item index="/landlord/orders"><el-icon><Tickets /></el-icon>订单</el-menu-item>
+        <el-menu-item index="/landlord/contracts"><el-icon><Document /></el-icon>合同管理</el-menu-item>
+        <el-menu-item index="/landlord/workorders"><el-icon><Service /></el-icon>工单处理</el-menu-item>
         <el-menu-item index="/landlord/bills"><el-icon><Money /></el-icon>账单</el-menu-item>
       </el-menu>
     </el-aside>
@@ -57,6 +59,8 @@ import {
   Plus,
   Calendar,
   Tickets,
+  Document,
+  Service,
   Money,
   Search,
   Bell

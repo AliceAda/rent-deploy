@@ -173,20 +173,4 @@ export const landlordBills: LandlordBill[] = [
   { id: 5, month: '2026-06', houseTitle: '回龙观 一居', tenant: '小赵', amount: 5200, paid: 2600, status: '逾期' }
 ]
 
-// 房东合同
-export interface LandlordContract {
-  id: number
-  no: string
-  houseTitle: string
-  tenant: string
-  start: string
-  end: string
-  rent: number
-  deposit: number
-  status: '草稿' | '待签署' | '生效中' | '已到期' | '已终止'
-}
-export const landlordContracts: LandlordContract[] = [
-  { id: 1, no: 'C2026080001', houseTitle: '百子湾 两居', tenant: '小陈', start: '2026-09-01', end: '2027-08-31', rent: 7800, deposit: 7800, status: '待签署' },
-  { id: 2, no: 'C2026070007', houseTitle: '国贸 开间', tenant: '老周', start: '2026-07-10', end: '2027-07-09', rent: 5400, deposit: 5400, status: '生效中' },
-  { id: 3, no: 'C2026050012', houseTitle: '回龙观 一居', tenant: '小赵', start: '2026-05-20', end: '2027-05-19', rent: 5200, deposit: 5200, status: '生效中' }
-]
+// (房东合同数据已迁移至独立合同页，接入 /contract/landlord，此处不再保留 mock)

@@ -8,6 +8,13 @@ export interface WorkOrderItem {
   title: string
   status: string
   createTime: string
+  // 平台/房东侧展示字段（可选）
+  user?: string
+  houseTitle?: string
+  content?: string
+  handler?: string
+  handleResult?: string
+  closedAt?: string
 }
 
 export interface RepairSubmit {
@@ -24,3 +31,11 @@ export const getMyWorkOrders = () => get<{ list: WorkOrderItem[]; total: number 
 
 /** 提交报修/投诉 */
 export const submitRepair = (data: RepairSubmit) => post('/workorder/repair', data)
+
+/** 平台/房东工作台：全部工单列表（含实名处理） */
+export const getWorkOrders = (status?: string) =>
+  get<{ list: WorkOrderItem[]; total: number }>('/workorder/list', status ? { status } : undefined)
+
+/** 处理工单（更新状态 + 处理备注/结果） */
+export const handleWorkOrder = (id: number, data: { status: string; handleResult?: string }) =>
+  post(`/workorder/${id}/handle`, data)
