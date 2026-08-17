@@ -13,7 +13,8 @@ export default defineConfig({
     port: 5173,
     open: true,
     proxy: {
-      '/api': { target: 'http://localhost:8081', changeOrigin: true }
+      // 与 serve.mjs / nginx 保持一致，可用 VITE_DEV_API_TARGET 覆盖
+      '/api': { target: process.env.VITE_DEV_API_TARGET || 'http://localhost:8080', changeOrigin: true }
     }
   },
   build: {

@@ -5,8 +5,8 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const DIST = join(__dirname, 'dist')
-const PORT = 8888
-const API_TARGET = 'http://127.0.0.1:8080'
+const PORT = Number(process.env.PORT || 8888)
+const API_TARGET = process.env.API_TARGET || 'http://127.0.0.1:8080'
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -50,12 +50,18 @@ async function proxyApi(req, res) {
   }
 }
 
-const server = http.createServer(async (req, res) => {
+async function handle(req, res) {
   const url = req.url || '/'
 
   if (url.startsWith('/api/')) return proxyApi(req, res)
 
-  let path = decodeURIComponent(url.split('?')[0])
+  let path
+  try {
+    path = decodeURIComponent(url.split('?')[0])
+  } catch {
+    res.writeHead(400, { 'Content-Type': 'text/plain' })
+    return res.end('Bad Request')
+  }
   if (path === '/') path = '/index.html'
 
   const filePath = normalize(join(DIST, path))
@@ -92,6 +98,17 @@ const server = http.createServer(async (req, res) => {
       res.end('Not Found')
     }
   }
+}
+
+// 统一异常兜底：单个请求出错不拖垮整个静态服务
+const server = http.createServer((req, res) => {
+  handle(req, res).catch((e) => {
+    console.error('[serve] request error:', e)
+    try {
+      res.writeHead(500, { 'Content-Type': 'text/plain' })
+      res.end('Internal Error')
+    } catch { /* res 可能已结束 */ }
+  })
 })
 
 server.listen(PORT, '127.0.0.1', () => {
