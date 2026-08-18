@@ -48,3 +48,7 @@ Thumbs.db
 
 # 临时构建产物回收目录
 _build_trash/
+
+# 非代码资产：接口文档/头脑风暴交付物，不入库（本地保留）
+/apifox/
+frontend-brainstorm.html
