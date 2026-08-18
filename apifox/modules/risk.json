@@ -1,0 +1,647 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "安居租房平台 API（前端契约推导） · 风控 Risk",
+    "version": "0.1.0-progressive",
+    "description": "模块: 风控 Risk | 自动从前端契约拆分, 共 7 个接口, 4 个 DTO 组件"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "本地后端网关（开发）"
+    },
+    {
+      "url": "https://api.example.com",
+      "description": "生产环境（待替换）"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/risk/blacklist": {
+      "get": {
+        "tags": [
+          "风控 Risk"
+        ],
+        "operationId": "getBlacklist",
+        "summary": "查询风控黑名单",
+        "x-module": "风控",
+        "description": "查询参数(query)以 Record<string,unknown> 传入，含分页/筛选字段，待逐接口细化。",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "description": "分页/筛选参数（Record），如 page,size 及各业务字段",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/BlacklistItem"
+                          }
+                        },
+                        "total": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "list",
+                        "total"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/risk/rule": {
+      "get": {
+        "tags": [
+          "风控 Risk"
+        ],
+        "operationId": "getRiskRules",
+        "summary": "查询风控规则",
+        "x-module": "风控",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/BlacklistItem"
+                          }
+                        },
+                        "total": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "list",
+                        "total"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/risk/record/{userId}": {
+      "get": {
+        "tags": [
+          "风控 Risk"
+        ],
+        "operationId": "getUserRiskRecord",
+        "summary": "查询用户风控记录",
+        "x-module": "风控",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/RiskRule"
+                          }
+                        },
+                        "total": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "list",
+                        "total"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/risk/decide": {
+      "post": {
+        "tags": [
+          "风控 Risk"
+        ],
+        "operationId": "riskDecide",
+        "summary": "风控决策",
+        "x-module": "风控",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "number"
+                  },
+                  "action": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "userId",
+                  "action",
+                  "reason"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/RiskRecord"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/house/report/{id}": {
+      "get": {
+        "tags": [
+          "风控 Risk"
+        ],
+        "operationId": "getReportDetail",
+        "summary": "获取房源举报详情",
+        "x-module": "风控",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ReportItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "风控 Risk"
+        ],
+        "operationId": "updateReport",
+        "summary": "更新房源举报处理",
+        "x-module": "风控",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "handleResult": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "handleResult",
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ReportItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/house/report": {
+      "post": {
+        "tags": [
+          "风控 Risk"
+        ],
+        "operationId": "handleReport",
+        "summary": "处理房源举报",
+        "x-module": "风控",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "handleResult": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "handleResult",
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ReportItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "BlacklistItem": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number",
+            "example": 1
+          },
+          "userName": {
+            "type": "string",
+            "example": "示例"
+          },
+          "reason": {
+            "type": "string",
+            "example": "文本"
+          },
+          "createTime": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          }
+        },
+        "required": [
+          "userId",
+          "reason",
+          "createTime"
+        ]
+      },
+      "ReportItem": {
+        "type": "object",
+        "properties": {
+          "houseId": {
+            "type": "number",
+            "example": 1
+          },
+          "houseTitle": {
+            "type": "string",
+            "example": "示例"
+          },
+          "reporterId": {
+            "type": "number",
+            "example": 1
+          },
+          "reporterName": {
+            "type": "string",
+            "example": "示例"
+          },
+          "reason": {
+            "type": "string",
+            "example": "文本"
+          },
+          "status": {
+            "type": "string",
+            "example": "示例"
+          },
+          "createTime": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "handleResult": {
+            "type": "string",
+            "example": "文本"
+          }
+        },
+        "required": [
+          "houseId",
+          "reporterId",
+          "reason",
+          "status",
+          "createTime"
+        ]
+      },
+      "RiskRecord": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number",
+            "example": 1
+          },
+          "userName": {
+            "type": "string",
+            "example": "示例"
+          },
+          "action": {
+            "type": "string",
+            "example": "文本"
+          },
+          "riskLevel": {
+            "type": "string",
+            "example": "文本"
+          },
+          "detail": {
+            "type": "string",
+            "example": "文本"
+          },
+          "createTime": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          }
+        },
+        "required": [
+          "userId",
+          "action",
+          "riskLevel",
+          "detail",
+          "createTime"
+        ]
+      },
+      "RiskRule": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "示例"
+          },
+          "type": {
+            "type": "string",
+            "example": "示例"
+          },
+          "threshold": {
+            "type": "string",
+            "example": "文本"
+          },
+          "enabled": {
+            "type": "boolean",
+            "example": false
+          },
+          "description": {
+            "type": "string",
+            "example": "文本"
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "threshold",
+          "enabled"
+        ]
+      }
+    }
+  }
+}

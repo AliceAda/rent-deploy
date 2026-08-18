@@ -1,0 +1,607 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "安居租房平台 API（前端契约推导） · 用户 User",
+    "version": "0.1.0-progressive",
+    "description": "模块: 用户 User | 自动从前端契约拆分, 共 9 个接口, 8 个 DTO 组件"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "本地后端网关（开发）"
+    },
+    {
+      "url": "https://api.example.com",
+      "description": "生产环境（待替换）"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/user/me": {
+      "get": {
+        "tags": [
+          "用户 User"
+        ],
+        "operationId": "getUserProfile",
+        "summary": "查询当前用户资料",
+        "x-module": "用户中心",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/UserProfile"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "用户 User"
+        ],
+        "operationId": "updateUserProfile",
+        "summary": "更新当前用户资料（昵称/头像/性别/邮箱，无需验证码）",
+        "x-module": "用户中心",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/UserProfile"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/auth/bind-phone": {
+      "post": {
+        "tags": [
+          "用户 User"
+        ],
+        "operationId": "changePhone",
+        "summary": "换绑手机号（需新手机号验证码，对齐契约 POST /api/auth/bind-phone）",
+        "x-module": "用户中心",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePhoneData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ChangePhoneData"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/user/password/change": {
+      "post": {
+        "tags": [
+          "用户 User"
+        ],
+        "operationId": "changePassword",
+        "summary": "修改密码（需旧密码 + 当前手机号验证码）",
+        "x-module": "用户中心",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ChangePasswordData"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/user/realname": {
+      "get": {
+        "tags": [
+          "用户 User"
+        ],
+        "operationId": "getRealnameStatus",
+        "summary": "查询实名认证状态",
+        "x-module": "用户中心",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/RealnameStatus"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "用户 User"
+        ],
+        "operationId": "submitRealname",
+        "summary": "提交实名认证",
+        "x-module": "用户中心",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RealnameSubmitData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/RealnameStatus"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/user/account-cancel": {
+      "get": {
+        "tags": [
+          "用户 User"
+        ],
+        "operationId": "getAccountCancelStatus",
+        "summary": "查询账号注销状态",
+        "x-module": "用户中心",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AccountCancelStatus"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "用户 User"
+        ],
+        "operationId": "applyAccountCancel",
+        "summary": "申请注销账号",
+        "x-module": "用户中心",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountCancelData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AccountCancelData"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "用户 User"
+        ],
+        "operationId": "cancelAccountCancel",
+        "summary": "撤销注销申请",
+        "x-module": "用户中心",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AccountCancelData"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "AccountCancelData": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "reason"
+        ]
+      },
+      "AccountCancelStatus": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "example": "文本"
+          },
+          "applyTime": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "cancelAt": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          }
+        }
+      },
+      "ChangePasswordData": {
+        "type": "object",
+        "properties": {
+          "newPassword": {
+            "type": "string",
+            "example": "文本"
+          },
+          "code": {
+            "type": "string",
+            "example": "文本"
+          }
+        },
+        "required": [
+          "newPassword",
+          "code"
+        ]
+      },
+      "ChangePhoneData": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "文本"
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "RealnameStatus": {
+        "type": "object",
+        "properties": {
+          "realName": {
+            "type": "string",
+            "example": "示例"
+          },
+          "idCardMask": {
+            "type": "string",
+            "example": "文本"
+          }
+        }
+      },
+      "RealnameSubmitData": {
+        "type": "object",
+        "properties": {
+          "idCard": {
+            "type": "string",
+            "example": "文本"
+          }
+        },
+        "required": [
+          "idCard"
+        ]
+      },
+      "UpdateProfileData": {
+        "type": "object",
+        "properties": {
+          "avatar": {
+            "type": "string",
+            "example": "https://example.com/static/demo.jpg"
+          },
+          "gender": {
+            "type": "number",
+            "example": 0
+          },
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          }
+        }
+      },
+      "UserProfile": {
+        "type": "object",
+        "properties": {
+          "avatar": {
+            "type": "string",
+            "example": "https://example.com/static/demo.jpg"
+          },
+          "gender": {
+            "type": "number",
+            "example": 0
+          },
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "13800138000"
+          },
+          "certStatus": {
+            "type": "string",
+            "example": "示例"
+          }
+        }
+      }
+    }
+  }
+}

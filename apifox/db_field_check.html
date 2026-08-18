@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>数据库字段对齐校验 · rent-deploy</title>
+<style>body{font-family:-apple-system,"Segoe UI",Roboto,"Microsoft YaHei",sans-serif;background:#f6f8fa;color:#1f2328;margin:0;padding:24px;}
+.wrap{max-width:1100px;margin:0 auto;}
+h1{font-size:22px;margin:0 0 4px;} .sub{color:#57606a;margin-bottom:20px;font-size:13px;}
+.sum{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+.card{background:#fff;border:1px solid #d0d7de;border-radius:8px;padding:14px 18px;flex:1;min-width:160px;}
+.card .n{font-size:26px;font-weight:700;} .card .l{font-size:12px;color:#57606a;}
+.ok{color:#1a7f37;} .warn{color:#9a6700;} .bad{color:#cf222e;}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #d0d7de;border-radius:8px;overflow:hidden;margin-bottom:24px;font-size:13px;}
+th,td{border-bottom:1px solid #eaeef2;padding:8px 10px;text-align:left;vertical-align:top;}
+th{background:#f6f8fa;font-weight:600;}
+.tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:11px;margin:1px 2px;}
+.ts{background:#e8f0fe;color:#1a56db;} .td{background:#fde8e8;color:#cf222e;}
+.sec{font-size:16px;font-weight:700;margin:24px 0 8px;}
+code{background:#eef1f4;padding:1px 5px;border-radius:4px;font-size:12px;}
+</style></head><body><div class="wrap">
+<h1>数据库字段对齐校验</h1>
+<div class="sub">比对源：ApiFox 规范 <code>apifox/openapi.json</code> 的返回 DTO 字段 vs mock 数据库 <code>src/mock/db.ts</code> 实际存储/类型字段。仅比对顶层字段名（存在性检查），嵌套结构以顶层键为准。</div>
+<div class="sum">
+<div class="card"><div class="n ok">0</div><div class="l">字段完全一致</div></div>
+<div class="card"><div class="n warn">0</div><div class="l">存在字段差异</div></div>
+<div class="card"><div class="n">0</div><div class="l">已比对实体</div></div>
+<div class="card"><div class="n">0</div><div class="l">未自动匹配</div></div>
+</div>
+<div class="sub" style="margin-top:30px">生成说明：DB 字段优先取 db.ts 种子数据字面量，缺省时取类型接口字段；规范 DTO 字段取自 openapi.json 的 components.schemas。差异可能含字段重命名（如 coverImage↔cover）或后端转换，需人工判别真缺漏。</div>
+</div></body></html>

@@ -1,6 +1,7 @@
 <template>
-  <div class="page-max" v-loading="houseLoading">
-    <template v-if="house">
+  <div class="page-max">
+    <AppSkeleton v-if="houseLoading" :rows="8" block />
+    <template v-else-if="house">
     <el-row :gutter="20">
       <el-col :md="17">
         <!-- 画廊：房源插画图 + VR 入口（点击放大灯箱） -->
@@ -65,7 +66,7 @@
               </div>
             </div>
           </div>
-          <div class="map-ph sm">📍 真实项目接入高德 / 百度地图后展示小区定位与通勤</div>
+          <HouseMap v-if="house" :houses="[house]" :height="200" :show-tip="false" @open="openDetail" />
         </el-card>
         <el-card shadow="never" class="fee">
           <h4>费用试算</h4>
@@ -93,12 +94,7 @@
     <el-card shadow="never" class="extra">
       <el-tabs v-model="extraTab">
         <el-tab-pane label="价格历史" name="price">
-          <ul v-if="priceHistory.length" class="simple-list">
-            <li v-for="(p, i) in priceHistory" :key="i">
-              <span class="text-sub">{{ p.date }}</span>
-              <b class="price-text">¥{{ p.price }}/月</b>
-            </li>
-          </ul>
+          <RentTrendChart v-if="priceHistory.length" :data="priceHistory" />
           <el-empty v-else description="暂无价格历史" :image-size="60" />
         </el-tab-pane>
         <el-tab-pane label="房间信息" name="rooms">
@@ -238,7 +234,7 @@
       </div>
     </div>
     </template>
-    <el-empty v-else-if="!houseLoading" description="房源不存在" />
+    <el-empty v-else description="房源不存在" />
   </div>
 </template>
 
@@ -259,6 +255,9 @@ import { resolveHouse, toBrowseHouse } from '@/utils/house'
 import { houseImg, GALLERY_SCENES, SCENE_NAMES, type HouseScene } from '@/utils/houseImg'
 import { toggleCollect } from '@/utils/collect'
 import HouseCard from '@/components/HouseCard.vue'
+import AppSkeleton from '@/components/AppSkeleton.vue'
+import RentTrendChart from '@/components/RentTrendChart.vue'
+import HouseMap from '@/components/HouseMap.vue'
 import type { House } from '@/mock/data'
 
 const route = useRoute()

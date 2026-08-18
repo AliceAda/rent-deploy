@@ -7,6 +7,7 @@ import App from './App.vue'
 import router from './router'
 import { useAuthStore } from './store/auth'
 import { setUnauthorizedHandler } from './api/http'
+import '@/composables/useTheme' // 应用深色模式（首屏前执行，避免闪烁）
 import './styles/index.css'
 
 const app = createApp(App)

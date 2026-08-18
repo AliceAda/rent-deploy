@@ -1,0 +1,290 @@
+{
+  "expanded_count": 67,
+  "expanded": [
+    {
+      "name": "AccountCancelStatus",
+      "fields": 3
+    },
+    {
+      "name": "AddressItem",
+      "fields": 10
+    },
+    {
+      "name": "AdminContract",
+      "fields": 13
+    },
+    {
+      "name": "AdminHouse",
+      "fields": 9
+    },
+    {
+      "name": "AdminOrder",
+      "fields": 8
+    },
+    {
+      "name": "AdminTicket",
+      "fields": 11
+    },
+    {
+      "name": "AdminUser",
+      "fields": 7
+    },
+    {
+      "name": "AdminUserItem",
+      "fields": 4
+    },
+    {
+      "name": "BillItem",
+      "fields": 15
+    },
+    {
+      "name": "BlacklistItem",
+      "fields": 4
+    },
+    {
+      "name": "BookingItem",
+      "fields": 9
+    },
+    {
+      "name": "BrowseHistoryItem",
+      "fields": 7
+    },
+    {
+      "name": "ChangePasswordData",
+      "fields": 2
+    },
+    {
+      "name": "ChangePhoneData",
+      "fields": 1
+    },
+    {
+      "name": "CollectItem",
+      "fields": 4
+    },
+    {
+      "name": "ContentItem",
+      "fields": 9
+    },
+    {
+      "name": "ContractAttachment",
+      "fields": 5
+    },
+    {
+      "name": "ContractDetail",
+      "fields": 2
+    },
+    {
+      "name": "ContractItem",
+      "fields": 14
+    },
+    {
+      "name": "ContractTemplate",
+      "fields": 5
+    },
+    {
+      "name": "CouponItem",
+      "fields": 5
+    },
+    {
+      "name": "DashboardToday",
+      "fields": 2
+    },
+    {
+      "name": "DictItem",
+      "fields": 4
+    },
+    {
+      "name": "FinanceItem",
+      "fields": 11
+    },
+    {
+      "name": "ForgotPwdData",
+      "fields": 2
+    },
+    {
+      "name": "HotKeyword",
+      "fields": 1
+    },
+    {
+      "name": "HouseImage",
+      "fields": 4
+    },
+    {
+      "name": "HouseItem",
+      "fields": 25
+    },
+    {
+      "name": "HouseRoom",
+      "fields": 6
+    },
+    {
+      "name": "LandlordHouseStats",
+      "fields": 3
+    },
+    {
+      "name": "LogItem",
+      "fields": 5
+    },
+    {
+      "name": "LoginData",
+      "fields": 1
+    },
+    {
+      "name": "LoginResult",
+      "fields": 3
+    },
+    {
+      "name": "MessageItem",
+      "fields": 4
+    },
+    {
+      "name": "NotifySetting",
+      "fields": 4
+    },
+    {
+      "name": "OrderDetail",
+      "fields": 11
+    },
+    {
+      "name": "OrderItem",
+      "fields": 7
+    },
+    {
+      "name": "PayMethod",
+      "fields": 3
+    },
+    {
+      "name": "PayOrder",
+      "fields": 5
+    },
+    {
+      "name": "PayRecord",
+      "fields": 5
+    },
+    {
+      "name": "PointsInfo",
+      "fields": 1
+    },
+    {
+      "name": "PresignQuery",
+      "fields": 2
+    },
+    {
+      "name": "PriceHistory",
+      "fields": 1
+    },
+    {
+      "name": "RealnameStatus",
+      "fields": 2
+    },
+    {
+      "name": "RealnameSubmitData",
+      "fields": 1
+    },
+    {
+      "name": "RefundItem",
+      "fields": 5
+    },
+    {
+      "name": "RegisterData",
+      "fields": 4
+    },
+    {
+      "name": "RepairSubmit",
+      "fields": 3
+    },
+    {
+      "name": "ReportItem",
+      "fields": 8
+    },
+    {
+      "name": "ReviewItem",
+      "fields": 4
+    },
+    {
+      "name": "ReviewSubmit",
+      "fields": 1
+    },
+    {
+      "name": "RiskRecord",
+      "fields": 6
+    },
+    {
+      "name": "RiskRule",
+      "fields": 5
+    },
+    {
+      "name": "RoleItem",
+      "fields": 5
+    },
+    {
+      "name": "ScheduleItem",
+      "fields": 3
+    },
+    {
+      "name": "SearchLog",
+      "fields": 5
+    },
+    {
+      "name": "SessionItem",
+      "fields": 6
+    },
+    {
+      "name": "SignLog",
+      "fields": 4
+    },
+    {
+      "name": "SmsSendData",
+      "fields": 1
+    },
+    {
+      "name": "StatusLog",
+      "fields": 5
+    },
+    {
+      "name": "StockData",
+      "fields": 1
+    },
+    {
+      "name": "SysParam",
+      "fields": 2
+    },
+    {
+      "name": "UpdateProfileData",
+      "fields": 3
+    },
+    {
+      "name": "UserProfile",
+      "fields": 5
+    },
+    {
+      "name": "WithdrawItem",
+      "fields": 4
+    },
+    {
+      "name": "WorkOrderItem",
+      "fields": 12
+    },
+    {
+      "name": "WorkOrderLog",
+      "fields": 6
+    }
+  ],
+  "list_total_fixed": [
+    "AddressList",
+    "BillList",
+    "BookingList",
+    "CollectList",
+    "CouponList",
+    "HouseList",
+    "OrderList",
+    "PayRecordList",
+    "RefundList",
+    "ReviewList",
+    "SessionList",
+    "WithdrawList"
+  ],
+  "leftover_todo": 0,
+  "schema_total": 85,
+  "total_properties_after": 388
+}

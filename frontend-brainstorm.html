@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>前端头脑风暴 · anju-rent-frontend 演进路线图</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --panel:#ffffff; --ink:#1f2933; --muted:#647084;
+    --line:#e4e8ee; --brand:#2563eb; --brand-soft:#eef3ff;
+    --green:#16a34a; --amber:#d97706; --red:#dc2626; --violet:#7c3aed;
+    --radius:14px; --shadow:0 1px 3px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.05);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.65;font-size:15px;}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 20px 80px;}
+  header.hero{background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;border-radius:var(--radius);
+    padding:28px 30px;box-shadow:var(--shadow);}
+  header.hero h1{margin:0 0 6px;font-size:24px;letter-spacing:.5px;}
+  header.hero p{margin:0;opacity:.92;font-size:14px;}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);
+    padding:3px 10px;border-radius:999px;font-size:12.5px;}
+  section{margin-top:32px;}
+  h2{font-size:19px;margin:0 0 4px;display:flex;align-items:center;gap:9px;}
+  h2 .bar{width:5px;height:20px;background:var(--brand);border-radius:3px;display:inline-block;}
+  .sub{color:var(--muted);font-size:13.5px;margin:0 0 16px;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 22px;box-shadow:var(--shadow);}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;}
+  .theme{border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;background:var(--panel);
+    box-shadow:var(--shadow);}
+  .theme h3{margin:0 0 4px;font-size:16px;}
+  .theme .tag{font-size:11.5px;color:#fff;padding:2px 8px;border-radius:6px;display:inline-block;margin-bottom:10px;}
+  .theme ul{margin:8px 0 0;padding-left:18px;}
+  .theme li{margin:5px 0;font-size:13.6px;}
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:1px 7px;border-radius:6px;margin-right:5px;}
+  .p-high{background:#fee2e2;color:#b91c1c;}
+  .p-mid{background:#fef3c7;color:#b45309;}
+  .p-low{background:#dcfce7;color:#15803d;}
+  /* matrix */
+  .matrix-wrap{display:flex;flex-direction:column;align-items:center;}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:10px;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block;}
+  .quick{background:var(--green);} .major{background:var(--brand);}
+  .fill{background:var(--amber);} .hard{background:var(--red);}
+  table.tbl{width:100%;border-collapse:collapse;font-size:13.5px;}
+  table.tbl th,table.tbl td{border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top;}
+  table.tbl th{color:var(--muted);font-weight:600;background:#fafbfc;}
+  table.tbl tr:hover td{background:#fbfcfe;}
+  .next{background:linear-gradient(135deg,#0f172a,#1e293b);color:#e5e7eb;border-radius:var(--radius);
+    padding:22px 24px;box-shadow:var(--shadow);}
+  .next h2{color:#fff;}
+  .next ol{margin:10px 0 0;padding-left:20px;}
+  .next li{margin:7px 0;}
+  .kbd{background:#1e293b;border:1px solid #334155;color:#cbd5e1;border-radius:6px;padding:1px 7px;font-size:12px;}
+  a{color:var(--brand);text-decoration:none;}
+  .foot{color:var(--muted);font-size:12px;margin-top:28px;text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>前端头脑风暴 · 演进路线图</h1>
+    <p>项目：anju-rent-frontend（安居租房）｜ 阶段：mock 原型 + API 契约并存，后端就绪即可整体对接</p>
+    <div class="meta">
+      <span class="chip">Vue 3.4</span>
+      <span class="chip">Element Plus 2.9（全量引入）</span>
+      <span class="chip">Pinia + vue-router(hash)</span>
+      <span class="chip">ECharts 5.6</span>
+      <span class="chip">Vite 5.4 + MSW</span>
+      <span class="chip">58 视图 / 3 门户</span>
+      <span class="chip">Docker + nginx 部署</span>
+    </div>
+  </header>
+
+  <!-- 影响/成本矩阵 -->
+  <section>
+    <h2><span class="bar"></span>一、影响 × 成本 优先级矩阵</h2>
+    <p class="sub">纵轴=业务/体验影响，横轴=实施成本。优先摘「高影响·低成本」象限，再排期「高影响·高成本」战略项。</p>
+    <div class="card matrix-wrap">
+      <svg viewBox="0 0 680 460" width="100%" style="max-width:680px" role="img" aria-label="影响成本矩阵">
+        <!-- 背景象限 -->
+        <rect x="60" y="40" width="290" height="180" fill="#ecfdf5"/>
+        <rect x="350" y="40" width="270" height="180" fill="#eff6ff"/>
+        <rect x="60" y="220" width="290" height="180" fill="#fffbeb"/>
+        <rect x="350" y="220" width="270" height="180" fill="#fef2f2"/>
+        <!-- 坐标轴 -->
+        <line x1="60" y1="40" x2="60" y2="400" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="60" y1="400" x2="620" y2="400" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="20" y="230" font-size="13" fill="#475569" transform="rotate(-90 20 230)">影响 ↑</text>
+        <text x="340" y="432" font-size="13" fill="#475569">成本 →</text>
+        <!-- 象限标签 -->
+        <text x="80" y="62" font-size="12.5" fill="#15803d" font-weight="700">⚡ 速赢区 (Quick Wins)</text>
+        <text x="368" y="62" font-size="12.5" fill="#1d4ed8" font-weight="700">🚀 战略大项 (Major)</text>
+        <text x="80" y="242" font-size="12.5" fill="#b45309" font-weight="700">🧩 填充项 (Fill-ins)</text>
+        <text x="368" y="242" font-size="12.5" fill="#b91c1c" font-weight="700">⚠️ 吃力不讨好 (Hard)</text>
+        <!-- 点：x=成本(60..620) y=影响(400下..40上) 已映射 -->
+        <!-- 速赢 -->
+        <circle cx="140" cy="120" r="9" fill="#16a34a"/><text x="152" y="124" font-size="11.5" fill="#334155">Element Plus 按需引入</text>
+        <circle cx="170" cy="160" r="9" fill="#16a34a"/><text x="182" y="164" font-size="11.5" fill="#334155">虚拟列表(长列表)</text>
+        <circle cx="205" cy="100" r="9" fill="#16a34a"/><text x="217" y="104" font-size="11.5" fill="#334155">骨架屏+过渡动效</text>
+        <circle cx="240" cy="140" r="9" fill="#16a34a"/><text x="252" y="144" font-size="11.5" fill="#334155">租金趋势图(ECharts)</text>
+        <circle cx="265" cy="180" r="9" fill="#16a34a"/><text x="277" y="184" font-size="11.5" fill="#334155">房源对比雷达图</text>
+        <!-- 战略 -->
+        <circle cx="470" cy="110" r="9" fill="#2563eb"/><text x="482" y="114" font-size="11.5" fill="#334155">移动端响应式改版</text>
+        <circle cx="520" cy="90"  r="9" fill="#2563eb"/><text x="532" y="94"  font-size="11.5" fill="#334155">地图找房+周边配套</text>
+        <circle cx="500" cy="150" r="9" fill="#2563eb"/><text x="512" y="154" font-size="11.5" fill="#334155">Hash→History + SSG/SSR</text>
+        <circle cx="555" cy="130" r="9" fill="#2563eb"/><text x="567" y="134" font-size="11.5" fill="#334155">富媒体房源详情(图/视频/VR)</text>
+        <circle cx="450" cy="180" r="9" fill="#2563eb"/><text x="462" y="184" font-size="11.5" fill="#334155">AI 智能客服(ChatWidget)</text>
+        <!-- 填充 -->
+        <circle cx="150" cy="320" r="9" fill="#d97706"/><text x="162" y="324" font-size="11.5" fill="#334155">设计系统 Tokens+深色模式</text>
+        <circle cx="210" cy="360" r="9" fill="#d97706"/><text x="222" y="364" font-size="11.5" fill="#334155">i18n 国际化</text>
+        <circle cx="265" cy="300" r="9" fill="#d97706"/><text x="277" y="304" font-size="11.5" fill="#334155">测试覆盖+Storybook</text>
+        <!-- 吃力 -->
+        <circle cx="500" cy="320" r="9" fill="#dc2626"/><text x="512" y="324" font-size="11.5" fill="#334155">微前端拆分门户</text>
+        <circle cx="455" cy="360" r="9" fill="#dc2626"/><text x="467" y="364" font-size="11.5" fill="#334155">PWA 离线</text>
+      </svg>
+      <div class="legend">
+        <span><i class="dot quick"></i>速赢（先做）</span>
+        <span><i class="dot major"></i>战略大项（排期）</span>
+        <span><i class="dot fill"></i>填充项（有余力做）</span>
+        <span><i class="dot hard"></i>高成本低回报（谨慎）</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 主题头脑风暴 -->
+  <section>
+    <h2><span class="bar"></span>二、分主题创意清单</h2>
+    <p class="sub">每条标注优先级 <span class="pill p-high">高</span><span class="pill p-mid">中</span><span class="pill p-low">低</span>，可据此裁剪范围。</p>
+    <div class="grid">
+
+      <div class="theme">
+        <span class="tag" style="background:var(--green)">流量 / SEO</span>
+        <h3>面向公众的获客能力</h3>
+        <ul>
+          <li><span class="pill p-high">高</span>hash→history 模式 + 服务端渲染/静态生成，让房源页可被搜索引擎收录（当前 hash 路由对 SEO 不友好，DEPLOY.md 已自陈）。</li>
+          <li><span class="pill p-mid">中</span>每套房源注入 <code>schema.org/Residence</code> 结构化数据 + 动态 <code>meta</code>/OG 标签，提升搜索摘要与分享卡片质量。</li>
+          <li><span class="pill p-mid">中</span>站点地图(sitemap)、robots、城市/商圈聚合落地页（/city/beijing 等）做 SEO 长尾。</li>
+          <li><span class="pill p-low">低</span>SSR 首屏骨架 + 预取下一页，兼顾收录与体验。</li>
+        </ul>
+      </div>
+
+      <div class="theme">
+        <span class="tag" style="background:var(--brand)">移动优先</span>
+        <h3>租房是手机场景</h3>
+        <ul>
+          <li><span class="pill p-high">高</span>Element Plus 偏桌面，需补移动端响应式/移动端独立布局：底部 Tab 栏、抽屉筛选、手势返回。</li>
+          <li><span class="pill p-high">高</span>首页与找房页做移动端重排：地图入口、卡片流、下拉刷新、无限滚动。</li>
+          <li><span class="pill p-mid">中</span>引入 <code>viewport</code> 单位与 <code>clamp()</code> 流式排版，统一多端间距体系。</li>
+          <li><span class="pill p-low">低</span>微信/小程序同构（如需）可考虑 Taro/uni-app 复用逻辑层。</li>
+        </ul>
+      </div>
+
+      <div class="theme">
+        <span class="tag" style="background:var(--violet)">找房核心体验</span>
+        <h3>地图 · 对比 · 富媒体</h3>
+        <ul>
+          <li><span class="pill p-high">高</span>地图找房：高德/腾讯地图标点、圈选范围、周边配套（地铁/商超/学校）与通勤时间。</li>
+          <li><span class="pill p-mid">中</span>房源详情富媒体：图片画廊、视频、<b>VR 看房</b>，替代当前纯图文。</li>
+          <li><span class="pill p-mid">中</span>智能筛选升级：价格/户型/通勤等多维条件 + 保存筛选方案。</li>
+          <li><span class="pill p-low">低</span><code>Compare.vue</code> 现有对比加<b>雷达图</b>（性价比/交通/配套维度），ECharts 已就绪。</li>
+        </ul>
+      </div>
+
+      <div class="theme">
+        <span class="tag" style="background:#0891b2">AI / 智能化</span>
+        <h3>把 ChatWidget 用起来</h3>
+        <ul>
+          <li><span class="pill p-mid">中</span>深化 <code>ChatWidget.vue</code>：房东-租客 IM、自动问答（FAQ 机器人）、转人工工单。</li>
+          <li><span class="pill p-mid">中</span>AI 生成房源描述/标题，降低房东发布门槛（<code>PublishHouse.vue</code> 接入）。</li>
+          <li><span class="pill p-low">低</span>租金估价可视化：用 ECharts 画小区历史租金曲线，辅助定价。</li>
+          <li><span class="pill p-low">低</span>基于浏览历史的「猜你喜欢」推荐位（<code>Home.vue</code>）。</li>
+        </ul>
+      </div>
+
+      <div class="theme">
+        <span class="tag" style="background:#db2777">性能 / 工程</span>
+        <h3>体量与可维护性</h3>
+        <ul>
+          <li><span class="pill p-high">高</span>Element Plus <b>按需引入</b>（unplugin-auto-import + components），替换 `app.use(ElementPlus)` 全量，首包显著下降。</li>
+          <li><span class="pill p-mid">中</span>长列表（房源/工单/消息）改<b>虚拟滚动</b>，降低 DOM 与卡顿。</li>
+          <li><span class="pill p-mid">中</span>图片懒加载 + WebP/AVIF + CDN；首屏骨架屏与路由级预取。</li>
+          <li><span class="pill p-low">低</span>Bundle 分析（rollup-plugin-visualizer），按路由更细分包。</li>
+        </ul>
+      </div>
+
+      <div class="theme">
+        <span class="tag" style="background:#475569">设计 / 品牌</span>
+        <h3>统一与质感</h3>
+        <ul>
+          <li><span class="pill p-mid">中</span>建立 Design Tokens（颜色/间距/圆角/阴影 CSS 变量），统一三门户视觉。</li>
+          <li><span class="pill p-mid">中</span><b>深色模式</b>（DEPLOY.md 已预告），用 CSS 变量主题切换。</li>
+          <li><span class="pill p-mid">中</span>微交互与过渡动效体系，提升高级感。</li>
+          <li><span class="pill p-low">低</span>无障碍(a11y)：键盘导航、ARIA、对比度合规。</li>
+        </ul>
+      </div>
+
+      <div class="theme">
+        <span class="tag" style="background:#0d9488">质量 / 协作</span>
+        <h3>从原型到产品</h3>
+        <ul>
+          <li><span class="pill p-mid">中</span>补齐测试：当前仅 composables 有 vitest，补组件/接口契约测试（MSW 天然适配）。</li>
+          <li><span class="pill p-mid">中</span>Storybook 沉淀 <code>HouseCard</code> 等为基础组件库，支撑多门户复用。</li>
+          <li><span class="pill p-mid">中</span>TypeScript 严格化（strict）、E2E（Playwright）核心链路。</li>
+          <li><span class="pill p-low">低</span>CI：type-check + test + build + 预览部署门禁。</li>
+        </ul>
+      </div>
+
+      <div class="theme">
+        <span class="tag" style="background:#7c2d12">架构演进</span>
+        <h3>规模化准备</h3>
+        <ul>
+          <li><span class="pill p-mid">中</span>i18n 国际化（DEPLOY.md 已预告），vue-i18n + 文案集中。</li>
+          <li><span class="pill p-mid">中</span>Pinia 状态持久化 + 按域拆分 store，减少刷新丢失。</li>
+          <li><span class="pill p-low">低</span>微前端拆分 user/landlord/admin（成本高，仅超大团队需要，谨慎）。</li>
+          <li><span class="pill p-low">低</span>设计稿到代码：Figma 变量联动。</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 速赢清单 -->
+  <section>
+    <h2><span class="bar"></span>三、建议优先落地的「速赢」清单</h2>
+    <p class="sub">低成本、可在一两个迭代内见效，且不影响现有 mock/API 切换架构。</p>
+    <div class="card">
+      <table class="tbl">
+        <thead><tr><th>优先级</th><th>项</th><th>改动点</th><th>预期收益</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill p-high">高</span></td><td>Element Plus 按需引入</td><td>main.ts + vite.config（unplugin）</td><td>首包体积下降 30%~50%，加载更快</td></tr>
+          <tr><td><span class="pill p-high">高</span></td><td>长列表虚拟滚动</td><td>HouseList / 工单 / 消息列表</td><td>千级数据不卡顿</td></tr>
+          <tr><td><span class="pill p-mid">中</span></td><td>骨架屏 + 过渡动效</td><td>布局/路由切换封装</td><td>感知性能与高级感提升</td></tr>
+          <tr><td><span class="pill p-mid">中</span></td><td>租金趋势图</td><td>复用 ECharts（已装）</td><td>房东定价/租客决策有数据支撑</td></tr>
+          <tr><td><span class="pill p-mid">中</span></td><td>房源对比雷达图</td><td>Compare.vue + ECharts</td><td>决策效率提升</td></tr>
+          <tr><td><span class="pill p-mid">中</span></td><td>Design Tokens + 深色模式</td><td>styles/index.css 变量化</td><td>视觉统一，品牌感</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 下一步 -->
+  <section>
+    <div class="next">
+      <h2>四、下一步怎么走</h2>
+      <p class="sub" style="color:#94a3b8">选一条线，我可以直接展开成可执行的方案/原型：</p>
+      <ol>
+        <li><b>深做速赢</b>：挑上面 1~2 项，我直接改 <code>main.ts</code>/<code>vite.config.ts</code> 或补组件，给出 PR 级改动。</li>
+        <li><b>移动端改版</b>：先产出移动端信息架构 + 关键页（首页/找房/详情）高保真原型或组件骨架。</li>
+        <li><b>地图找房</b>：先定地图供应商（高德 vs 腾讯）、数据字段，再给集成方案与最小可用页。</li>
+        <li><b>SEO 改造</b>：评估 SSG（Vite + 预渲染）vs SSR（Nuxt/自建）成本，给迁移路线图。</li>
+        <li><b>AI 客服</b>：基于现有 <code>ChatWidget.vue</code> 设计 IM + FAQ 机器人方案与数据契约。</li>
+      </ol>
+      <p style="margin-top:14px;color:#94a3b8;font-size:13px">告诉我编号或自定义方向即可。也可说「全部生成方案文档（HTML）」我把每条展开成带任务拆解的规格书。</p>
+    </div>
+  </section>
+
+  <p class="foot">前端头脑风暴 · 基于 rent-deploy 当前代码现状生成 · 可随项目演进持续更新</p>
+</div>
+</body>
+</html>

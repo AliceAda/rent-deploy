@@ -77,14 +77,19 @@
         </div>
 
         <!-- 列表视图 -->
-        <el-row v-show="!mapMode" :gutter="14">
-          <el-col v-for="h in filtered" :key="h.id" :xs="24" :sm="12" :md="8">
-            <HouseCard :house="h" @open="openDetail" @fav="toggleCollect(h.id)" />
-          </el-col>
-          <el-col v-if="!filtered.length" :span="24">
-            <el-empty description="没有符合条件的房源，试试放宽筛选" />
-          </el-col>
-        </el-row>
+        <template v-if="!mapMode">
+          <div v-if="loading" class="sk-grid">
+            <AppSkeleton v-for="n in 6" :key="n" :rows="3" :avatar="true" />
+          </div>
+          <el-row v-else :gutter="14">
+            <el-col v-for="h in filtered" :key="h.id" :xs="24" :sm="12" :md="8">
+              <HouseCard :house="h" @open="openDetail" @fav="toggleCollect(h.id)" />
+            </el-col>
+            <el-col v-if="!filtered.length" :span="24">
+              <el-empty description="没有符合条件的房源，试试放宽筛选" />
+            </el-col>
+          </el-row>
+        </template>
 
         <!-- 地图找房视图：路网 + 地铁线/站 + 商圈 POI + 区域聚合 -->
         <div v-show="mapMode" class="map-wrap">
@@ -139,6 +144,44 @@
         </div>
       </el-col>
     </el-row>
+
+    <!-- 移动端筛选抽屉 -->
+    <el-button class="filter-fab" type="primary" circle @click="showFilter = true">⚙</el-button>
+    <el-drawer v-model="showFilter" title="筛选" direction="btt" size="72%">
+      <el-form label-position="top">
+        <el-form-item label="租赁方式">
+          <el-radio-group v-model="f.rent">
+            <el-radio-button label="全部" value="全部" />
+            <el-radio-button label="整租" value="整租" />
+            <el-radio-button label="合租" value="合租" />
+            <el-radio-button label="公寓" value="公寓" />
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="户型">
+          <el-select v-model="f.type" placeholder="不限" style="width: 100%">
+            <el-option label="不限" value="all" />
+            <el-option label="1室" value="1室" />
+            <el-option label="2室" value="2室" />
+            <el-option label="3室" value="3室" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="朝向">
+          <el-select v-model="f.ori" placeholder="不限" style="width: 100%">
+            <el-option label="不限" value="all" />
+            <el-option label="南" value="南" />
+            <el-option label="北" value="北" />
+            <el-option label="东" value="东" />
+            <el-option label="西" value="西" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="月租金上限：{{ f.price >= 15000 ? '不限' : f.price + '元' }}">
+          <el-slider v-model="f.price" :min="1500" :max="15000" :step="500" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" style="width: 100%" @click="showFilter = false">查看结果</el-button>
+        </el-form-item>
+      </el-form>
+    </el-drawer>
   </div>
 </template>
 
@@ -147,6 +190,7 @@ import { reactive, ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAppStore } from '@/store'
 import HouseCard from '@/components/HouseCard.vue'
+import AppSkeleton from '@/components/AppSkeleton.vue'
 import { getHouseList } from '@/api/house'
 import { useDataSource } from '@/composables/useDataSource'
 import { toBrowseHouse } from '@/utils/house'
@@ -169,6 +213,7 @@ const { data: houses, isDemo, loading, load } = useDataSource<House[]>(
   store.publicHouses
 )
 const mapMode = ref(false)
+const showFilter = ref(false)
 const active = ref<number | null>(null)
 const sort = ref('default')
 const kw = ref('')
@@ -549,5 +594,35 @@ function openDetail(id: number) {
 .map-tip {
   margin-top: 10px;
   font-size: 12px;
+}
+/* 加载骨架网格 */
+.sk-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  padding: 4px 0;
+}
+/* 移动端筛选浮窗 */
+.filter-fab {
+  display: none;
+}
+@media (max-width: 980px) {
+  .sk-grid {
+    grid-template-columns: 1fr;
+  }
+  /* 移动端隐藏侧栏筛选，改用底部抽屉 */
+  .filters {
+    display: none;
+  }
+  .filter-fab {
+    display: inline-flex;
+    position: fixed;
+    right: 16px;
+    bottom: 84px;
+    z-index: 70;
+    width: 48px;
+    height: 48px;
+    box-shadow: 0 6px 18px rgba(47, 111, 237, 0.4);
+  }
 }
 </style>

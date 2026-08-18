@@ -1,0 +1,166 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
+<style>
+ body{font-family:-apple-system,'Segoe UI',Roboto,'Microsoft YaHei',sans-serif;background:#f5f7fa;color:#1f2329;margin:0;padding:24px}
+ h1{font-size:20px;margin:0 0 4px}
+ .sub{color:#646a73;font-size:13px;margin-bottom:18px}
+ .cards{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+ .card{background:#fff;border:1px solid #e5e6eb;border-radius:10px;padding:14px 16px;min-width:120px}
+ .card .n{font-size:24px;font-weight:700;color:#165dff}
+ .card .l{font-size:12px;color:#646a73;margin-top:2px}
+ .ep{background:#fff;border:1px solid #e5e6eb;border-radius:10px;padding:16px 18px;margin-bottom:16px}
+ .ep .path{font-family:monospace;font-size:14px;background:#f2f3f5;padding:4px 8px;border-radius:6px}
+ .ep .m{display:inline-block;background:#165dff;color:#fff;font-size:11px;padding:1px 6px;border-radius:4px;margin-right:8px;vertical-align:middle}
+ .tree{margin-top:10px;font-family:monospace;font-size:13px;line-height:1.7;white-space:pre-wrap}
+ .k{color:#7a3e9d;font-weight:600}
+ .ty{color:#0f9d8a}
+ .opt{color:#c9cdd4;font-size:11px}
+ .db{color:#a8abb2;font-size:11px}
+ .ex{color:#c47f00;font-size:11px}
+ .ref{color:#165dff}
+ .note{background:#fff7e8;border:1px solid #ffe1b3;color:#8a6d3b;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:18px}
+</style></head><body>
+<h1>ApiFox 文档树 · 返回数据补齐报告</h1>
+<div class="sub">基于前端 DTO 推断 + 数据库字段对齐，将伪定义占位 DTO 展开为真实属性树。生成于 apifox/openapi.json</div>
+<div class="cards">
+<div class="card"><div class="n">67</div><div class="l">展开伪定义 DTO</div></div>
+<div class="card"><div class="n">388</div><div class="l">展开后总属性数</div></div>
+<div class="card"><div class="n">12</div><div class="l">补齐 total 的分页 List</div></div>
+<div class="card"><div class="n">0</div><div class="l">残留 TODO 占位</div></div>
+</div>
+<div class="note">说明：补齐前，HouseItem / OrderDetail / LoginResult 等 67 个 DTO 的字段被压在单个属性的 description 文本里，ApiFox 无法渲染成「返回数据」树；补齐后每个字段均为独立 property（含类型、示例值、DB 映射提示），分页 List 额外补齐 total 字段。下方为关键接口的响应 data 树。</div>
+<div class="ep">
+<div><span class="m">GET</span><span class="path">/api/house/list</span></div>
+<div class="tree">ApiResp {
+  code: integer
+  message: string
+  data: 
+<div class="ref" style="margin-left:18px">▸ <b>HouseList</b><div style="margin-left:36px"><span class="k">list</span> <span class="ty"></span></div>
+<div class="ref" style="margin-left:54px">▸ <b>HouseItem</b><div style="margin-left:72px"><span class="k">title</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:72px"><span class="k">city</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:72px"><span class="k">district</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:72px"><span class="k">community</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:72px"><span class="k">addressDetail</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:72px"><span class="k">rentType</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:72px"><span class="k">layout</span> <span class="ty">string</span> <span class="ex">= "文本"</span></div>
+<div style="margin-left:72px"><span class="k">area</span> <span class="ty">number</span> <span class="ex">= 0</span></div>
+<div style="margin-left:72px"><span class="k">floor</span> <span class="ty">string</span> <span class="ex">= "文本"</span></div>
+<div style="margin-left:72px"><span class="k">orientation</span> <span class="ty">string</span> <span class="ex">= "文本"</span></div>
+<div style="margin-left:72px"><span class="k">decoration</span> <span class="ty">string</span> <span class="ex">= "文本"</span></div>
+<div style="margin-left:72px"><span class="k">price</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:72px"><span class="k">depositType</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:72px"><span class="k">depositAmount</span> <span class="opt">?</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:72px"><span class="k">status</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:72px"><span class="k">source</span> <span class="ty">string</span> <span class="ex">= "文本"</span></div>
+<div style="margin-left:72px"><span class="k">landlordId</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:72px"><span class="k">agentId</span> <span class="opt">?</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:72px"><span class="k">description</span> <span class="ty">string</span> <span class="ex">= "文本"</span></div>
+<div style="margin-left:72px"><span class="k">videoUrl</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "https://example.com/static/demo.jpg"</span></div>
+<div style="margin-left:72px"><span class="k">coverImage</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "https://example.com/static/demo.jpg"</span></div>
+<div style="margin-left:72px"><span class="k">views</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:72px"><span class="k">collectCount</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:72px"><span class="k">grade</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:72px"><span class="k">createdAt</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "2024-01-01 00:00:00"</span></div></div>
+<div style="margin-left:36px"><span class="k">total</span> <span class="ty">integer</span> <span class="ex">= 0</span> <span class="db">总记录数（分页）</span></div></div>
+}</div>
+</div>
+<div class="ep">
+<div><span class="m">GET</span><span class="path">/api/house/{id}</span></div>
+<div class="tree">ApiResp {
+  code: integer
+  message: string
+  data: 
+<div class="ref" style="margin-left:18px">▸ <b>HouseItem</b><div style="margin-left:36px"><span class="k">title</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:36px"><span class="k">city</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:36px"><span class="k">district</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:36px"><span class="k">community</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:36px"><span class="k">addressDetail</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:36px"><span class="k">rentType</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:36px"><span class="k">layout</span> <span class="ty">string</span> <span class="ex">= "文本"</span></div>
+<div style="margin-left:36px"><span class="k">area</span> <span class="ty">number</span> <span class="ex">= 0</span></div>
+<div style="margin-left:36px"><span class="k">floor</span> <span class="ty">string</span> <span class="ex">= "文本"</span></div>
+<div style="margin-left:36px"><span class="k">orientation</span> <span class="ty">string</span> <span class="ex">= "文本"</span></div>
+<div style="margin-left:36px"><span class="k">decoration</span> <span class="ty">string</span> <span class="ex">= "文本"</span></div>
+<div style="margin-left:36px"><span class="k">price</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:36px"><span class="k">depositType</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:36px"><span class="k">depositAmount</span> <span class="opt">?</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:36px"><span class="k">status</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:36px"><span class="k">source</span> <span class="ty">string</span> <span class="ex">= "文本"</span></div>
+<div style="margin-left:36px"><span class="k">landlordId</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:36px"><span class="k">agentId</span> <span class="opt">?</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:36px"><span class="k">description</span> <span class="ty">string</span> <span class="ex">= "文本"</span></div>
+<div style="margin-left:36px"><span class="k">videoUrl</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "https://example.com/static/demo.jpg"</span></div>
+<div style="margin-left:36px"><span class="k">coverImage</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "https://example.com/static/demo.jpg"</span></div>
+<div style="margin-left:36px"><span class="k">views</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:36px"><span class="k">collectCount</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:36px"><span class="k">grade</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:36px"><span class="k">createdAt</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "2024-01-01 00:00:00"</span></div></div>
+}</div>
+</div>
+<div class="ep">
+<div><span class="m">POST</span><span class="path">/api/auth/login</span></div>
+<div class="tree">ApiResp {
+  code: integer
+  message: string
+  data: 
+<div class="ref" style="margin-left:18px">▸ <b>LoginResult</b><div style="margin-left:36px"><span class="k">refreshToken</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "文本"</span></div>
+<div style="margin-left:36px"><span class="k">userInfo</span> <span class="opt">?</span> <span class="ty">object</span> <span class="ex">= {}</span></div>
+<div style="margin-left:54px"><span class="k">id</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:54px"><span class="k">name</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:54px"><span class="k">phone</span> <span class="ty">string</span> <span class="ex">= "13800138000"</span></div>
+<div style="margin-left:54px"><span class="k">role</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:54px"><span class="k">avatar</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "https://example.com/static/demo.jpg"</span></div>
+<div style="margin-left:54px"><span class="k">gender</span> <span class="opt">?</span> <span class="ty">number</span> <span class="ex">= 0</span></div>
+<div style="margin-left:54px"><span class="k">email</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "user@example.com"</span></div>
+<div style="margin-left:36px"><span class="k">expireIn</span> <span class="opt">?</span> <span class="ty">number</span> <span class="ex">= 0</span></div></div>
+}</div>
+</div>
+<div class="ep">
+<div><span class="m">GET</span><span class="path">/api/user/address</span></div>
+<div class="tree">ApiResp {
+  code: integer
+  message: string
+  data: 
+<div class="ref" style="margin-left:18px">▸ <b>AddressList</b><div style="margin-left:36px"><span class="k">list</span> <span class="ty"></span></div>
+<div class="ref" style="margin-left:54px">▸ <b>AddressItem</b><div style="margin-left:72px"><span class="k">userId</span> <span class="opt">?</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:72px"><span class="k">contactName</span> <span class="ty">string</span> <span class="ex">= "示例"</span> <span class="db">DB: contact_name</span></div>
+<div style="margin-left:72px"><span class="k">phone</span> <span class="ty">string</span> <span class="ex">= "13800138000"</span> <span class="db">DB: phone</span></div>
+<div style="margin-left:72px"><span class="k">provinceId</span> <span class="opt">?</span> <span class="ty">number</span> <span class="ex">= 1</span> <span class="db">DB: province_id（int，关联 region 表）</span></div>
+<div style="margin-left:72px"><span class="k">cityId</span> <span class="opt">?</span> <span class="ty">number</span> <span class="ex">= 1</span> <span class="db">DB: city_id</span></div>
+<div style="margin-left:72px"><span class="k">districtId</span> <span class="opt">?</span> <span class="ty">number</span> <span class="ex">= 1</span> <span class="db">DB: district_id</span></div>
+<div style="margin-left:72px"><span class="k">detail</span> <span class="ty">string</span> <span class="ex">= "文本"</span> <span class="db">DB: detail</span></div>
+<div style="margin-left:72px"><span class="k">tag</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "示例"</span> <span class="db">DB: tag（家/公司/其他）</span></div>
+<div style="margin-left:72px"><span class="k">isDefault</span> <span class="ty">boolean</span> <span class="ex">= false</span> <span class="db">DB: is_default</span></div>
+<div style="margin-left:72px"><span class="k">createdAt</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "2024-01-01 00:00:00"</span></div></div>
+<div style="margin-left:36px"><span class="k">total</span> <span class="ty">integer</span> <span class="ex">= 0</span> <span class="db">总记录数（分页）</span></div></div>
+}</div>
+</div>
+<div class="ep">
+<div><span class="m">GET</span><span class="path">/api/order/{id}</span></div>
+<div class="tree">ApiResp {
+  code: integer
+  message: string
+  data: 
+<div class="ref" style="margin-left:18px">▸ <b>OrderDetail</b><div style="margin-left:36px"><span class="k">rentType</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:36px"><span class="k">startDate</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "2024-01-01 00:00:00"</span></div>
+<div style="margin-left:36px"><span class="k">endDate</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "2024-01-01 00:00:00"</span></div>
+<div style="margin-left:36px"><span class="k">payTime</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "2024-01-01 00:00:00"</span></div>
+<div style="margin-left:36px"><span class="k">checkinTime</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "2024-01-01 00:00:00"</span></div>
+<div style="margin-left:36px"><span class="k">tenantId</span> <span class="opt">?</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:36px"><span class="k">tenantName</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:36px"><span class="k">tenantPhone</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "13800138000"</span></div>
+<div style="margin-left:36px"><span class="k">landlordId</span> <span class="opt">?</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:36px"><span class="k">landlordName</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div>
+<div style="margin-left:36px"><span class="k">remark</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div></div>
+}</div>
+</div>
+<div class="ep">
+<div><span class="m">GET</span><span class="path">/api/contract/{id}</span></div>
+<div class="tree">ApiResp {
+  code: integer
+  message: string
+  data: 
+<div class="ref" style="margin-left:18px">▸ <b>ContractDetail</b><div style="margin-left:36px"><span class="k">templateId</span> <span class="opt">?</span> <span class="ty">number</span> <span class="ex">= 1</span></div>
+<div style="margin-left:36px"><span class="k">remark</span> <span class="opt">?</span> <span class="ty">string</span> <span class="ex">= "示例"</span></div></div>
+}</div>
+</div>
+</body></html>

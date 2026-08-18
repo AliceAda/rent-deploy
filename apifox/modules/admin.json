@@ -1,0 +1,2782 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "安居租房平台 API（前端契约推导） · 后台 Admin",
+    "version": "0.1.0-progressive",
+    "description": "模块: 后台 Admin | 自动从前端契约拆分, 共 40 个接口, 17 个 DTO 组件"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "本地后端网关（开发）"
+    },
+    {
+      "url": "https://api.example.com",
+      "description": "生产环境（待替换）"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/admin/contents": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getAdminContents",
+        "summary": "getAdminContents",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ContentItem"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "createAdminContent",
+        "summary": "createAdminContent",
+        "x-module": "平台后台",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContentItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ContentItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/contents/{id}": {
+      "put": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "updateAdminContent",
+        "summary": "updateAdminContent",
+        "x-module": "平台后台",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContentItem"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ContentItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/contents/{id}/publish": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "publishAdminContent",
+        "summary": "publishAdminContent",
+        "x-module": "平台后台",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ContentItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/contents/{id}/offline": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "offlineAdminContent",
+        "summary": "offlineAdminContent",
+        "x-module": "平台后台",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ContentItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/contracts": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getAdminContracts",
+        "summary": "getAdminContracts",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdminContract"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/contracts/{id}/remind": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "remindContract",
+        "summary": "remindContract",
+        "x-module": "平台后台",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AdminContract"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/contracts/{id}/cancel": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "cancelContract",
+        "summary": "cancelContract",
+        "x-module": "平台后台",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AdminContract"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/finances": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getAdminFinances",
+        "summary": "getAdminFinances",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/FinanceItem"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/finances/{id}/withdraw": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "withdrawFinance",
+        "summary": "withdrawFinance",
+        "x-module": "平台后台",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/FinanceItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/finances/{id}/dispute": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "disputeFinance",
+        "summary": "disputeFinance",
+        "x-module": "平台后台",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/FinanceItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/houses": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getAdminHouses",
+        "summary": "getAdminHouses",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdminHouse"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/houses/audit": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "auditHouse",
+        "summary": "auditHouse",
+        "x-module": "平台后台",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AdminHouse"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/houses/reject": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "rejectHouse",
+        "summary": "rejectHouse",
+        "x-module": "平台后台",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AdminHouse"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/statistics/gmv": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getGmvStat",
+        "summary": "getGmvStat",
+        "x-module": "平台后台",
+        "description": "查询参数(query)以 Record<string,unknown> 传入，含分页/筛选字段，待逐接口细化。",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "description": "分页/筛选参数（Record），如 page,size 及各业务字段",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/GmvData"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/statistics/stock": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getStockStat",
+        "summary": "getStockStat",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/StockData"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/statistics/today": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getDashboardToday",
+        "summary": "工作台今日指标",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/DashboardToday"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/statistics/export": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "exportStat",
+        "summary": "exportStat",
+        "x-module": "平台后台",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dim": {
+                    "type": "string"
+                  },
+                  "range": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "dim",
+                  "range"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/PresignQuery"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/system/roles": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getAdminRoles",
+        "summary": "getAdminRoles",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RoleItem"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "createAdminRole",
+        "summary": "createAdminRole",
+        "x-module": "平台后台",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/RoleItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/system/roles/{id}": {
+      "put": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "updateAdminRole",
+        "summary": "updateAdminRole",
+        "x-module": "平台后台",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleItem"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/RoleItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "deleteAdminRole",
+        "summary": "deleteAdminRole",
+        "x-module": "平台后台",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "无返回数据（成功仅 code=0）"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/system/admins": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getAdminUsers",
+        "summary": "getAdminUsers",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdminUserItem"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "createAdminUser",
+        "summary": "createAdminUser",
+        "x-module": "平台后台",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminUserItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AdminUserItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/system/admins/{id}": {
+      "put": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "updateAdminUser",
+        "summary": "updateAdminUser",
+        "x-module": "平台后台",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminUserItem"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AdminUserItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/system/admins/{id}/toggle-status": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "toggleAdminUser",
+        "summary": "toggleAdminUser",
+        "x-module": "平台后台",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AdminUserItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/system/menus": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getAdminMenus",
+        "summary": "getAdminMenus",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MenuItem"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/system/dicts": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getAdminDicts",
+        "summary": "getAdminDicts",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DictItem"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/system/logs": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getAdminLogs",
+        "summary": "getAdminLogs",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LogItem"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/system/params": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getSysParams",
+        "summary": "getSysParams",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/SysParam"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "saveSysParams",
+        "summary": "saveSysParams",
+        "x-module": "平台后台",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SysParam"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SysParam"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/tickets": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getAdminTickets",
+        "summary": "getAdminTickets",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdminTicket"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/tickets/{id}/assign": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "assignTicket",
+        "summary": "assignTicket",
+        "x-module": "平台后台",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AdminTicket"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/tickets/{id}/transfer": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "transferTicket",
+        "summary": "transferTicket",
+        "x-module": "平台后台",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "handler": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "handler"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AdminTicket"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/tickets/{id}/visit": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "visitTicket",
+        "summary": "visitTicket",
+        "x-module": "平台后台",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AdminTicket"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/orders": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getAdminOrders",
+        "summary": "getAdminOrders",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdminOrder"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/orders/{id}/confirm": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "confirmOrder",
+        "summary": "confirmOrder",
+        "x-module": "平台后台",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AdminOrder"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/orders/{id}/refund": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "refundOrder",
+        "summary": "refundOrder",
+        "x-module": "平台后台",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AdminOrder"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/users": {
+      "get": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "getAdminUserList",
+        "summary": "getAdminUserList",
+        "x-module": "平台后台",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdminUser"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/admin/users/{id}/toggle-status": {
+      "post": {
+        "tags": [
+          "后台 Admin"
+        ],
+        "operationId": "toggleUserStatus",
+        "summary": "toggleUserStatus",
+        "x-module": "平台后台",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AdminUserItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "AdminContract": {
+        "type": "object",
+        "properties": {
+          "contractNo": {
+            "type": "string",
+            "example": "文本"
+          },
+          "houseId": {
+            "type": "number",
+            "example": 1
+          },
+          "houseTitle": {
+            "type": "string",
+            "example": "示例"
+          },
+          "tenantId": {
+            "type": "number",
+            "example": 1
+          },
+          "tenantName": {
+            "type": "string",
+            "example": "示例"
+          },
+          "landlordId": {
+            "type": "number",
+            "example": 1
+          },
+          "landlordName": {
+            "type": "string",
+            "example": "示例"
+          },
+          "startDate": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "endDate": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "monthlyRent": {
+            "type": "number",
+            "example": 0
+          },
+          "deposit": {
+            "type": "number",
+            "example": 0
+          },
+          "status": {
+            "type": "string",
+            "description": "待签署/生效中/已到期/已终止",
+            "example": "示例"
+          },
+          "signedAt": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          }
+        },
+        "required": [
+          "contractNo",
+          "houseTitle",
+          "tenantName",
+          "landlordName",
+          "status"
+        ]
+      },
+      "AdminHouse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "示例"
+          },
+          "district": {
+            "type": "string",
+            "example": "示例"
+          },
+          "layout": {
+            "type": "string",
+            "example": "文本"
+          },
+          "area": {
+            "type": "number",
+            "example": 0
+          },
+          "price": {
+            "type": "number",
+            "example": 1
+          },
+          "source": {
+            "type": "string",
+            "example": "文本"
+          },
+          "status": {
+            "type": "string",
+            "description": "待审核/可租/已租/已下架/违规",
+            "example": "示例"
+          },
+          "depositType": {
+            "type": "string",
+            "example": "示例"
+          },
+          "description": {
+            "type": "string",
+            "example": "文本"
+          }
+        },
+        "required": [
+          "title",
+          "status"
+        ]
+      },
+      "AdminOrder": {
+        "type": "object",
+        "properties": {
+          "orderNo": {
+            "type": "string",
+            "example": "文本"
+          },
+          "houseTitle": {
+            "type": "string",
+            "example": "示例"
+          },
+          "type": {
+            "type": "string",
+            "description": "看房预约/预订",
+            "example": "示例"
+          },
+          "tenantName": {
+            "type": "string",
+            "example": "示例"
+          },
+          "agent": {
+            "type": "string",
+            "example": "文本"
+          },
+          "amount": {
+            "type": "number",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "example": "示例"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          }
+        },
+        "required": [
+          "orderNo",
+          "type",
+          "amount",
+          "status"
+        ]
+      },
+      "AdminTicket": {
+        "type": "object",
+        "properties": {
+          "ticketNo": {
+            "type": "string",
+            "example": "文本"
+          },
+          "type": {
+            "type": "string",
+            "description": "报修/投诉",
+            "example": "示例"
+          },
+          "houseId": {
+            "type": "number",
+            "example": 1
+          },
+          "houseTitle": {
+            "type": "string",
+            "example": "示例"
+          },
+          "tenantId": {
+            "type": "number",
+            "example": 1
+          },
+          "tenantName": {
+            "type": "string",
+            "example": "示例"
+          },
+          "content": {
+            "type": "string",
+            "example": "文本"
+          },
+          "status": {
+            "type": "string",
+            "description": "待分派/处理中/待回访/已关闭",
+            "example": "示例"
+          },
+          "handler": {
+            "type": "string",
+            "example": "文本"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "closedAt": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          }
+        },
+        "required": [
+          "ticketNo",
+          "type",
+          "content",
+          "status"
+        ]
+      },
+      "AdminUser": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "示例"
+          },
+          "role": {
+            "type": "string",
+            "description": "租客/房东/经纪人",
+            "example": "示例"
+          },
+          "phone": {
+            "type": "string",
+            "example": "13800138000"
+          },
+          "certStatus": {
+            "type": "string",
+            "description": "已认证/待审核/未认证",
+            "example": "示例"
+          },
+          "creditScore": {
+            "type": "number",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "description": "正常/冻结",
+            "example": "示例"
+          },
+          "regTime": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          }
+        },
+        "required": [
+          "name",
+          "role",
+          "phone",
+          "status"
+        ]
+      },
+      "AdminUserItem": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "example": "文本"
+          },
+          "role": {
+            "type": "string",
+            "example": "示例"
+          },
+          "status": {
+            "type": "string",
+            "example": "示例"
+          },
+          "last": {
+            "type": "string",
+            "example": "文本"
+          }
+        },
+        "required": [
+          "user",
+          "role",
+          "status"
+        ]
+      },
+      "ContentItem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "公告/资讯/Banner/帮助中心",
+            "example": "示例"
+          },
+          "title": {
+            "type": "string",
+            "example": "示例"
+          },
+          "cover": {
+            "type": "string",
+            "example": "https://example.com/static/demo.jpg"
+          },
+          "body": {
+            "type": "string",
+            "example": "文本"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://example.com/static/demo.jpg"
+          },
+          "sort": {
+            "type": "number",
+            "example": 0
+          },
+          "status": {
+            "type": "string",
+            "description": "草稿/已发布",
+            "example": "示例"
+          },
+          "publishTime": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "body",
+          "status"
+        ]
+      },
+      "DashboardToday": {
+        "type": "object",
+        "properties": {
+          "newOrder": {
+            "type": "number",
+            "example": 0
+          },
+          "deal": {
+            "type": "number",
+            "example": 0
+          }
+        },
+        "required": [
+          "newOrder",
+          "deal"
+        ]
+      },
+      "DictItem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "示例"
+          },
+          "label": {
+            "type": "string",
+            "example": "文本"
+          },
+          "value": {
+            "type": "string",
+            "example": "文本"
+          },
+          "remark": {
+            "type": "string",
+            "example": "示例"
+          }
+        },
+        "required": [
+          "type",
+          "label",
+          "value"
+        ]
+      },
+      "FinanceItem": {
+        "type": "object",
+        "properties": {
+          "settleNo": {
+            "type": "string",
+            "example": "文本"
+          },
+          "bizDesc": {
+            "type": "string",
+            "example": "文本"
+          },
+          "orderId": {
+            "type": "number",
+            "example": 1
+          },
+          "houseId": {
+            "type": "number",
+            "example": 1
+          },
+          "totalAmount": {
+            "type": "number",
+            "example": 1
+          },
+          "platformFee": {
+            "type": "number",
+            "example": 0
+          },
+          "landlordAmount": {
+            "type": "number",
+            "example": 1
+          },
+          "agentAmount": {
+            "type": "number",
+            "example": 1
+          },
+          "settleStatus": {
+            "type": "string",
+            "description": "冻结/已结算/已提现",
+            "example": "示例"
+          },
+          "settleDate": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          }
+        },
+        "required": [
+          "settleNo",
+          "bizDesc",
+          "totalAmount",
+          "platformFee",
+          "landlordAmount",
+          "agentAmount",
+          "settleStatus"
+        ]
+      },
+      "GmvData": {
+        "type": "object",
+        "properties": {
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "labels"
+        ]
+      },
+      "LogItem": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number",
+            "example": 1
+          },
+          "module": {
+            "type": "string",
+            "example": "文本"
+          },
+          "action": {
+            "type": "string",
+            "example": "文本"
+          },
+          "ip": {
+            "type": "string",
+            "example": "文本"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          }
+        },
+        "required": [
+          "module",
+          "action"
+        ]
+      },
+      "MenuItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "TODO: 待定义类型 number\n  name: string\n  path: string\n  perm: string\n  children?: MenuItem"
+            }
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "PresignQuery": {
+        "type": "object",
+        "properties": {
+          "bizType": {
+            "type": "string",
+            "example": "示例"
+          },
+          "objectKey": {
+            "type": "string",
+            "example": "文本"
+          }
+        },
+        "required": [
+          "bizType",
+          "objectKey"
+        ]
+      },
+      "RoleItem": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "文本"
+          },
+          "name": {
+            "type": "string",
+            "example": "示例"
+          },
+          "remark": {
+            "type": "string",
+            "example": "示例"
+          },
+          "status": {
+            "type": "number",
+            "example": 0
+          },
+          "perms": {
+            "type": "string",
+            "example": "文本"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "StockData": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "example": 0
+          }
+        },
+        "required": [
+          "value"
+        ]
+      },
+      "SysParam": {
+        "type": "object",
+        "properties": {
+          "feeRate": {
+            "type": "number",
+            "example": 0
+          },
+          "minImg": {
+            "type": "number",
+            "example": 0
+          }
+        },
+        "required": [
+          "feeRate",
+          "minImg"
+        ]
+      }
+    }
+  }
+}

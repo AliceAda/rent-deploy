@@ -1,0 +1,4317 @@
+{
+ "summary": {
+  "sql_tables": 102,
+  "sql_columns": 900,
+  "dto_total": 85,
+  "dto_mapped": 45,
+  "fields_checked": 425,
+  "fields_matched": 270,
+  "missing_total": 155,
+  "miss_time": 37,
+  "miss_derived": 28,
+  "miss_rename": 60,
+  "miss_orphan": 30,
+  "typemis_total": 4,
+  "hint_issues": 0,
+  "unmapped_dto": []
+ },
+ "rows": [
+  {
+   "dto": "AccountCancelStatus",
+   "table": "account_cancel",
+   "total": 3,
+   "matched": 1,
+   "missing": [
+    {
+     "field": "applyTime",
+     "target": "apply_time",
+     "opt": true,
+     "db": null,
+     "cat": "time"
+    },
+    {
+     "field": "cancelAt",
+     "target": "cancel_at",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "status",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "processed_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 6
+  },
+  {
+   "dto": "BlacklistItem",
+   "table": "blacklist",
+   "total": 4,
+   "matched": 2,
+   "missing": [
+    {
+     "field": "userName",
+     "target": "user_name",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "operator_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "expire_at",
+     "type": "datetime",
+     "comment": "NULL=永久"
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 7
+  },
+  {
+   "dto": "BookingItem",
+   "table": "booking",
+   "total": 9,
+   "matched": 4,
+   "missing": [
+    {
+     "field": "houseTitle",
+     "target": "house_title",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "userId",
+     "target": "user_id",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "userName",
+     "target": "user_name",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "userPhone",
+     "target": "user_phone",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "no",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "landlord_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "phone",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 11
+  },
+  {
+   "dto": "BookingList",
+   "table": "booking",
+   "total": 9,
+   "matched": 4,
+   "missing": [
+    {
+     "field": "houseTitle",
+     "target": "house_title",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "userId",
+     "target": "user_id",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "userName",
+     "target": "user_name",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "userPhone",
+     "target": "user_phone",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "no",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "landlord_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "phone",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 11
+  },
+  {
+   "dto": "ContentItem",
+   "table": "content",
+   "total": 9,
+   "matched": 9,
+   "missing": [],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    }
+   ],
+   "col_count": 10
+  },
+  {
+   "dto": "AdminContract",
+   "table": "contract",
+   "total": 13,
+   "matched": 13,
+   "missing": [],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "room_id",
+     "type": "int",
+     "comment": "合租房间"
+    },
+    {
+     "col": "agent_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "template_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "term_months",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "pay_frequency",
+     "type": "varchar",
+     "comment": "付频（月/季/年）"
+    },
+    {
+     "col": "terminate_type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "termination_reason",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "terminated_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "renewal_count",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "snapshot",
+     "type": "json",
+     "comment": "签约时房源/条款快照（下架后冻结）"
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 25
+  },
+  {
+   "dto": "ContractDetail",
+   "table": "contract",
+   "total": 2,
+   "matched": 1,
+   "missing": [
+    {
+     "field": "remark",
+     "target": "remark",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "contract_no",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "house_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "room_id",
+     "type": "int",
+     "comment": "合租房间"
+    },
+    {
+     "col": "house_title",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "tenant_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "landlord_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "landlord_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "agent_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "start_date",
+     "type": "date",
+     "comment": ""
+    },
+    {
+     "col": "end_date",
+     "type": "date",
+     "comment": ""
+    },
+    {
+     "col": "term_months",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "monthly_rent",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "deposit",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "pay_frequency",
+     "type": "varchar",
+     "comment": "付频（月/季/年）"
+    },
+    {
+     "col": "status",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "signed_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "terminate_type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "termination_reason",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "terminated_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "renewal_count",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "snapshot",
+     "type": "json",
+     "comment": "签约时房源/条款快照（下架后冻结）"
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 25
+  },
+  {
+   "dto": "ContractItem",
+   "table": "contract",
+   "total": 14,
+   "matched": 12,
+   "missing": [
+    {
+     "field": "rentAmount",
+     "target": "rent_amount",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "depositAmount",
+     "target": "deposit_amount",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "room_id",
+     "type": "int",
+     "comment": "合租房间"
+    },
+    {
+     "col": "agent_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "template_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "term_months",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "monthly_rent",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "deposit",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "pay_frequency",
+     "type": "varchar",
+     "comment": "付频（月/季/年）"
+    },
+    {
+     "col": "terminate_type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "termination_reason",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "renewal_count",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "snapshot",
+     "type": "json",
+     "comment": "签约时房源/条款快照（下架后冻结）"
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 25
+  },
+  {
+   "dto": "ContractAttachment",
+   "table": "contract_attachment",
+   "total": 5,
+   "matched": 3,
+   "missing": [
+    {
+     "field": "type",
+     "target": "type",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_id",
+     "type": "bigint",
+     "comment": "冗余分片键(UG):写入时由服务层填充租户 user_id"
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 6
+  },
+  {
+   "dto": "SignLog",
+   "table": "contract_sign_log",
+   "total": 4,
+   "matched": 0,
+   "missing": [
+    {
+     "field": "action",
+     "target": "action",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "operator",
+     "target": "operator",
+     "opt": false,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "remark",
+     "target": "remark",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_id",
+     "type": "bigint",
+     "comment": "冗余分片键(UG):写入时由服务层填充租户 user_id"
+    },
+    {
+     "col": "contract_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "signer_id",
+     "type": "int",
+     "comment": "签署人 → user.id"
+    },
+    {
+     "col": "signer_role",
+     "type": "varchar",
+     "comment": "tenant/landlord/agent"
+    },
+    {
+     "col": "sign_status",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "signed_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "ip",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "ca_info",
+     "type": "varchar",
+     "comment": "CA/电子签信息"
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 10
+  },
+  {
+   "dto": "StatusLog",
+   "table": "contract_status_log",
+   "total": 5,
+   "matched": 2,
+   "missing": [
+    {
+     "field": "operator",
+     "target": "operator",
+     "opt": false,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "remark",
+     "target": "remark",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_id",
+     "type": "bigint",
+     "comment": "冗余分片键(UG):写入时由服务层填充租户 user_id"
+    },
+    {
+     "col": "contract_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "operator_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "reason",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 8
+  },
+  {
+   "dto": "ContractTemplate",
+   "table": "contract_template",
+   "total": 5,
+   "matched": 3,
+   "missing": [
+    {
+     "field": "type",
+     "target": "type",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [
+    {
+     "field": "status",
+     "dt": "string",
+     "col": "status",
+     "st": "tinyint"
+    }
+   ],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "version",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 6
+  },
+  {
+   "dto": "CouponItem",
+   "table": "coupon",
+   "total": 5,
+   "matched": 3,
+   "missing": [
+    {
+     "field": "amount",
+     "target": "amount",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "expireAt",
+     "target": "expire_at",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [
+    {
+     "field": "status",
+     "dt": "string",
+     "col": "status",
+     "st": "tinyint"
+    }
+   ],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "value",
+     "type": "decimal",
+     "comment": "满减金额或折扣率"
+    },
+    {
+     "col": "valid_from",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "valid_to",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 9
+  },
+  {
+   "dto": "CouponList",
+   "table": "coupon",
+   "total": 5,
+   "matched": 3,
+   "missing": [
+    {
+     "field": "amount",
+     "target": "amount",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "expireAt",
+     "target": "expire_at",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [
+    {
+     "field": "status",
+     "dt": "string",
+     "col": "status",
+     "st": "tinyint"
+    }
+   ],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "value",
+     "type": "decimal",
+     "comment": "满减金额或折扣率"
+    },
+    {
+     "col": "valid_from",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "valid_to",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 9
+  },
+  {
+   "dto": "BillItem",
+   "table": "fee_bill",
+   "total": 15,
+   "matched": 7,
+   "missing": [
+    {
+     "field": "billNo",
+     "target": "bill_no",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "houseTitle",
+     "target": "house_title",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "title",
+     "target": "title",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "paid",
+     "target": "paid",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "period",
+     "target": "period",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "payTime",
+     "target": "pay_time",
+     "opt": true,
+     "db": null,
+     "cat": "time"
+    },
+    {
+     "field": "orderId",
+     "target": "order_id",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "tenantName",
+     "target": "tenant_name",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "contract_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "payer_id",
+     "type": "int",
+     "comment": "付费方"
+    },
+    {
+     "col": "due_date",
+     "type": "date",
+     "comment": ""
+    },
+    {
+     "col": "paid_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "payment_id",
+     "type": "int",
+     "comment": ""
+    }
+   ],
+   "col_count": 13
+  },
+  {
+   "dto": "BillList",
+   "table": "fee_bill",
+   "total": 15,
+   "matched": 7,
+   "missing": [
+    {
+     "field": "billNo",
+     "target": "bill_no",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "houseTitle",
+     "target": "house_title",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "title",
+     "target": "title",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "paid",
+     "target": "paid",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "period",
+     "target": "period",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "payTime",
+     "target": "pay_time",
+     "opt": true,
+     "db": null,
+     "cat": "time"
+    },
+    {
+     "field": "orderId",
+     "target": "order_id",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "tenantName",
+     "target": "tenant_name",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "contract_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "payer_id",
+     "type": "int",
+     "comment": "付费方"
+    },
+    {
+     "col": "due_date",
+     "type": "date",
+     "comment": ""
+    },
+    {
+     "col": "paid_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "payment_id",
+     "type": "int",
+     "comment": ""
+    }
+   ],
+   "col_count": 13
+  },
+  {
+   "dto": "FinanceItem",
+   "table": "finance_settlement",
+   "total": 11,
+   "matched": 11,
+   "missing": [],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    }
+   ],
+   "col_count": 12
+  },
+  {
+   "dto": "HotKeyword",
+   "table": "hot_search",
+   "total": 1,
+   "matched": 0,
+   "missing": [
+    {
+     "field": "count",
+     "target": "count",
+     "opt": false,
+     "db": null,
+     "cat": "orphan"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "keyword",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "city",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "hit_count",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "stat_date",
+     "type": "date",
+     "comment": ""
+    }
+   ],
+   "col_count": 5
+  },
+  {
+   "dto": "AdminHouse",
+   "table": "house",
+   "total": 9,
+   "matched": 9,
+   "missing": [],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "building_id",
+     "type": "int",
+     "comment": "所属小区/楼栋 → building.id"
+    },
+    {
+     "col": "region_id",
+     "type": "int",
+     "comment": "区县 → region.id"
+    },
+    {
+     "col": "city",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "community",
+     "type": "varchar",
+     "comment": "小区名（冗余 building.name 便于检索）"
+    },
+    {
+     "col": "address_detail",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "rent_type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "room_count",
+     "type": "tinyint",
+     "comment": "室数"
+    },
+    {
+     "col": "hall_count",
+     "type": "tinyint",
+     "comment": "厅数"
+    },
+    {
+     "col": "toilet_count",
+     "type": "tinyint",
+     "comment": "卫数"
+    },
+    {
+     "col": "floor",
+     "type": "varchar",
+     "comment": "楼层/总层 如 8/18"
+    },
+    {
+     "col": "orientation",
+     "type": "varchar",
+     "comment": "朝向"
+    },
+    {
+     "col": "decoration",
+     "type": "varchar",
+     "comment": "装修"
+    },
+    {
+     "col": "deposit_amount",
+     "type": "decimal",
+     "comment": "押金金额（合租按房间）"
+    },
+    {
+     "col": "landlord_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "agent_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "video_url",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "lng",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "lat",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "grade",
+     "type": "decimal",
+     "comment": "评分"
+    },
+    {
+     "col": "views",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "collect_count",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "cover_image",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "published_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "updated_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 35
+  },
+  {
+   "dto": "HouseItem",
+   "table": "house",
+   "total": 25,
+   "matched": 25,
+   "missing": [],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "building_id",
+     "type": "int",
+     "comment": "所属小区/楼栋 → building.id"
+    },
+    {
+     "col": "region_id",
+     "type": "int",
+     "comment": "区县 → region.id"
+    },
+    {
+     "col": "room_count",
+     "type": "tinyint",
+     "comment": "室数"
+    },
+    {
+     "col": "hall_count",
+     "type": "tinyint",
+     "comment": "厅数"
+    },
+    {
+     "col": "toilet_count",
+     "type": "tinyint",
+     "comment": "卫数"
+    },
+    {
+     "col": "lng",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "lat",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "published_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "updated_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 35
+  },
+  {
+   "dto": "HouseList",
+   "table": "house",
+   "total": 25,
+   "matched": 25,
+   "missing": [],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "building_id",
+     "type": "int",
+     "comment": "所属小区/楼栋 → building.id"
+    },
+    {
+     "col": "region_id",
+     "type": "int",
+     "comment": "区县 → region.id"
+    },
+    {
+     "col": "room_count",
+     "type": "tinyint",
+     "comment": "室数"
+    },
+    {
+     "col": "hall_count",
+     "type": "tinyint",
+     "comment": "厅数"
+    },
+    {
+     "col": "toilet_count",
+     "type": "tinyint",
+     "comment": "卫数"
+    },
+    {
+     "col": "lng",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "lat",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "published_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "updated_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 35
+  },
+  {
+   "dto": "HouseImage",
+   "table": "house_image",
+   "total": 4,
+   "matched": 3,
+   "missing": [
+    {
+     "field": "type",
+     "target": "type",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "region_id",
+     "type": "int",
+     "comment": "冗余分片键(HG):写入时由服务层填充房源所在城市 region_id"
+    },
+    {
+     "col": "media_type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "is_cover",
+     "type": "tinyint",
+     "comment": ""
+    }
+   ],
+   "col_count": 7
+  },
+  {
+   "dto": "PriceHistory",
+   "table": "house_price_history",
+   "total": 1,
+   "matched": 0,
+   "missing": [
+    {
+     "field": "price",
+     "target": "price",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "region_id",
+     "type": "int",
+     "comment": "冗余分片键(HG):写入时由服务层填充房源所在城市 region_id"
+    },
+    {
+     "col": "house_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "old_price",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "new_price",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "operator_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "reason",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 8
+  },
+  {
+   "dto": "ReportItem",
+   "table": "house_report",
+   "total": 8,
+   "matched": 4,
+   "missing": [
+    {
+     "field": "houseTitle",
+     "target": "house_title",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "reporterName",
+     "target": "reporter_name",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    },
+    {
+     "field": "handleResult",
+     "target": "handle_result",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "region_id",
+     "type": "int",
+     "comment": "冗余分片键(HG):写入时由服务层填充房源所在城市 region_id"
+    },
+    {
+     "col": "handler",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 8
+  },
+  {
+   "dto": "HouseRoom",
+   "table": "house_room",
+   "total": 6,
+   "matched": 4,
+   "missing": [
+    {
+     "field": "name",
+     "target": "name",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "price",
+     "target": "price",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "region_id",
+     "type": "int",
+     "comment": "冗余分片键(HG):写入时由服务层填充房源所在城市 region_id"
+    },
+    {
+     "col": "room_name",
+     "type": "varchar",
+     "comment": "主卧/次卧/单间"
+    },
+    {
+     "col": "rent_price",
+     "type": "decimal",
+     "comment": "本间月租"
+    },
+    {
+     "col": "deposit",
+     "type": "decimal",
+     "comment": "本间押金"
+    },
+    {
+     "col": "has_window",
+     "type": "tinyint",
+     "comment": ""
+    },
+    {
+     "col": "gender_limit",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "tenant_id",
+     "type": "int",
+     "comment": "当前承租租客（空=未租）"
+    },
+    {
+     "col": "tenant_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "lease_end",
+     "type": "date",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 15
+  },
+  {
+   "dto": "ScheduleItem",
+   "table": "house_schedule",
+   "total": 3,
+   "matched": 2,
+   "missing": [
+    {
+     "field": "date",
+     "target": "date",
+     "opt": false,
+     "db": null,
+     "cat": "orphan"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "region_id",
+     "type": "int",
+     "comment": "冗余分片键(HG):写入时由服务层填充房源所在城市 region_id"
+    },
+    {
+     "col": "house_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "booking_date",
+     "type": "date",
+     "comment": ""
+    },
+    {
+     "col": "booking_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 8
+  },
+  {
+   "dto": "BrowseHistoryItem",
+   "table": "house_view_history",
+   "total": 7,
+   "matched": 1,
+   "missing": [
+    {
+     "field": "title",
+     "target": "title",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "coverImage",
+     "target": "cover_image",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "price",
+     "target": "price",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "city",
+     "target": "city",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "district",
+     "target": "district",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "viewTime",
+     "target": "view_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 4
+  },
+  {
+   "dto": "StockData",
+   "table": "landlord_bill",
+   "total": 1,
+   "matched": 0,
+   "missing": [
+    {
+     "field": "value",
+     "target": "value",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "bill_month",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "house_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "house_title",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "landlord_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "amount",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "paid_amount",
+     "type": "decimal",
+     "comment": ""
+    },
+    {
+     "col": "status",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "due_date",
+     "type": "date",
+     "comment": ""
+    },
+    {
+     "col": "paid_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 13
+  },
+  {
+   "dto": "AdminOrder",
+   "table": "lease_order",
+   "total": 8,
+   "matched": 6,
+   "missing": [
+    {
+     "field": "type",
+     "target": "type",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "agent",
+     "target": "agent",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "house_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "room_id",
+     "type": "int",
+     "comment": "合租时指向具体房间"
+    },
+    {
+     "col": "rent_type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "tenant_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "landlord_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "landlord_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "agent_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "agent_name",
+     "type": "varchar",
+     "comment": ""
+    }
+   ],
+   "col_count": 15
+  },
+  {
+   "dto": "OrderDetail",
+   "table": "lease_order",
+   "total": 11,
+   "matched": 5,
+   "missing": [
+    {
+     "field": "startDate",
+     "target": "start_date",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "endDate",
+     "target": "end_date",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "payTime",
+     "target": "pay_time",
+     "opt": true,
+     "db": null,
+     "cat": "time"
+    },
+    {
+     "field": "checkinTime",
+     "target": "checkin_time",
+     "opt": true,
+     "db": null,
+     "cat": "time"
+    },
+    {
+     "field": "tenantPhone",
+     "target": "tenant_phone",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "remark",
+     "target": "remark",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "order_no",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "house_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "room_id",
+     "type": "int",
+     "comment": "合租时指向具体房间"
+    },
+    {
+     "col": "house_title",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "agent_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "agent_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "amount",
+     "type": "decimal",
+     "comment": "首期/总额"
+    },
+    {
+     "col": "status",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 15
+  },
+  {
+   "dto": "OrderItem",
+   "table": "lease_order",
+   "total": 7,
+   "matched": 4,
+   "missing": [
+    {
+     "field": "title",
+     "target": "title",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "tenant",
+     "target": "tenant",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "room_id",
+     "type": "int",
+     "comment": "合租时指向具体房间"
+    },
+    {
+     "col": "house_title",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "rent_type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "tenant_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "landlord_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "landlord_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "agent_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "agent_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 15
+  },
+  {
+   "dto": "OrderList",
+   "table": "lease_order",
+   "total": 7,
+   "matched": 4,
+   "missing": [
+    {
+     "field": "title",
+     "target": "title",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "tenant",
+     "target": "tenant",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "room_id",
+     "type": "int",
+     "comment": "合租时指向具体房间"
+    },
+    {
+     "col": "house_title",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "rent_type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "tenant_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "landlord_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "landlord_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "agent_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "agent_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 15
+  },
+  {
+   "dto": "MessageItem",
+   "table": "message",
+   "total": 4,
+   "matched": 2,
+   "missing": [
+    {
+     "field": "read",
+     "target": "read",
+     "opt": false,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "ref_type",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "ref_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "is_read",
+     "type": "tinyint",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 9
+  },
+  {
+   "dto": "LogItem",
+   "table": "operate_log",
+   "total": 5,
+   "matched": 5,
+   "missing": [],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "param",
+     "type": "text",
+     "comment": "操作参数（脱敏）"
+    }
+   ],
+   "col_count": 7
+  },
+  {
+   "dto": "PayOrder",
+   "table": "payment",
+   "total": 5,
+   "matched": 3,
+   "missing": [
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    },
+    {
+     "field": "payTime",
+     "target": "pay_time",
+     "opt": true,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "payment_no",
+     "type": "varchar",
+     "comment": "支付流水号"
+    },
+    {
+     "col": "order_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": "付款人"
+    },
+    {
+     "col": "trade_no",
+     "type": "varchar",
+     "comment": "第三方交易号"
+    },
+    {
+     "col": "biz_type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "paid_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "notify_raw",
+     "type": "text",
+     "comment": "回调原始报文"
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 12
+  },
+  {
+   "dto": "PayRecord",
+   "table": "payment",
+   "total": 5,
+   "matched": 3,
+   "missing": [
+    {
+     "field": "orderNo",
+     "target": "order_no",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "payment_no",
+     "type": "varchar",
+     "comment": "支付流水号"
+    },
+    {
+     "col": "order_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": "付款人"
+    },
+    {
+     "col": "trade_no",
+     "type": "varchar",
+     "comment": "第三方交易号"
+    },
+    {
+     "col": "biz_type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "paid_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "notify_raw",
+     "type": "text",
+     "comment": "回调原始报文"
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 12
+  },
+  {
+   "dto": "PayRecordList",
+   "table": "payment",
+   "total": 5,
+   "matched": 3,
+   "missing": [
+    {
+     "field": "orderNo",
+     "target": "order_no",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "payment_no",
+     "type": "varchar",
+     "comment": "支付流水号"
+    },
+    {
+     "col": "order_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": "付款人"
+    },
+    {
+     "col": "trade_no",
+     "type": "varchar",
+     "comment": "第三方交易号"
+    },
+    {
+     "col": "biz_type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "paid_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "notify_raw",
+     "type": "text",
+     "comment": "回调原始报文"
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 12
+  },
+  {
+   "dto": "RealnameStatus",
+   "table": "realname_auth",
+   "total": 2,
+   "matched": 0,
+   "missing": [
+    {
+     "field": "realName",
+     "target": "real_name",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "idCardMask",
+     "target": "id_card_mask",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "id_card",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "front_url",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "back_url",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "status",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "reject_reason",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "reviewer_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "reviewed_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 11
+  },
+  {
+   "dto": "RefundItem",
+   "table": "refund",
+   "total": 5,
+   "matched": 3,
+   "missing": [
+    {
+     "field": "orderId",
+     "target": "order_id",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "refund_no",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": "退款申请人"
+    },
+    {
+     "col": "biz_type",
+     "type": "enum",
+     "comment": "退款类型"
+    },
+    {
+     "col": "related_id",
+     "type": "int",
+     "comment": "关联 deposit_record/rent_period/lease_order"
+    },
+    {
+     "col": "channel",
+     "type": "varchar",
+     "comment": "原路退/退到余额"
+    },
+    {
+     "col": "operator_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "outer_no",
+     "type": "varchar",
+     "comment": "渠道退款单号"
+    },
+    {
+     "col": "done_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 13
+  },
+  {
+   "dto": "RefundList",
+   "table": "refund",
+   "total": 5,
+   "matched": 3,
+   "missing": [
+    {
+     "field": "orderId",
+     "target": "order_id",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "refund_no",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": "退款申请人"
+    },
+    {
+     "col": "biz_type",
+     "type": "enum",
+     "comment": "退款类型"
+    },
+    {
+     "col": "related_id",
+     "type": "int",
+     "comment": "关联 deposit_record/rent_period/lease_order"
+    },
+    {
+     "col": "channel",
+     "type": "varchar",
+     "comment": "原路退/退到余额"
+    },
+    {
+     "col": "operator_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "outer_no",
+     "type": "varchar",
+     "comment": "渠道退款单号"
+    },
+    {
+     "col": "done_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 13
+  },
+  {
+   "dto": "WorkOrderItem",
+   "table": "repair_order",
+   "total": 12,
+   "matched": 5,
+   "missing": [
+    {
+     "field": "title",
+     "target": "title",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    },
+    {
+     "field": "user",
+     "target": "user",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "houseTitle",
+     "target": "house_title",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "handler",
+     "target": "handler",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "handleResult",
+     "target": "handle_result",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "closedAt",
+     "target": "closed_at",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [
+    {
+     "field": "images",
+     "dt": "string",
+     "col": "images",
+     "st": "json"
+    }
+   ],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "no",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "room_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "worker",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "cost",
+     "type": "decimal",
+     "comment": "维修费用"
+    },
+    {
+     "col": "payer",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "finished_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 14
+  },
+  {
+   "dto": "ReviewItem",
+   "table": "review",
+   "total": 4,
+   "matched": 1,
+   "missing": [
+    {
+     "field": "user",
+     "target": "user",
+     "opt": false,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "score",
+     "target": "score",
+     "opt": false,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "house_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "order_id",
+     "type": "int",
+     "comment": "关联成交 → lease_order.id"
+    },
+    {
+     "col": "from_user_id",
+     "type": "int",
+     "comment": "评价人"
+    },
+    {
+     "col": "to_user_id",
+     "type": "int",
+     "comment": "被评价人"
+    },
+    {
+     "col": "type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "rating",
+     "type": "tinyint",
+     "comment": "1-5 星"
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 9
+  },
+  {
+   "dto": "ReviewList",
+   "table": "review",
+   "total": 4,
+   "matched": 1,
+   "missing": [
+    {
+     "field": "user",
+     "target": "user",
+     "opt": false,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "score",
+     "target": "score",
+     "opt": false,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "house_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "order_id",
+     "type": "int",
+     "comment": "关联成交 → lease_order.id"
+    },
+    {
+     "col": "from_user_id",
+     "type": "int",
+     "comment": "评价人"
+    },
+    {
+     "col": "to_user_id",
+     "type": "int",
+     "comment": "被评价人"
+    },
+    {
+     "col": "type",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "rating",
+     "type": "tinyint",
+     "comment": "1-5 星"
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 9
+  },
+  {
+   "dto": "RiskRecord",
+   "table": "risk_event",
+   "total": 6,
+   "matched": 1,
+   "missing": [
+    {
+     "field": "userName",
+     "target": "user_name",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "action",
+     "target": "action",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "riskLevel",
+     "target": "risk_level",
+     "opt": false,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "detail",
+     "target": "detail",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "rule_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "target_type",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "target_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "level",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "handled",
+     "type": "tinyint",
+     "comment": ""
+    },
+    {
+     "col": "note",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 9
+  },
+  {
+   "dto": "RiskRule",
+   "table": "risk_rule",
+   "total": 5,
+   "matched": 2,
+   "missing": [
+    {
+     "field": "threshold",
+     "target": "threshold",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "enabled",
+     "target": "enabled",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "description",
+     "target": "description",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "condition_json",
+     "type": "text",
+     "comment": "触发条件"
+    },
+    {
+     "col": "action",
+     "type": "varchar",
+     "comment": "处置（拦截/标记/降级）"
+    },
+    {
+     "col": "priority",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "status",
+     "type": "tinyint",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 8
+  },
+  {
+   "dto": "RoleItem",
+   "table": "role",
+   "total": 5,
+   "matched": 4,
+   "missing": [
+    {
+     "field": "perms",
+     "target": "perms",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    }
+   ],
+   "col_count": 5
+  },
+  {
+   "dto": "SearchLog",
+   "table": "search_log",
+   "total": 5,
+   "matched": 3,
+   "missing": [
+    {
+     "field": "userName",
+     "target": "user_name",
+     "opt": true,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "city",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 6
+  },
+  {
+   "dto": "SysParam",
+   "table": "sys_config",
+   "total": 2,
+   "matched": 0,
+   "missing": [
+    {
+     "field": "feeRate",
+     "target": "fee_rate",
+     "opt": false,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "minImg",
+     "target": "min_img",
+     "opt": false,
+     "db": null,
+     "cat": "orphan"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "config_key",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "config_value",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "remark",
+     "type": "varchar",
+     "comment": ""
+    }
+   ],
+   "col_count": 4
+  },
+  {
+   "dto": "DictItem",
+   "table": "sys_dict_item",
+   "total": 4,
+   "matched": 2,
+   "missing": [
+    {
+     "field": "type",
+     "target": "type",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "remark",
+     "target": "remark",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "type_id",
+     "type": "int",
+     "comment": "字典类型 → sys_dict_type.id"
+    },
+    {
+     "col": "sort",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "status",
+     "type": "tinyint",
+     "comment": "1启用 0停用"
+    }
+   ],
+   "col_count": 6
+  },
+  {
+   "dto": "AdminTicket",
+   "table": "ticket",
+   "total": 11,
+   "matched": 11,
+   "missing": [],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    }
+   ],
+   "col_count": 12
+  },
+  {
+   "dto": "WorkOrderLog",
+   "table": "ticket_log",
+   "total": 6,
+   "matched": 1,
+   "missing": [
+    {
+     "field": "operator",
+     "target": "operator",
+     "opt": false,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "fromStatus",
+     "target": "from_status",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "toStatus",
+     "target": "to_status",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "remark",
+     "target": "remark",
+     "opt": true,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "tenant_id",
+     "type": "bigint",
+     "comment": "冗余分片键(UG):写入时由服务层填充租户 user_id"
+    },
+    {
+     "col": "ticket_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "operator_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "note",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 7
+  },
+  {
+   "dto": "AdminUser",
+   "table": "user",
+   "total": 7,
+   "matched": 6,
+   "missing": [
+    {
+     "field": "status",
+     "target": "status",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "real_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "id_card",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "id_card_front",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "id_card_back",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "email",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "gender",
+     "type": "tinyint",
+     "comment": "0未知 1男 2女"
+    },
+    {
+     "col": "avatar",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "password",
+     "type": "varchar",
+     "comment": "密码哈希（生产需加盐）"
+    },
+    {
+     "col": "account_status",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "last_login",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "last_login_ip",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "updated_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "token_version",
+     "type": "int",
+     "comment": "令牌版本号(用于强制下线)"
+    }
+   ],
+   "col_count": 21
+  },
+  {
+   "dto": "AdminUserItem",
+   "table": "user",
+   "total": 4,
+   "matched": 1,
+   "missing": [
+    {
+     "field": "user",
+     "target": "user",
+     "opt": false,
+     "db": null,
+     "cat": "derived"
+    },
+    {
+     "field": "status",
+     "target": "status",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "last",
+     "target": "last",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "name",
+     "type": "varchar",
+     "comment": "昵称"
+    },
+    {
+     "col": "real_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "id_card",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "id_card_front",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "id_card_back",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "phone",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "email",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "gender",
+     "type": "tinyint",
+     "comment": "0未知 1男 2女"
+    },
+    {
+     "col": "avatar",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "password",
+     "type": "varchar",
+     "comment": "密码哈希（生产需加盐）"
+    },
+    {
+     "col": "cert_status",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "account_status",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "credit_score",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "reg_time",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "last_login",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "last_login_ip",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "updated_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "token_version",
+     "type": "int",
+     "comment": "令牌版本号(用于强制下线)"
+    }
+   ],
+   "col_count": 21
+  },
+  {
+   "dto": "UserProfile",
+   "table": "user",
+   "total": 5,
+   "matched": 5,
+   "missing": [],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "name",
+     "type": "varchar",
+     "comment": "昵称"
+    },
+    {
+     "col": "real_name",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "id_card",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "id_card_front",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "id_card_back",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "password",
+     "type": "varchar",
+     "comment": "密码哈希（生产需加盐）"
+    },
+    {
+     "col": "role",
+     "type": "enum",
+     "comment": "主角色"
+    },
+    {
+     "col": "account_status",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "credit_score",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "reg_time",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "last_login",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "last_login_ip",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "updated_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "token_version",
+     "type": "int",
+     "comment": "令牌版本号(用于强制下线)"
+    }
+   ],
+   "col_count": 21
+  },
+  {
+   "dto": "AddressItem",
+   "table": "user_address",
+   "total": 10,
+   "matched": 10,
+   "missing": [],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    }
+   ],
+   "col_count": 11
+  },
+  {
+   "dto": "AddressList",
+   "table": "user_address",
+   "total": 10,
+   "matched": 10,
+   "missing": [],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    }
+   ],
+   "col_count": 11
+  },
+  {
+   "dto": "CollectItem",
+   "table": "user_collect",
+   "total": 4,
+   "matched": 0,
+   "missing": [
+    {
+     "field": "title",
+     "target": "title",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "cover",
+     "target": "cover",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "price",
+     "target": "price",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "collectTime",
+     "target": "collect_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "house_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 4
+  },
+  {
+   "dto": "CollectList",
+   "table": "user_collect",
+   "total": 4,
+   "matched": 0,
+   "missing": [
+    {
+     "field": "title",
+     "target": "title",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "cover",
+     "target": "cover",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "price",
+     "target": "price",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    },
+    {
+     "field": "collectTime",
+     "target": "collect_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "house_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 4
+  },
+  {
+   "dto": "NotifySetting",
+   "table": "user_notify_setting",
+   "total": 4,
+   "matched": 0,
+   "missing": [
+    {
+     "field": "site",
+     "target": "site",
+     "opt": false,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "booking",
+     "target": "booking",
+     "opt": false,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "bill",
+     "target": "bill",
+     "opt": false,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "market",
+     "target": "market",
+     "opt": false,
+     "db": null,
+     "cat": "orphan"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "channel",
+     "type": "enum",
+     "comment": ""
+    },
+    {
+     "col": "biz_type",
+     "type": "varchar",
+     "comment": "业务(订单/合同/账单/营销/ALL)"
+    },
+    {
+     "col": "enabled",
+     "type": "tinyint",
+     "comment": ""
+    },
+    {
+     "col": "quiet_start",
+     "type": "time",
+     "comment": "免打扰起"
+    },
+    {
+     "col": "quiet_end",
+     "type": "time",
+     "comment": "免打扰止"
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 8
+  },
+  {
+   "dto": "PointsInfo",
+   "table": "user_points",
+   "total": 1,
+   "matched": 0,
+   "missing": [
+    {
+     "field": "level",
+     "target": "level",
+     "opt": false,
+     "db": null,
+     "cat": "rename"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "balance",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "updated_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 3
+  },
+  {
+   "dto": "SessionItem",
+   "table": "user_session",
+   "total": 6,
+   "matched": 2,
+   "missing": [
+    {
+     "field": "location",
+     "target": "location",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "lastActiveTime",
+     "target": "last_active_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    },
+    {
+     "field": "current",
+     "target": "current",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "token",
+     "type": "varchar",
+     "comment": "access token"
+    },
+    {
+     "col": "refresh_token",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "expire_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 8
+  },
+  {
+   "dto": "SessionList",
+   "table": "user_session",
+   "total": 6,
+   "matched": 2,
+   "missing": [
+    {
+     "field": "location",
+     "target": "location",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "lastActiveTime",
+     "target": "last_active_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    },
+    {
+     "field": "current",
+     "target": "current",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "token",
+     "type": "varchar",
+     "comment": "access token"
+    },
+    {
+     "col": "refresh_token",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "expire_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 8
+  },
+  {
+   "dto": "WithdrawItem",
+   "table": "withdraw",
+   "total": 4,
+   "matched": 2,
+   "missing": [
+    {
+     "field": "bankCard",
+     "target": "bank_card",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "withdraw_no",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "account_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "settle_no",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "paid_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 9
+  },
+  {
+   "dto": "WithdrawList",
+   "table": "withdraw",
+   "total": 4,
+   "matched": 2,
+   "missing": [
+    {
+     "field": "bankCard",
+     "target": "bank_card",
+     "opt": true,
+     "db": null,
+     "cat": "orphan"
+    },
+    {
+     "field": "createTime",
+     "target": "create_time",
+     "opt": false,
+     "db": null,
+     "cat": "time"
+    }
+   ],
+   "typemis": [],
+   "extra": [
+    {
+     "col": "id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "withdraw_no",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "user_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "account_id",
+     "type": "int",
+     "comment": ""
+    },
+    {
+     "col": "settle_no",
+     "type": "varchar",
+     "comment": ""
+    },
+    {
+     "col": "created_at",
+     "type": "datetime",
+     "comment": ""
+    },
+    {
+     "col": "paid_at",
+     "type": "datetime",
+     "comment": ""
+    }
+   ],
+   "col_count": 9
+  }
+ ],
+ "hint_issues": [],
+ "unmapped": []
+}

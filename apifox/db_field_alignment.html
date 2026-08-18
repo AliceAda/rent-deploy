@@ -1,0 +1,284 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ApiFox DTO ↔ 数据库字段对齐报告</title>
+<style>
+:root{--bg:#f5f7fa;--card:#fff;--line:#e3e8ef;--txt:#1f2d3d;--mut:#8a94a6;
+--ok:#1a7f37;--okbg:#e8f5ec;--warn:#b54708;--warnbg:#fef3e6;--bad:#b42318;--badbg:#fdecea;--accent:#2563eb;}
+*{box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--txt);margin:0;padding:24px;line-height:1.6}
+h1{font-size:22px;margin:0 0 4px}
+.sub{color:var(--mut);font-size:13px;margin-bottom:20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.card .n{font-size:24px;font-weight:700}
+.card .l{font-size:12px;color:var(--mut)}
+.card.bad .n{color:var(--bad)} .card.warn .n{color:var(--warn)} .card.ok .n{color:var(--ok)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:24px;font-size:13px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#f0f3f8;font-weight:600}
+tr:last-child td{border-bottom:none}
+.tag{display:inline-block;padding:1px 7px;border-radius:6px;font-size:11px;font-weight:600}
+.tag.ok{background:var(--okbg);color:var(--ok)} .tag.warn{background:var(--warnbg);color:var(--warn)} .tag.bad{background:var(--badbg);color:var(--bad)}
+code{background:#eef1f6;padding:1px 5px;border-radius:4px;font-size:12px}
+.section-t{font-size:16px;font-weight:700;margin:28px 0 10px;border-left:4px solid var(--accent);padding-left:10px}
+.miss{color:var(--bad);font-weight:600} .opt{color:var(--mut)}
+ul{margin:4px 0;padding-left:18px}
+.small{font-size:12px;color:var(--mut)}
+.bar{height:6px;background:#eef1f6;border-radius:4px;overflow:hidden;margin-top:4px}
+.bar>i{display:block;height:100%}
+</style></head><body>
+<h1>ApiFox DTO ↔ 数据库字段对齐报告</h1>
+<div class="sub">数据源: <code>D:\Project\anju_rent.sql</code> (MySQL 8.0, 102 张表) · 对照: <code>apifox/openapi.json</code> (85 个 DTO)<br>生成时间: 2026-08-17</div>
+<div class="cards">
+<div class="card"><div class="n">102</div><div class="l">数据库表</div></div>
+<div class="card"><div class="n">900</div><div class="l">数据表总列数</div></div>
+<div class="card"><div class="n">45</div><div class="l">已映射 DTO→表</div></div>
+<div class="card ok"><div class="n">270/425</div><div class="l">字段命中 (64%)</div></div>
+<div class="card bad"><div class="n">155</div><div class="l">DTO字段在表中无同名列</div></div>
+<div class="card warn"><div class="n">37</div><div class="l">① 时间命名(_at/_time)</div></div>
+<div class="card warn"><div class="n">28</div><div class="l">② 关联派生(join)</div></div>
+<div class="card ok"><div class="n">60</div><div class="l">③ 重命名/join(无害)</div></div>
+<div class="card bad"><div class="n">30</div><div class="l">④ 真孤儿(需关注)</div></div>
+<div class="card warn"><div class="n">4</div><div class="l">类型疑似不一致</div></div>
+<div class="card ok"><div class="n">0</div><div class="l">DB提示指向不存在列</div></div>
+</div>
+<div class="section-t">一、逐表对齐概览</div>
+<table><thead><tr><th>数据库表</th><th>来源 DTO</th><th>命中/字段</th><th>覆盖率</th><th>缺列</th><th>类型疑异</th><th>表余列</th></tr></thead><tbody>
+<tr><td><code>account_cancel</code></td><td class='small'>AccountCancelStatus</td><td>1/3</td><td><div class='bar'><i style='width:33%;background:var(--bad)'></i></div><span class='small'>33%</span></td><td><span class=miss>2</span></td><td>0</td><td class='small'>5</td></tr>
+<tr><td><code>blacklist</code></td><td class='small'>BlacklistItem</td><td>2/4</td><td><div class='bar'><i style='width:50%;background:var(--bad)'></i></div><span class='small'>50%</span></td><td><span class=miss>2</span></td><td>0</td><td class='small'>5</td></tr>
+<tr><td><code>booking</code></td><td class='small'>BookingItem, BookingList</td><td>8/18</td><td><div class='bar'><i style='width:44%;background:var(--bad)'></i></div><span class='small'>44%</span></td><td><span class=miss>10</span></td><td>0</td><td class='small'>7</td></tr>
+<tr><td><code>content</code></td><td class='small'>ContentItem</td><td>9/9</td><td><div class='bar'><i style='width:100%;background:var(--ok)'></i></div><span class='small'>100%</span></td><td>0</td><td>0</td><td class='small'>1</td></tr>
+<tr><td><code>contract</code></td><td class='small'>AdminContract, ContractDetail, ContractItem</td><td>26/29</td><td><div class='bar'><i style='width:90%;background:var(--warn)'></i></div><span class='small'>90%</span></td><td><span class=miss>3</span></td><td>0</td><td class='small'>24</td></tr>
+<tr><td><code>contract_attachment</code></td><td class='small'>ContractAttachment</td><td>3/5</td><td><div class='bar'><i style='width:60%;background:var(--bad)'></i></div><span class='small'>60%</span></td><td><span class=miss>2</span></td><td>0</td><td class='small'>3</td></tr>
+<tr><td><code>contract_sign_log</code></td><td class='small'>SignLog</td><td>0/4</td><td><div class='bar'><i style='width:0%;background:var(--bad)'></i></div><span class='small'>0%</span></td><td><span class=miss>4</span></td><td>0</td><td class='small'>10</td></tr>
+<tr><td><code>contract_status_log</code></td><td class='small'>StatusLog</td><td>2/5</td><td><div class='bar'><i style='width:40%;background:var(--bad)'></i></div><span class='small'>40%</span></td><td><span class=miss>3</span></td><td>0</td><td class='small'>6</td></tr>
+<tr><td><code>contract_template</code></td><td class='small'>ContractTemplate</td><td>3/5</td><td><div class='bar'><i style='width:60%;background:var(--bad)'></i></div><span class='small'>60%</span></td><td><span class=miss>2</span></td><td>1</td><td class='small'>3</td></tr>
+<tr><td><code>coupon</code></td><td class='small'>CouponItem, CouponList</td><td>6/10</td><td><div class='bar'><i style='width:60%;background:var(--bad)'></i></div><span class='small'>60%</span></td><td><span class=miss>4</span></td><td>2</td><td class='small'>6</td></tr>
+<tr><td><code>fee_bill</code></td><td class='small'>BillItem, BillList</td><td>14/30</td><td><div class='bar'><i style='width:47%;background:var(--bad)'></i></div><span class='small'>47%</span></td><td><span class=miss>16</span></td><td>0</td><td class='small'>6</td></tr>
+<tr><td><code>finance_settlement</code></td><td class='small'>FinanceItem</td><td>11/11</td><td><div class='bar'><i style='width:100%;background:var(--ok)'></i></div><span class='small'>100%</span></td><td>0</td><td>0</td><td class='small'>1</td></tr>
+<tr><td><code>hot_search</code></td><td class='small'>HotKeyword</td><td>0/1</td><td><div class='bar'><i style='width:0%;background:var(--bad)'></i></div><span class='small'>0%</span></td><td><span class=miss>1</span></td><td>0</td><td class='small'>5</td></tr>
+<tr><td><code>house</code></td><td class='small'>AdminHouse, HouseItem, HouseList</td><td>59/59</td><td><div class='bar'><i style='width:100%;background:var(--ok)'></i></div><span class='small'>100%</span></td><td>0</td><td>0</td><td class='small'>26</td></tr>
+<tr><td><code>house_image</code></td><td class='small'>HouseImage</td><td>3/4</td><td><div class='bar'><i style='width:75%;background:var(--bad)'></i></div><span class='small'>75%</span></td><td><span class=miss>1</span></td><td>0</td><td class='small'>4</td></tr>
+<tr><td><code>house_price_history</code></td><td class='small'>PriceHistory</td><td>0/1</td><td><div class='bar'><i style='width:0%;background:var(--bad)'></i></div><span class='small'>0%</span></td><td><span class=miss>1</span></td><td>0</td><td class='small'>8</td></tr>
+<tr><td><code>house_report</code></td><td class='small'>ReportItem</td><td>4/8</td><td><div class='bar'><i style='width:50%;background:var(--bad)'></i></div><span class='small'>50%</span></td><td><span class=miss>4</span></td><td>0</td><td class='small'>4</td></tr>
+<tr><td><code>house_room</code></td><td class='small'>HouseRoom</td><td>4/6</td><td><div class='bar'><i style='width:67%;background:var(--bad)'></i></div><span class='small'>67%</span></td><td><span class=miss>2</span></td><td>0</td><td class='small'>11</td></tr>
+<tr><td><code>house_schedule</code></td><td class='small'>ScheduleItem</td><td>2/3</td><td><div class='bar'><i style='width:67%;background:var(--bad)'></i></div><span class='small'>67%</span></td><td><span class=miss>1</span></td><td>0</td><td class='small'>6</td></tr>
+<tr><td><code>house_view_history</code></td><td class='small'>BrowseHistoryItem</td><td>1/7</td><td><div class='bar'><i style='width:14%;background:var(--bad)'></i></div><span class='small'>14%</span></td><td><span class=miss>6</span></td><td>0</td><td class='small'>3</td></tr>
+<tr><td><code>landlord_bill</code></td><td class='small'>StockData</td><td>0/1</td><td><div class='bar'><i style='width:0%;background:var(--bad)'></i></div><span class='small'>0%</span></td><td><span class=miss>1</span></td><td>0</td><td class='small'>13</td></tr>
+<tr><td><code>lease_order</code></td><td class='small'>AdminOrder, OrderDetail, OrderItem, OrderList</td><td>19/33</td><td><div class='bar'><i style='width:58%;background:var(--bad)'></i></div><span class='small'>58%</span></td><td><span class=miss>14</span></td><td>0</td><td class='small'>11</td></tr>
+<tr><td><code>message</code></td><td class='small'>MessageItem</td><td>2/4</td><td><div class='bar'><i style='width:50%;background:var(--bad)'></i></div><span class='small'>50%</span></td><td><span class=miss>2</span></td><td>0</td><td class='small'>7</td></tr>
+<tr><td><code>operate_log</code></td><td class='small'>LogItem</td><td>5/5</td><td><div class='bar'><i style='width:100%;background:var(--ok)'></i></div><span class='small'>100%</span></td><td>0</td><td>0</td><td class='small'>2</td></tr>
+<tr><td><code>payment</code></td><td class='small'>PayOrder, PayRecord, PayRecordList</td><td>9/15</td><td><div class='bar'><i style='width:60%;background:var(--bad)'></i></div><span class='small'>60%</span></td><td><span class=miss>6</span></td><td>0</td><td class='small'>9</td></tr>
+<tr><td><code>realname_auth</code></td><td class='small'>RealnameStatus</td><td>0/2</td><td><div class='bar'><i style='width:0%;background:var(--bad)'></i></div><span class='small'>0%</span></td><td><span class=miss>2</span></td><td>0</td><td class='small'>11</td></tr>
+<tr><td><code>refund</code></td><td class='small'>RefundItem, RefundList</td><td>6/10</td><td><div class='bar'><i style='width:60%;background:var(--bad)'></i></div><span class='small'>60%</span></td><td><span class=miss>4</span></td><td>0</td><td class='small'>10</td></tr>
+<tr><td><code>repair_order</code></td><td class='small'>WorkOrderItem</td><td>5/12</td><td><div class='bar'><i style='width:42%;background:var(--bad)'></i></div><span class='small'>42%</span></td><td><span class=miss>7</span></td><td>1</td><td class='small'>9</td></tr>
+<tr><td><code>review</code></td><td class='small'>ReviewItem, ReviewList</td><td>2/8</td><td><div class='bar'><i style='width:25%;background:var(--bad)'></i></div><span class='small'>25%</span></td><td><span class=miss>6</span></td><td>0</td><td class='small'>8</td></tr>
+<tr><td><code>risk_event</code></td><td class='small'>RiskRecord</td><td>1/6</td><td><div class='bar'><i style='width:17%;background:var(--bad)'></i></div><span class='small'>17%</span></td><td><span class=miss>5</span></td><td>0</td><td class='small'>8</td></tr>
+<tr><td><code>risk_rule</code></td><td class='small'>RiskRule</td><td>2/5</td><td><div class='bar'><i style='width:40%;background:var(--bad)'></i></div><span class='small'>40%</span></td><td><span class=miss>3</span></td><td>0</td><td class='small'>6</td></tr>
+<tr><td><code>role</code></td><td class='small'>RoleItem</td><td>4/5</td><td><div class='bar'><i style='width:80%;background:var(--warn)'></i></div><span class='small'>80%</span></td><td><span class=miss>1</span></td><td>0</td><td class='small'>1</td></tr>
+<tr><td><code>search_log</code></td><td class='small'>SearchLog</td><td>3/5</td><td><div class='bar'><i style='width:60%;background:var(--bad)'></i></div><span class='small'>60%</span></td><td><span class=miss>2</span></td><td>0</td><td class='small'>3</td></tr>
+<tr><td><code>sys_config</code></td><td class='small'>SysParam</td><td>0/2</td><td><div class='bar'><i style='width:0%;background:var(--bad)'></i></div><span class='small'>0%</span></td><td><span class=miss>2</span></td><td>0</td><td class='small'>4</td></tr>
+<tr><td><code>sys_dict_item</code></td><td class='small'>DictItem</td><td>2/4</td><td><div class='bar'><i style='width:50%;background:var(--bad)'></i></div><span class='small'>50%</span></td><td><span class=miss>2</span></td><td>0</td><td class='small'>4</td></tr>
+<tr><td><code>ticket</code></td><td class='small'>AdminTicket</td><td>11/11</td><td><div class='bar'><i style='width:100%;background:var(--ok)'></i></div><span class='small'>100%</span></td><td>0</td><td>0</td><td class='small'>1</td></tr>
+<tr><td><code>ticket_log</code></td><td class='small'>WorkOrderLog</td><td>1/6</td><td><div class='bar'><i style='width:17%;background:var(--bad)'></i></div><span class='small'>17%</span></td><td><span class=miss>5</span></td><td>0</td><td class='small'>6</td></tr>
+<tr><td><code>user</code></td><td class='small'>AdminUser, AdminUserItem, UserProfile</td><td>12/16</td><td><div class='bar'><i style='width:75%;background:var(--bad)'></i></div><span class='small'>75%</span></td><td><span class=miss>4</span></td><td>0</td><td class='small'>20</td></tr>
+<tr><td><code>user_address</code></td><td class='small'>AddressItem, AddressList</td><td>20/20</td><td><div class='bar'><i style='width:100%;background:var(--ok)'></i></div><span class='small'>100%</span></td><td>0</td><td>0</td><td class='small'>1</td></tr>
+<tr><td><code>user_collect</code></td><td class='small'>CollectItem, CollectList</td><td>0/8</td><td><div class='bar'><i style='width:0%;background:var(--bad)'></i></div><span class='small'>0%</span></td><td><span class=miss>8</span></td><td>0</td><td class='small'>4</td></tr>
+<tr><td><code>user_notify_setting</code></td><td class='small'>NotifySetting</td><td>0/4</td><td><div class='bar'><i style='width:0%;background:var(--bad)'></i></div><span class='small'>0%</span></td><td><span class=miss>4</span></td><td>0</td><td class='small'>8</td></tr>
+<tr><td><code>user_points</code></td><td class='small'>PointsInfo</td><td>0/1</td><td><div class='bar'><i style='width:0%;background:var(--bad)'></i></div><span class='small'>0%</span></td><td><span class=miss>1</span></td><td>0</td><td class='small'>3</td></tr>
+<tr><td><code>user_session</code></td><td class='small'>SessionItem, SessionList</td><td>4/12</td><td><div class='bar'><i style='width:33%;background:var(--bad)'></i></div><span class='small'>33%</span></td><td><span class=miss>8</span></td><td>0</td><td class='small'>6</td></tr>
+<tr><td><code>withdraw</code></td><td class='small'>WithdrawItem, WithdrawList</td><td>4/8</td><td><div class='bar'><i style='width:50%;background:var(--bad)'></i></div><span class='small'>50%</span></td><td><span class=miss>4</span></td><td>0</td><td class='small'>7</td></tr>
+</tbody></table>
+<div class="section-t">二、DTO 字段在数据库中找不到同名列（按性质分类）</div>
+<div class="small" style="margin:10px 0 4px;font-weight:700;color:var(--warn)">▶ ① 时间字段命名(_time↔_at) (37 项)</div>
+<table><thead><tr><th>表</th><th>DTO</th><th>字段(目标列)</th><th>可选</th><th>DB提示</th></tr></thead><tbody>
+<tr><td><code>account_cancel</code></td><td>AccountCancelStatus</td><td class='miss'>applyTime <span class='opt'>→ apply_time</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>blacklist</code></td><td>BlacklistItem</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>booking</code></td><td>BookingItem</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>booking</code></td><td>BookingList</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>contract_attachment</code></td><td>ContractAttachment</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>contract_sign_log</code></td><td>SignLog</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>contract_status_log</code></td><td>StatusLog</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>contract_template</code></td><td>ContractTemplate</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillItem</td><td class='miss'>payTime <span class='opt'>→ pay_time</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillList</td><td class='miss'>payTime <span class='opt'>→ pay_time</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>house_report</code></td><td>ReportItem</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>house_view_history</code></td><td>BrowseHistoryItem</td><td class='miss'>viewTime <span class='opt'>→ view_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>OrderDetail</td><td class='miss'>payTime <span class='opt'>→ pay_time</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>OrderDetail</td><td class='miss'>checkinTime <span class='opt'>→ checkin_time</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>OrderItem</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>OrderList</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>message</code></td><td>MessageItem</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>payment</code></td><td>PayOrder</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>payment</code></td><td>PayOrder</td><td class='miss'>payTime <span class='opt'>→ pay_time</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>payment</code></td><td>PayRecord</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>payment</code></td><td>PayRecordList</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>refund</code></td><td>RefundItem</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>refund</code></td><td>RefundList</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>repair_order</code></td><td>WorkOrderItem</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>review</code></td><td>ReviewItem</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>review</code></td><td>ReviewList</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>risk_event</code></td><td>RiskRecord</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>search_log</code></td><td>SearchLog</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>ticket_log</code></td><td>WorkOrderLog</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_collect</code></td><td>CollectItem</td><td class='miss'>collectTime <span class='opt'>→ collect_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_collect</code></td><td>CollectList</td><td class='miss'>collectTime <span class='opt'>→ collect_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_session</code></td><td>SessionItem</td><td class='miss'>lastActiveTime <span class='opt'>→ last_active_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_session</code></td><td>SessionItem</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_session</code></td><td>SessionList</td><td class='miss'>lastActiveTime <span class='opt'>→ last_active_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_session</code></td><td>SessionList</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>withdraw</code></td><td>WithdrawItem</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>withdraw</code></td><td>WithdrawList</td><td class='miss'>createTime <span class='opt'>→ create_time</span></td><td>否</td><td>—</td></tr>
+</tbody></table>
+<div class="small" style="margin:10px 0 4px;font-weight:700;color:var(--warn)">▶ ② 关联派生字段(join/计算) (28 项)</div>
+<table><thead><tr><th>表</th><th>DTO</th><th>字段(目标列)</th><th>可选</th><th>DB提示</th></tr></thead><tbody>
+<tr><td><code>blacklist</code></td><td>BlacklistItem</td><td class='miss'>userName <span class='opt'>→ user_name</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>booking</code></td><td>BookingItem</td><td class='miss'>houseTitle <span class='opt'>→ house_title</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>booking</code></td><td>BookingItem</td><td class='miss'>userName <span class='opt'>→ user_name</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>booking</code></td><td>BookingItem</td><td class='miss'>userPhone <span class='opt'>→ user_phone</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>booking</code></td><td>BookingList</td><td class='miss'>houseTitle <span class='opt'>→ house_title</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>booking</code></td><td>BookingList</td><td class='miss'>userName <span class='opt'>→ user_name</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>booking</code></td><td>BookingList</td><td class='miss'>userPhone <span class='opt'>→ user_phone</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillItem</td><td class='miss'>houseTitle <span class='opt'>→ house_title</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillItem</td><td class='miss'>tenantName <span class='opt'>→ tenant_name</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillList</td><td class='miss'>houseTitle <span class='opt'>→ house_title</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillList</td><td class='miss'>tenantName <span class='opt'>→ tenant_name</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>house_report</code></td><td>ReportItem</td><td class='miss'>houseTitle <span class='opt'>→ house_title</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>house_report</code></td><td>ReportItem</td><td class='miss'>reporterName <span class='opt'>→ reporter_name</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>AdminOrder</td><td class='miss'>agent <span class='opt'>→ agent</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>OrderDetail</td><td class='miss'>tenantPhone <span class='opt'>→ tenant_phone</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>OrderItem</td><td class='miss'>tenant <span class='opt'>→ tenant</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>OrderList</td><td class='miss'>tenant <span class='opt'>→ tenant</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>realname_auth</code></td><td>RealnameStatus</td><td class='miss'>realName <span class='opt'>→ real_name</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>repair_order</code></td><td>WorkOrderItem</td><td class='miss'>user <span class='opt'>→ user</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>repair_order</code></td><td>WorkOrderItem</td><td class='miss'>houseTitle <span class='opt'>→ house_title</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>repair_order</code></td><td>WorkOrderItem</td><td class='miss'>handler <span class='opt'>→ handler</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>review</code></td><td>ReviewItem</td><td class='miss'>user <span class='opt'>→ user</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>review</code></td><td>ReviewItem</td><td class='miss'>score <span class='opt'>→ score</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>review</code></td><td>ReviewList</td><td class='miss'>user <span class='opt'>→ user</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>review</code></td><td>ReviewList</td><td class='miss'>score <span class='opt'>→ score</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>risk_event</code></td><td>RiskRecord</td><td class='miss'>userName <span class='opt'>→ user_name</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>search_log</code></td><td>SearchLog</td><td class='miss'>userName <span class='opt'>→ user_name</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>user</code></td><td>AdminUserItem</td><td class='miss'>user <span class='opt'>→ user</span></td><td>否</td><td>—</td></tr>
+</tbody></table>
+<div class="small" style="margin:10px 0 4px;font-weight:700;color:var(--ok)">▶ ③ 重命名或 join(目标列在库他处已存在, 无害) (60 项)</div>
+<table><thead><tr><th>表</th><th>DTO</th><th>字段(目标列)</th><th>可选</th><th>DB提示</th></tr></thead><tbody>
+<tr><td><code>booking</code></td><td>BookingItem</td><td class='miss'>userId <span class='opt'>→ user_id</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>booking</code></td><td>BookingList</td><td class='miss'>userId <span class='opt'>→ user_id</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>contract</code></td><td>ContractDetail</td><td class='miss'>remark <span class='opt'>→ remark</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>contract</code></td><td>ContractItem</td><td class='miss'>depositAmount <span class='opt'>→ deposit_amount</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>contract_attachment</code></td><td>ContractAttachment</td><td class='miss'>type <span class='opt'>→ type</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>contract_sign_log</code></td><td>SignLog</td><td class='miss'>action <span class='opt'>→ action</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>contract_sign_log</code></td><td>SignLog</td><td class='miss'>remark <span class='opt'>→ remark</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>contract_status_log</code></td><td>StatusLog</td><td class='miss'>remark <span class='opt'>→ remark</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>contract_template</code></td><td>ContractTemplate</td><td class='miss'>type <span class='opt'>→ type</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>coupon</code></td><td>CouponItem</td><td class='miss'>amount <span class='opt'>→ amount</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>coupon</code></td><td>CouponItem</td><td class='miss'>expireAt <span class='opt'>→ expire_at</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>coupon</code></td><td>CouponList</td><td class='miss'>amount <span class='opt'>→ amount</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>coupon</code></td><td>CouponList</td><td class='miss'>expireAt <span class='opt'>→ expire_at</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillItem</td><td class='miss'>title <span class='opt'>→ title</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillItem</td><td class='miss'>period <span class='opt'>→ period</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillItem</td><td class='miss'>orderId <span class='opt'>→ order_id</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillList</td><td class='miss'>title <span class='opt'>→ title</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillList</td><td class='miss'>period <span class='opt'>→ period</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillList</td><td class='miss'>orderId <span class='opt'>→ order_id</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>house_image</code></td><td>HouseImage</td><td class='miss'>type <span class='opt'>→ type</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>house_price_history</code></td><td>PriceHistory</td><td class='miss'>price <span class='opt'>→ price</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>house_room</code></td><td>HouseRoom</td><td class='miss'>name <span class='opt'>→ name</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>house_room</code></td><td>HouseRoom</td><td class='miss'>price <span class='opt'>→ price</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>house_view_history</code></td><td>BrowseHistoryItem</td><td class='miss'>title <span class='opt'>→ title</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>house_view_history</code></td><td>BrowseHistoryItem</td><td class='miss'>coverImage <span class='opt'>→ cover_image</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>house_view_history</code></td><td>BrowseHistoryItem</td><td class='miss'>price <span class='opt'>→ price</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>house_view_history</code></td><td>BrowseHistoryItem</td><td class='miss'>city <span class='opt'>→ city</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>house_view_history</code></td><td>BrowseHistoryItem</td><td class='miss'>district <span class='opt'>→ district</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>landlord_bill</code></td><td>StockData</td><td class='miss'>value <span class='opt'>→ value</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>AdminOrder</td><td class='miss'>type <span class='opt'>→ type</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>OrderDetail</td><td class='miss'>startDate <span class='opt'>→ start_date</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>OrderDetail</td><td class='miss'>endDate <span class='opt'>→ end_date</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>OrderDetail</td><td class='miss'>remark <span class='opt'>→ remark</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>OrderItem</td><td class='miss'>title <span class='opt'>→ title</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>lease_order</code></td><td>OrderList</td><td class='miss'>title <span class='opt'>→ title</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>payment</code></td><td>PayRecord</td><td class='miss'>orderNo <span class='opt'>→ order_no</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>payment</code></td><td>PayRecordList</td><td class='miss'>orderNo <span class='opt'>→ order_no</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>refund</code></td><td>RefundItem</td><td class='miss'>orderId <span class='opt'>→ order_id</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>refund</code></td><td>RefundList</td><td class='miss'>orderId <span class='opt'>→ order_id</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>repair_order</code></td><td>WorkOrderItem</td><td class='miss'>title <span class='opt'>→ title</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>repair_order</code></td><td>WorkOrderItem</td><td class='miss'>closedAt <span class='opt'>→ closed_at</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>risk_event</code></td><td>RiskRecord</td><td class='miss'>action <span class='opt'>→ action</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>risk_event</code></td><td>RiskRecord</td><td class='miss'>detail <span class='opt'>→ detail</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>risk_rule</code></td><td>RiskRule</td><td class='miss'>threshold <span class='opt'>→ threshold</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>risk_rule</code></td><td>RiskRule</td><td class='miss'>enabled <span class='opt'>→ enabled</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>risk_rule</code></td><td>RiskRule</td><td class='miss'>description <span class='opt'>→ description</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>sys_dict_item</code></td><td>DictItem</td><td class='miss'>type <span class='opt'>→ type</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>sys_dict_item</code></td><td>DictItem</td><td class='miss'>remark <span class='opt'>→ remark</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>ticket_log</code></td><td>WorkOrderLog</td><td class='miss'>fromStatus <span class='opt'>→ from_status</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>ticket_log</code></td><td>WorkOrderLog</td><td class='miss'>toStatus <span class='opt'>→ to_status</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>ticket_log</code></td><td>WorkOrderLog</td><td class='miss'>remark <span class='opt'>→ remark</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>user</code></td><td>AdminUser</td><td class='miss'>status <span class='opt'>→ status</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user</code></td><td>AdminUserItem</td><td class='miss'>status <span class='opt'>→ status</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_collect</code></td><td>CollectItem</td><td class='miss'>title <span class='opt'>→ title</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_collect</code></td><td>CollectItem</td><td class='miss'>cover <span class='opt'>→ cover</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_collect</code></td><td>CollectItem</td><td class='miss'>price <span class='opt'>→ price</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_collect</code></td><td>CollectList</td><td class='miss'>title <span class='opt'>→ title</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_collect</code></td><td>CollectList</td><td class='miss'>cover <span class='opt'>→ cover</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_collect</code></td><td>CollectList</td><td class='miss'>price <span class='opt'>→ price</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_points</code></td><td>PointsInfo</td><td class='miss'>level <span class='opt'>→ level</span></td><td>否</td><td>—</td></tr>
+</tbody></table>
+<div class="small" style="margin:10px 0 4px;font-weight:700;color:var(--bad)">▶ ④ 真孤儿(全库均无此列, 需关注) (30 项)</div>
+<table><thead><tr><th>表</th><th>DTO</th><th>字段(目标列)</th><th>可选</th><th>DB提示</th></tr></thead><tbody>
+<tr><td><code>account_cancel</code></td><td>AccountCancelStatus</td><td class='miss'>cancelAt <span class='opt'>→ cancel_at</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>contract</code></td><td>ContractItem</td><td class='miss'>rentAmount <span class='opt'>→ rent_amount</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>contract_sign_log</code></td><td>SignLog</td><td class='miss'>operator <span class='opt'>→ operator</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>contract_status_log</code></td><td>StatusLog</td><td class='miss'>operator <span class='opt'>→ operator</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillItem</td><td class='miss'>billNo <span class='opt'>→ bill_no</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillItem</td><td class='miss'>paid <span class='opt'>→ paid</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillList</td><td class='miss'>billNo <span class='opt'>→ bill_no</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>fee_bill</code></td><td>BillList</td><td class='miss'>paid <span class='opt'>→ paid</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>hot_search</code></td><td>HotKeyword</td><td class='miss'>count <span class='opt'>→ count</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>house_report</code></td><td>ReportItem</td><td class='miss'>handleResult <span class='opt'>→ handle_result</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>house_schedule</code></td><td>ScheduleItem</td><td class='miss'>date <span class='opt'>→ date</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>message</code></td><td>MessageItem</td><td class='miss'>read <span class='opt'>→ read</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>realname_auth</code></td><td>RealnameStatus</td><td class='miss'>idCardMask <span class='opt'>→ id_card_mask</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>repair_order</code></td><td>WorkOrderItem</td><td class='miss'>handleResult <span class='opt'>→ handle_result</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>risk_event</code></td><td>RiskRecord</td><td class='miss'>riskLevel <span class='opt'>→ risk_level</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>role</code></td><td>RoleItem</td><td class='miss'>perms <span class='opt'>→ perms</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>sys_config</code></td><td>SysParam</td><td class='miss'>feeRate <span class='opt'>→ fee_rate</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>sys_config</code></td><td>SysParam</td><td class='miss'>minImg <span class='opt'>→ min_img</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>ticket_log</code></td><td>WorkOrderLog</td><td class='miss'>operator <span class='opt'>→ operator</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user</code></td><td>AdminUserItem</td><td class='miss'>last <span class='opt'>→ last</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>user_notify_setting</code></td><td>NotifySetting</td><td class='miss'>site <span class='opt'>→ site</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_notify_setting</code></td><td>NotifySetting</td><td class='miss'>booking <span class='opt'>→ booking</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_notify_setting</code></td><td>NotifySetting</td><td class='miss'>bill <span class='opt'>→ bill</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_notify_setting</code></td><td>NotifySetting</td><td class='miss'>market <span class='opt'>→ market</span></td><td>否</td><td>—</td></tr>
+<tr><td><code>user_session</code></td><td>SessionItem</td><td class='miss'>location <span class='opt'>→ location</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>user_session</code></td><td>SessionItem</td><td class='miss'>current <span class='opt'>→ current</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>user_session</code></td><td>SessionList</td><td class='miss'>location <span class='opt'>→ location</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>user_session</code></td><td>SessionList</td><td class='miss'>current <span class='opt'>→ current</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>withdraw</code></td><td>WithdrawItem</td><td class='miss'>bankCard <span class='opt'>→ bank_card</span></td><td>是</td><td>—</td></tr>
+<tr><td><code>withdraw</code></td><td>WithdrawList</td><td class='miss'>bankCard <span class='opt'>→ bank_card</span></td><td>是</td><td>—</td></tr>
+</tbody></table>
+<div class="section-t">三、重点关注：真实缺口与跨表混淆</div>
+
+<div style="background:#fff;border:1px solid var(--line);border-left:4px solid var(--bad);border-radius:8px;padding:14px 16px;font-size:13px;line-height:1.8">
+<p style="margin:0 0 8px"><b>结论：</b>DTO 与数据库字段<b>整体可对上</b>，但存在①系统性命名差异（时间字段 <code>_time</code>↔<code>_at</code>、若干逻辑名↔物理列重命名）、②关联派生展示字段（JOIN 产生，无独立列）、以及③少量<b>真实缺口/跨表混淆</b>。后端按下列规则做字段映射即可，无数据层风险。</p>
+<p style="margin:6px 0"><b style="color:var(--bad)">1. 跨表混淆（最需关注）：lease_order 与 contract 字段被前端"订单"DTO 混在一起。</b><br>
+<code>OrderItem / OrderDetail</code> 含 <code>startDate, endDate, payTime, checkinTime, remark, tenantPhone</code> 等，但 <code>lease_order</code> 表仅 15 列（id/order_no/house_id/tenant_id/tenant_name/landlord_id/landlord_name/agent_id/agent_name/amount/status/created_at/room_id/rent_type/house_title），<b>并无上述列</b>。这些租期/签约字段实际落在 <code>contract</code> 表（start_date/end_date/signed_at/terminated_at/termination_reason/deposit/monthly_rent…）。<br>
+<em>建议：</em>把租期与签约相关字段从订单 DTO 剥离到 Contract DTO；lease_order 仅保留订单引用+金额+状态。</p>
+<p style="margin:6px 0"><b style="color:var(--warn)">2. repair_order 缺展示列：</b><code>repair_order</code> 仅有 no/content/worker/finished_at/cost/payer，<b>无</b> <code>title</code>、<code>house_title</code>、<code>handle_result</code> 列；<code>WorkOrderItem</code> 的这几个字段需由后端 join <code>house</code> 表或扩充列补齐。</p>
+<p style="margin:6px 0"><b style="color:var(--warn)">3. WorkOrderLog 映射已修正：</b>原误指 <code>repair_order</code>（0 命中），改指 <code>ticket_log</code>（含 action/operator_id/note/created_at）。但 ticket_log 无 from_status/to_status；若工单状态流需留痕，建议新增 <code>repair_order_log</code> 或复用 <code>operate_log</code>。</p>
+<p style="margin:6px 0"><b style="color:var(--ok)">4. 关键重命名（后端字段映射，无数据风险）：</b><br>
+<code>userId→tenant_id</code> · <code>orderNo→order_id</code> · <code>orderId→related_id</code>(退款)/<code>order_id</code>(支付) · <code>bankCard→account_id</code> · <code>status→account_status</code>(user) · <code>score→rating</code>(review) · <code>handler→worker</code>(repair) · <code>last→last_login</code> · <code>title→house_title</code>(订单) · <code>createTime/create_at 体系</code>。</p>
+</div>
+<div class="section-t">四、字段类型疑似不一致（前端类型 vs 库类型，已按日期串兼容）</div>
+<table><thead><tr><th>表</th><th>DTO字段</th><th>前端类型</th><th>库列</th><th>库类型</th></tr></thead><tbody>
+<tr><td><code>contract_template</code></td><td>status</td><td><code>string</code></td><td><code>status</code></td><td><code>tinyint</code></td></tr>
+<tr><td><code>coupon</code></td><td>status</td><td><code>string</code></td><td><code>status</code></td><td><code>tinyint</code></td></tr>
+<tr><td><code>coupon</code></td><td>status</td><td><code>string</code></td><td><code>status</code></td><td><code>tinyint</code></td></tr>
+<tr><td><code>repair_order</code></td><td>images</td><td><code>string</code></td><td><code>images</code></td><td><code>json</code></td></tr>
+</tbody></table>
+<div class="section-t">五、DTO 内 <code>// DB:</code> 提示指向不存在的列</div>
+<p class="small">✅ 所有 <code>// DB:</code> 提示均能在某张表中找到对应列。</p>
+<div class="section-t">六、未自动映射 / 需人工确认的 DTO</div>
+<p class="small">无。</p>
+<p class="small">⚠ 存疑映射（同名多表/聚合表，建议人工复核）：BillItem/BillList→fee_bill(也可能是landlord_bill)；CouponItem→coupon(也可能是user_coupon)；WorkOrderItem/WorkOrderLog→repair_order(也可能是ticket)；StockData→landlord_bill(聚合)；AdminOrder/Order*→lease_order；StatusLog→contract_status_log。</p>
+</body></html>

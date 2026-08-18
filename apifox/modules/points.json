@@ -1,0 +1,188 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "安居租房平台 API（前端契约推导） · 积分 Points",
+    "version": "0.1.0-progressive",
+    "description": "模块: 积分 Points | 自动从前端契约拆分, 共 2 个接口, 3 个 DTO 组件"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "本地后端网关（开发）"
+    },
+    {
+      "url": "https://api.example.com",
+      "description": "生产环境（待替换）"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/user/points": {
+      "get": {
+        "tags": [
+          "积分 Points"
+        ],
+        "operationId": "getMyPoints",
+        "summary": "我的积分",
+        "x-module": "积分",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/PointsInfo"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/user/coupon": {
+      "get": {
+        "tags": [
+          "积分 Points"
+        ],
+        "operationId": "getMyCoupons",
+        "summary": "我的优惠券",
+        "x-module": "积分",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CouponList"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "CouponItem": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "示例"
+          },
+          "amount": {
+            "type": "number",
+            "example": 1
+          },
+          "threshold": {
+            "type": "number",
+            "example": 0
+          },
+          "expireAt": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "status": {
+            "type": "string",
+            "description": "unused/used/expired",
+            "example": "示例"
+          }
+        },
+        "required": [
+          "name",
+          "amount",
+          "threshold",
+          "expireAt",
+          "status"
+        ]
+      },
+      "CouponList": {
+        "type": "object",
+        "properties": {
+          "list": {
+            "$ref": "#/components/schemas/CouponItem"
+          },
+          "total": {
+            "type": "integer",
+            "example": 0,
+            "description": "总记录数（分页）"
+          }
+        },
+        "required": [
+          "list",
+          "total"
+        ]
+      },
+      "PointsInfo": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "string",
+            "example": "文本"
+          }
+        },
+        "required": [
+          "level"
+        ]
+      }
+    }
+  }
+}

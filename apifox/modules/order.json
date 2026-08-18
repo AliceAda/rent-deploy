@@ -1,0 +1,1115 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "安居租房平台 API（前端契约推导） · 订单 Order",
+    "version": "0.1.0-progressive",
+    "description": "模块: 订单 Order | 自动从前端契约拆分, 共 15 个接口, 5 个 DTO 组件"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "本地后端网关（开发）"
+    },
+    {
+      "url": "https://api.example.com",
+      "description": "生产环境（待替换）"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/order/my": {
+      "get": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "getMyOrders",
+        "summary": "我的订单列表（租客）",
+        "x-module": "订单",
+        "description": "查询参数(query)以 Record<string,unknown> 传入，含分页/筛选字段，待逐接口细化。",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "description": "分页/筛选参数（Record），如 page,size 及各业务字段",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderList"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/order/landlord": {
+      "get": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "getLandlordOrders",
+        "summary": "房东订单列表",
+        "x-module": "订单",
+        "description": "查询参数(query)以 Record<string,unknown> 传入，含分页/筛选字段，待逐接口细化。",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "description": "分页/筛选参数（Record），如 page,size 及各业务字段",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderList"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/order": {
+      "get": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "getOrderList",
+        "summary": "订单列表（通用）",
+        "x-module": "订单",
+        "description": "查询参数(query)以 Record<string,unknown> 传入，含分页/筛选字段，待逐接口细化。",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "description": "分页/筛选参数（Record），如 page,size 及各业务字段",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderList"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "createOrder",
+        "summary": "创建订单",
+        "x-module": "订单",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "houseId": {
+                    "type": "object",
+                    "description": "TODO: 待定义类型 number\n  roomId?: number\n  rentType: string\n  amount: number\n  startDate: string\n  endDate: string"
+                  }
+                },
+                "required": [
+                  "houseId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/order/{id}": {
+      "get": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "getOrderDetail",
+        "summary": "获取订单详情",
+        "x-module": "订单",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderDetail"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "updateOrder",
+        "summary": "更新订单",
+        "x-module": "订单",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderDetail"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/order/{orderId}/pay": {
+      "post": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "payOrder",
+        "summary": "订单支付",
+        "x-module": "订单",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/PayResult"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/order/{id}/cancel": {
+      "post": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "cancelOrder",
+        "summary": "取消订单",
+        "x-module": "订单",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/order/{id}/checkin": {
+      "post": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "checkinOrder",
+        "summary": "入住办理",
+        "x-module": "订单",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                          }
+                        },
+                        "total": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "list",
+                        "total"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/order/{id}/renew": {
+      "post": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "renewOrder",
+        "summary": "续租",
+        "x-module": "订单",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "endDate": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "endDate"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/order/{id}/sublease": {
+      "post": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "subleaseOrder",
+        "summary": "转租",
+        "x-module": "订单",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tenantPhone": {
+                    "type": "string"
+                  },
+                  "remark": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "tenantPhone"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/order/{id}/terminate": {
+      "post": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "terminateOrder",
+        "summary": "终止合同",
+        "x-module": "订单",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/order/{id}/status-log": {
+      "get": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "getOrderStatusLog",
+        "summary": "查询订单状态变更日志",
+        "x-module": "订单",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        },
+                        "total": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "list",
+                        "total"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/order/rent-period": {
+      "get": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "getRentPeriod",
+        "summary": "查询可租期",
+        "x-module": "订单",
+        "description": "查询参数(query)以 Record<string,unknown> 传入，含分页/筛选字段，待逐接口细化。",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "description": "分页/筛选参数（Record），如 page,size 及各业务字段",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/RentPeriod"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/landlord/orders": {
+      "post": {
+        "tags": [
+          "订单 Order"
+        ],
+        "operationId": "createLandlordOrder",
+        "summary": "房东新增订单",
+        "x-module": "订单",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "description": "无返回数据"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "OrderDetail": {
+        "type": "object",
+        "properties": {
+          "rentType": {
+            "type": "string",
+            "example": "示例"
+          },
+          "startDate": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "endDate": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "payTime": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "checkinTime": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "tenantId": {
+            "type": "number",
+            "example": 1
+          },
+          "tenantName": {
+            "type": "string",
+            "example": "示例"
+          },
+          "tenantPhone": {
+            "type": "string",
+            "example": "13800138000"
+          },
+          "landlordId": {
+            "type": "number",
+            "example": 1
+          },
+          "landlordName": {
+            "type": "string",
+            "example": "示例"
+          },
+          "remark": {
+            "type": "string",
+            "example": "示例"
+          }
+        }
+      },
+      "OrderItem": {
+        "type": "object",
+        "properties": {
+          "orderNo": {
+            "type": "string",
+            "example": "文本"
+          },
+          "houseId": {
+            "type": "number",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "示例"
+          },
+          "tenant": {
+            "type": "string",
+            "example": "文本"
+          },
+          "amount": {
+            "type": "number",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "example": "示例"
+          },
+          "createTime": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          }
+        },
+        "required": [
+          "houseId",
+          "title",
+          "amount",
+          "status",
+          "createTime"
+        ]
+      },
+      "OrderList": {
+        "type": "object",
+        "properties": {
+          "list": {
+            "$ref": "#/components/schemas/OrderItem"
+          },
+          "total": {
+            "type": "integer",
+            "example": 0,
+            "description": "总记录数（分页）"
+          }
+        },
+        "required": [
+          "list",
+          "total"
+        ]
+      },
+      "PayResult": {
+        "type": "object",
+        "properties": {
+          "payUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "RentPeriod": {
+        "type": "object",
+        "properties": {
+          "periods": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "value"
+              ]
+            }
+          }
+        },
+        "required": [
+          "periods"
+        ]
+      }
+    }
+  }
+}

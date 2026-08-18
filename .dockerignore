@@ -1,7 +1,12 @@
 node_modules
 dist
+dist_deploy
+dist-ssr
 .git
+.gitignore
+.env
+.env.*
+!.env.example
+_build_trash
 .workbuddy
 *.log
-Dockerfile
-.dockerignore

@@ -1,0 +1,319 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "安居租房平台 API（前端契约推导） · 会话 Session",
+    "version": "0.1.0-progressive",
+    "description": "模块: 会话 Session | 自动从前端契约拆分, 共 4 个接口, 2 个 DTO 组件"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "本地后端网关（开发）"
+    },
+    {
+      "url": "https://api.example.com",
+      "description": "生产环境（待替换）"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/user/session": {
+      "get": {
+        "tags": [
+          "会话 Session"
+        ],
+        "operationId": "getSessions",
+        "summary": "查询登录会话列表",
+        "x-module": "会话/客服",
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/SessionList"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    },
+    "/api/user/session/{id}": {
+      "get": {
+        "tags": [
+          "会话 Session"
+        ],
+        "operationId": "getSessionDetail",
+        "summary": "获取登录会话详情",
+        "x-module": "会话/客服",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/SessionItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "会话 Session"
+        ],
+        "operationId": "updateSession",
+        "summary": "更新登录会话",
+        "x-module": "会话/客服",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionItem"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/SessionItem"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "会话 Session"
+        ],
+        "operationId": "deleteSession",
+        "summary": "注销登录会话",
+        "x-module": "会话/客服",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功（code=0）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/SessionItem"
+                          }
+                        },
+                        "total": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "list",
+                        "total"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未登录/令牌过期，需重新登录"
+          },
+          "500": {
+            "description": "服务器内部错误"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "SessionItem": {
+        "type": "object",
+        "properties": {
+          "device": {
+            "type": "string",
+            "example": "文本"
+          },
+          "ip": {
+            "type": "string",
+            "example": "文本"
+          },
+          "location": {
+            "type": "string",
+            "example": "文本"
+          },
+          "lastActiveTime": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "createTime": {
+            "type": "string",
+            "example": "2024-01-01 00:00:00"
+          },
+          "current": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "device",
+          "ip",
+          "lastActiveTime",
+          "createTime"
+        ]
+      },
+      "SessionList": {
+        "type": "object",
+        "properties": {
+          "list": {
+            "$ref": "#/components/schemas/SessionItem"
+          },
+          "total": {
+            "type": "integer",
+            "example": 0,
+            "description": "总记录数（分页）"
+          }
+        },
+        "required": [
+          "list",
+          "total"
+        ]
+      }
+    }
+  }
+}

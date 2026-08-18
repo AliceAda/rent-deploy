@@ -7,8 +7,8 @@
   --brand-s: #eaf1ff;
   --orange: #ff7d3c;
   --orange-s: #fff1e8;
-  /* 朱砂印：仅用于验真 / 签约等官方确认状态（颜色对齐第一版红） */
-  --seal: #e2483d;
+  /* 已验印：用于验真 / 签约等官方确认状态（绿色=已核验） */
+  --seal: #16a34a;
   --seal-ink: #fff;
   --ink: #1f2329;
   --sub: #5b6168;
@@ -71,6 +71,48 @@ a {
   --el-color-warning-dark-2: #cc642f;
 }
 
+/* ===== 深色模式（单一事实源 <html data-theme="dark">） ===== */
+[data-theme='dark'] {
+  --bg: #0e141d;
+  --panel: #161e29;
+  --ink: #e7ecf3;
+  --sub: #9aa6b6;
+  --line: #27323f;
+  --brand-s: #16233a;
+  --orange-s: #2a1c12;
+  --ok: #34d399;
+  --seal: #22c55e;
+  /* Element Plus 组件级变量：卡片 / 输入 / 文字 / 边框 同步变深 */
+  --el-bg-color: #161e29;
+  --el-bg-color-page: #0e141d;
+  --el-fill-color: #1d2733;
+  --el-fill-color-light: #1a232f;
+  --el-fill-color-lighter: #161e29;
+  --el-fill-color-blank: #161e29;
+  --el-text-color-primary: #e7ecf3;
+  --el-text-color-regular: #c2ccd9;
+  --el-text-color-secondary: #9aa6b6;
+  --el-border-color: #27323f;
+  --el-border-color-light: #222c38;
+  --el-border-color-lighter: #1d2733;
+  --el-mask-color: rgba(8, 12, 18, 0.7);
+}
+[data-theme='dark'] .topbar,
+[data-theme='dark'] .mtab {
+  background: var(--panel);
+  border-color: var(--line);
+}
+[data-theme='dark'] .cta {
+  background: var(--panel);
+}
+[data-theme='dark'] .house-map {
+  background: linear-gradient(180deg, #13203a, #0e1726);
+}
+[data-theme='dark'] .map-ph {
+  background: #13203a;
+  border-color: var(--line);
+}
+
 .page-max {
   max-width: 1180px;
   margin: 0 auto;
@@ -113,7 +155,7 @@ a {
   line-height: 1;
   letter-spacing: 2px;
   transform: rotate(-3deg);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 1px 3px rgba(226, 72, 61, 0.35);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 1px 3px rgba(22, 163, 74, 0.35);
   user-select: none;
   flex-shrink: 0;
 }

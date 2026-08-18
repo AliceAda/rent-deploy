@@ -75,6 +75,9 @@
             <el-button @click="onSearch">搜索</el-button>
           </template>
         </el-autocomplete>
+        <button class="theme-btn" :title="theme === 'dark' ? '切换浅色' : '切换深色'" @click="toggle">
+          {{ theme === 'dark' ? '☀️' : '🌙' }}
+        </button>
         <nav class="nav-tabs">
           <router-link to="/home" custom v-slot="{ navigate, isActive }">
             <button :class="{ active: isActive }" @click="navigate">首页</button>
@@ -129,6 +132,9 @@
       <router-link to="/list" custom v-slot="{ navigate, isActive }">
         <button :class="{ on: isActive }" @click="navigate">🔍<span>找房</span></button>
       </router-link>
+      <router-link to="/map" custom v-slot="{ navigate, isActive }">
+        <button :class="{ on: isActive }" @click="navigate">🗺️<span>地图</span></button>
+      </router-link>
       <router-link to="/mine" custom v-slot="{ navigate, isActive }">
         <button :class="{ on: isActive }" @click="navigate">👤<span>我的</span></button>
       </router-link>
@@ -146,6 +152,7 @@ import { safe, toList } from '@/api/http'
 import { getRegions } from '@/api/house'
 import { getSuggest } from '@/api/search'
 import { regions as mockRegions } from '@/mock/data'
+import { useTheme } from '@/composables/useTheme'
 
 // 级联节点：有 id 时逐级查库（/house/region?parentId=），无 id / 查库失败时用 children（本地 mock 回退）
 interface RegionNode {
@@ -157,6 +164,7 @@ interface RegionNode {
 const store = useAppStore()
 const auth = useAuthStore()
 const router = useRouter()
+const { theme, toggle } = useTheme()
 const keyword = ref('')
 const showCity = ref(false)
 
@@ -353,6 +361,22 @@ function onUserCmd(cmd: string) {
   flex: 1;
   max-width: 520px;
 }
+.theme-btn {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  transition: 0.15s;
+}
+.theme-btn:hover {
+  border-color: var(--brand);
+  background: var(--brand-s);
+}
 .nav-tabs {
   display: flex;
   gap: 2px;
@@ -403,7 +427,7 @@ function onUserCmd(cmd: string) {
   background: #fff;
   border-top: 1px solid var(--line);
   z-index: 60;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
 }
 .mtab button {
   background: transparent;

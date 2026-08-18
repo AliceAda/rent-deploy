@@ -974,7 +974,23 @@ export const handlers = [
     if (i >= 0) db.adminUsersDb.splice(i, 1)
     return ok(null)
   }),
+  http.post('/api/admin/users/:id/toggle-status', async ({ params, request }) => {
+    const b = await bodyOf(request)
+    const u = db.adminUsersDb.find((x) => x.id === Number(params.id))
+    if (u) u.status = String(b.status || '正常')
+    return ok(null)
+  }),
   http.get('/api/admin/orders', () => ok(db.adminOrdersDb)),
+  http.post('/api/admin/orders/:id/confirm', ({ params }) => {
+    const o = db.adminOrdersDb.find((x) => x.id === Number(params.id))
+    if (o) o.status = '已完成'
+    return ok(null)
+  }),
+  http.post('/api/admin/orders/:id/refund', ({ params }) => {
+    const o = db.adminOrdersDb.find((x) => x.id === Number(params.id))
+    if (o) o.status = '待支付'
+    return ok(null)
+  }),
   http.get('/api/admin/contracts', () => ok(db.adminContractsDb)),
   http.post('/api/admin/contracts/:id/remind', () => ok(null)),
   http.post('/api/admin/contracts/:id/cancel', ({ params }) => {

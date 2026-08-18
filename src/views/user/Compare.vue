@@ -40,6 +40,7 @@
           </div>
         </div>
       </div>
+      <CompareRadar v-if="list.length" :houses="list" />
     </div>
   </div>
 </template>
@@ -49,6 +50,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { resolveHouse } from '@/utils/house'
 import { houseCover } from '@/utils/houseImg'
 import { getCompareIds, toggleCompare, clearCompare, COMPARE_CHANGE } from '@/utils/compare'
+import CompareRadar from '@/components/CompareRadar.vue'
 import type { House } from '@/mock/data'
 
 const ROWS: { key: string; label: string }[] = [
