@@ -125,7 +125,7 @@ onMounted(() => center.loadAll())
   height: 46px;
   flex: 0 0 46px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--brand), #5a86ff);
+  background: linear-gradient(135deg, var(--brand), #2DD4BF);
   color: #fff;
   display: grid;
   place-items: center;
@@ -199,7 +199,7 @@ onMounted(() => center.loadAll())
   opacity: 0.85;
 }
 .cert-banner.todo {
-  background: linear-gradient(135deg, var(--brand), #5a86ff);
+  background: linear-gradient(135deg, var(--brand), #2DD4BF);
   color: #fff;
 }
 .cert-banner.todo .cert-icon {

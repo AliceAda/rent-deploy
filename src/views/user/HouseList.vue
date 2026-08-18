@@ -30,8 +30,8 @@
                 <el-option label="西" value="西" />
               </el-select>
             </el-form-item>
-            <el-form-item label="月租金上限：{{ f.price >= 15000 ? '不限' : f.price + '元' }}">
-              <el-slider v-model="f.price" :min="1500" :max="15000" :step="500" />
+            <el-form-item label="月租金上限：{{ f.price >= PRICE_MAX ? '不限' : f.price + '元' }}">
+              <el-slider v-model="f.price" :min="PRICE_MIN" :max="PRICE_MAX" :step="500" />
             </el-form-item>
             <el-form-item label="配套">
               <el-checkbox-group v-model="f.fac">
@@ -91,62 +91,13 @@
           </el-row>
         </template>
 
-        <!-- 地图找房视图：路网 + 地铁线/站 + 商圈 POI + 区域聚合 -->
-        <div v-show="mapMode" class="map-wrap">
-          <div class="map" @click.self="mapZoom = ''">
-            <div class="map-bg"></div>
-            <!-- 城市路网 -->
-            <div v-for="(r, i) in ROAD_H" :key="'h' + i" class="road-h" :style="{ top: r.top + '%', height: r.w + 'px' }"></div>
-            <div v-for="(r, i) in ROAD_V" :key="'v' + i" class="road-v" :style="{ left: r.left + '%', width: r.w + 'px' }"></div>
-            <!-- 地铁线路与站点 -->
-            <svg class="metro-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <path d="M6,88 L44,58 L82,14" stroke="#2F6FED" stroke-width="1.1" fill="none" stroke-dasharray="0.6 1.5" />
-              <path d="M12,22 L50,60 L90,34" stroke="#FF7D3C" stroke-width="1.1" fill="none" stroke-dasharray="0.6 1.5" />
-              <path d="M30,10 L58,44 L30,92" stroke="#1aa86a" stroke-width="1" fill="none" stroke-dasharray="0.6 1.5" opacity="0.8" />
-            </svg>
-            <span v-for="s in METRO_STOPS" :key="s.name" class="metro-stop" :style="{ left: s.x + '%', top: s.y + '%' }">
-              <i></i>{{ s.name }}
-            </span>
-            <!-- 商圈 / 医院 / 公园 POI -->
-            <span v-for="p in MAP_POIS" :key="p.name" class="poi-tag" :style="{ left: p.x + '%', top: p.y + '%' }">{{ p.ico }} {{ p.name }}</span>
-            <!-- 区域聚合气泡（组内 >3 套时收起为聚合点） -->
-            <button
-              v-for="g in mapGroups"
-              :key="g.district"
-              class="agg"
-              :class="{ zoom: mapZoom === g.district }"
-              :style="{ left: g.x + '%', top: g.y + '%' }"
-              @click.stop="mapZoom = mapZoom === g.district ? '' : g.district"
-            >
-              {{ g.district }}<b>{{ g.list.length }}套</b>
-            </button>
-            <!-- 房源 marker（聚合区展开后显示单个房源） -->
-            <button
-              v-for="h in mapMarkers"
-              :key="h.id"
-              class="marker"
-              :class="{ on: active === h.id }"
-              :style="{ left: h.x + '%', top: h.y + '%' }"
-              @click.stop="active = h.id"
-            >
-              ¥{{ h.price }}
-            </button>
-            <!-- 选中气泡 -->
-            <div v-if="activeHouse" class="popup" :style="{ left: activeHouse.x + '%', top: activeHouse.y + '%' }">
-              <div class="pt">{{ activeHouse.title }}</div>
-              <div class="pp">¥{{ activeHouse.price }}/月 · {{ activeHouse.layout }}</div>
-              <el-button size="small" type="primary" @click="openDetail(activeHouse.id)">查看详情</el-button>
-            </div>
-          </div>
-          <div class="map-tip text-sub">
-            🗺️ 地图为演示：区域聚合（>3 套收为聚合点，点击展开）。真实项目替换为高德/百度 JS API，房源随视野聚合打点、通勤联动。
-          </div>
-        </div>
+        <!-- 地图找房视图：复用 HouseMap（mock 路网 + 区域聚合，可一键接入高德/百度 JS API） -->
+        <HouseMap v-show="mapMode" class="map-wrap" :houses="filtered" v-model="active" @open="openDetail" :height="520" />
       </el-col>
     </el-row>
 
     <!-- 移动端筛选抽屉 -->
-    <el-button class="filter-fab" type="primary" circle @click="showFilter = true">⚙</el-button>
+    <el-button class="filter-fab" type="primary" circle aria-label="打开筛选" @click="showFilter = true">⚙</el-button>
     <el-drawer v-model="showFilter" title="筛选" direction="btt" size="72%">
       <el-form label-position="top">
         <el-form-item label="租赁方式">
@@ -186,10 +137,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+import { reactive, ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAppStore } from '@/store'
 import HouseCard from '@/components/HouseCard.vue'
+import HouseMap from '@/components/HouseMap.vue'
 import AppSkeleton from '@/components/AppSkeleton.vue'
 import { getHouseList } from '@/api/house'
 import { useDataSource } from '@/composables/useDataSource'
@@ -207,7 +159,7 @@ const router = useRouter()
 // 注意：解构出顶层 ref（模板才能自动解包），用法与 useTable 一致
 const { data: houses, isDemo, loading, load } = useDataSource<House[]>(
   async () => {
-    const r = await getHouseList()
+    const r = await getHouseList(buildQuery())
     return { code: r.code, data: (r.data?.list ?? []).map(toBrowseHouse) }
   },
   store.publicHouses
@@ -218,10 +170,28 @@ const active = ref<number | null>(null)
 const sort = ref('default')
 const kw = ref('')
 
+const PRICE_MAX = 15000
+const PRICE_MIN = 1500
+
 const TYPE_OPTS = ['all', '1室', '2室', '3室']
 const ORI_OPTS = ['all', '南', '北', '东', '西']
 
-const f = reactive({ rent: '全部', type: 'all', ori: 'all', price: 15000, fac: [] as string[] })
+const f = reactive({ rent: '全部', type: 'all', ori: 'all', price: PRICE_MAX, fac: [] as string[] })
+
+// 把当前筛选 + 顶栏定位拼成后端查询参数（server-first：后端按这些条件过滤）
+function buildQuery(): Record<string, string | number | undefined> {
+  const q: Record<string, string | number | undefined> = {}
+  if (f.rent !== '全部') q.rent = f.rent
+  if (f.type !== 'all') q.type = f.type
+  if (f.ori !== 'all') q.ori = f.ori
+  if (f.price < PRICE_MAX) q.price = f.price
+  if (f.fac.length) q.fac = f.fac.join(',')
+  const k = kw.value.trim()
+  if (k) q.q = k
+  if (store.cityShort) q.city = store.cityShort
+  if (store.district) q.district = store.district
+  return q
+}
 
 // 列表状态以 URL query 为唯一事实源：筛选变化写回 URL，URL 变化读回筛选。
 // 这样后退/前进/分享/直达都成立，也顺带消除 keep-alive 缓存旧筛选的问题。
@@ -231,7 +201,7 @@ function loadQuery() {
   f.rent = '全部'
   f.type = 'all'
   f.ori = 'all'
-  f.price = 15000
+  f.price = PRICE_MAX
   f.fac = []
   kw.value = ''
   sort.value = 'default'
@@ -245,7 +215,7 @@ function loadQuery() {
   const o = (q.ori as string) || 'all'
   if (ORI_OPTS.includes(o)) f.ori = o
   const price = Number(q.price)
-  if (q.price && !Number.isNaN(price) && price >= 1500 && price <= 15000) f.price = price
+  if (q.price && !Number.isNaN(price) && price >= PRICE_MIN && price <= PRICE_MAX) f.price = price
   const fac = ((q.fac as string) || '').split(',').filter(Boolean)
   f.fac = fac
   const s = (q.sort as string) || ''
@@ -265,7 +235,7 @@ async function pushToUrl() {
   if (f.rent !== '全部') clean.rent = f.rent
   if (f.type !== 'all') clean.type = f.type
   if (f.ori !== 'all') clean.ori = f.ori
-  if (f.price < 15000) clean.price = String(f.price)
+  if (f.price < PRICE_MAX) clean.price = String(f.price)
   if (f.fac.length) clean.fac = f.fac.join(',')
   if (sort.value !== 'default') clean.sort = sort.value
   // 保留定位参数
@@ -282,10 +252,23 @@ function schedulePush() {
   if (pushTimer) clearTimeout(pushTimer)
   pushTimer = setTimeout(pushToUrl, 250)
 }
-// 用户操作筛选 → 写回 URL（loadQuery 只赋值不同值，天然避免回环）
-watch(f, schedulePush, { deep: true })
-watch(kw, schedulePush)
-watch(sort, schedulePush)
+
+// 筛选 / 定位变化 → 防抖向后端重新拉取（server-first），client filtered 仅作排序与兜底
+let reloadTimer: ReturnType<typeof setTimeout> | null = null
+let suppressReload = true
+function scheduleReload() {
+  if (route.name !== 'list' || suppressReload) return
+  if (reloadTimer) clearTimeout(reloadTimer)
+  reloadTimer = setTimeout(() => load(), 280)
+}
+// 用户操作筛选 → 写回 URL + 重新拉取（loadQuery 只赋值不同值，天然避免回环）
+watch(f, () => { schedulePush(); scheduleReload() }, { deep: true })
+watch(kw, () => { schedulePush(); scheduleReload() })
+watch(sort, () => { schedulePush(); scheduleReload() })
+watch(
+  () => [store.cityShort, store.district],
+  () => { schedulePush(); scheduleReload() }
+)
 // 把 query 里的城市/区域反查回省→市→区，保持顶栏级联选中态一致
 function syncLocation(cityShort: string, district?: string) {
   for (const p of store.regions) {
@@ -301,6 +284,8 @@ onMounted(() => {
   loadQuery()
   load()
   window.addEventListener(COMPARE_CHANGE, syncCompareCount)
+  // 首屏 loadQuery 对 f 的赋值会触发上面的 watch，待其 flush 后再放开筛选重建，避免挂载即重复拉取
+  nextTick(() => { suppressReload = false })
 })
 onBeforeUnmount(() => window.removeEventListener(COMPARE_CHANGE, syncCompareCount))
 // 仅当列表页活动时同步 URL 状态（keep-alive 缓存页不响应其他路由的 query 变化）
@@ -317,56 +302,8 @@ function goCompare() {
   router.push('/compare')
 }
 
-// ===== 模拟地图元素（路网 / 地铁 / POI / 聚合） =====
-const ROAD_H = [
-  { top: 22, w: 3 },
-  { top: 48, w: 5 },
-  { top: 74, w: 3 },
-  { top: 90, w: 2 }
-]
-const ROAD_V = [
-  { left: 18, w: 2 },
-  { left: 44, w: 5 },
-  { left: 66, w: 3 },
-  { left: 85, w: 2 }
-]
-const METRO_STOPS = [
-  { name: '望京站', x: 44, y: 58 },
-  { name: '国贸站', x: 82, y: 14 },
-  { name: '回龙观', x: 12, y: 22 },
-  { name: '中关村', x: 58, y: 44 }
-]
-const MAP_POIS = [
-  { ico: '🏬', name: '商圈', x: 24, y: 38 },
-  { ico: '☕', name: '咖啡', x: 74, y: 62 },
-  { ico: '🏥', name: '医院', x: 38, y: 80 },
-  { ico: '🌳', name: '公园', x: 88, y: 74 }
-]
-
-// 地图状态：当前聚合展开的区域
-const mapZoom = ref('')
-// 区域聚合：组内 >3 套收起为聚合点（按房源坐标均值定位）
-const mapGroups = computed(() => {
-  const groups = new Map<string, typeof filtered.value>()
-  for (const h of filtered.value) {
-    const arr = groups.get(h.district) ?? []
-    arr.push(h)
-    groups.set(h.district, arr)
-  }
-  return [...groups.entries()]
-    .filter(([, list]) => list.length > 3)
-    .map(([district, list]) => ({
-      district,
-      list,
-      x: Math.round(list.reduce((s, h) => s + (h.x ?? 0), 0) / list.length),
-      y: Math.round(list.reduce((s, h) => s + (h.y ?? 0), 0) / list.length)
-    }))
-})
-// 单个 marker：仅非聚合区（或已展开的聚合区）的房源
-const mapMarkers = computed(() => {
-  const agg = new Set(mapGroups.value.map((g) => g.district))
-  return filtered.value.filter((h) => !agg.has(h.district) || mapZoom.value === h.district)
-})
+// 地图找房视图复用 HouseMap 组件（mock 路网 + 区域聚合，可一键接入高德/百度 JS API），
+// 不再在此重复维护地图渲染逻辑。
 
 // 先按顶栏定位（城市/区域）过滤，再做关键词与筛选条件过滤
 const locationHouses = computed(() => {
@@ -382,7 +319,7 @@ const filtered = computed(() => {
       (f.rent === '全部' || h.rentType === f.rent) &&
       (f.type === 'all' || h.layout.startsWith(f.type)) &&
       (f.ori === 'all' || h.orientation.includes(f.ori)) &&
-      (f.price >= 15000 || h.price <= f.price) &&
+      (f.price >= PRICE_MAX || h.price <= f.price) &&
       f.fac.every((x) => h.facilities.includes(x)) &&
       (!q || h.title.toLowerCase().includes(q) || h.district.toLowerCase().includes(q))
   )
@@ -392,13 +329,11 @@ const filtered = computed(() => {
   return arr
 })
 
-const activeHouse = computed<House | undefined>(() => houses.value.find((h) => h.id === active.value))
-
 function reset() {
   f.rent = '全部'
   f.type = 'all'
   f.ori = 'all'
-  f.price = 15000
+  f.price = PRICE_MAX
   f.fac = []
   kw.value = ''
   sort.value = 'default'
@@ -448,10 +383,6 @@ function openDetail(id: number) {
 .right {
   display: flex;
   align-items: center;
-}
-.map-wrap {
-  border-radius: 14px;
-  overflow: hidden;
 }
 .map {
   position: relative;
@@ -509,9 +440,9 @@ function openDetail(id: number) {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #2f6fed;
+  background: #10B0A0;
   border: 1.5px solid #fff;
-  box-shadow: 0 0 0 1px #2f6fed;
+  box-shadow: 0 0 0 1px #10B0A0;
 }
 .poi-tag {
   position: absolute;

@@ -82,6 +82,21 @@
         <HouseCard :house="h" @open="openDetail" @fav="toggleCollect(h.id)" />
       </el-col>
     </el-row>
+
+    <!-- 热门商圈：基于在架房源的区域分布，点击直达行情页 -->
+    <div class="sec-head">
+      <span class="bar"></span>
+      <h2 class="serif">热门商圈</h2>
+      <span class="eyebrow">BY DISTRICT · 在架房源分布</span>
+    </div>
+    <el-row :gutter="14">
+      <el-col v-for="d in hotDistricts" :key="d.name" :xs="12" :sm="8" :md="6">
+        <div class="hot" @click="goDistrict(d.name)">
+          <div class="hot-name serif">{{ d.name }}</div>
+          <div class="hot-meta"><b class="mono">{{ d.count }}</b> 套在架 · 均价 <b class="price mono">¥{{ d.avg }}</b></div>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -128,6 +143,17 @@ function quick(rent: string) {
   if (q) query.q = q
   router.push({ path: '/list', query })
 }
+// 热门商圈：按在架房源量排序，点击进入对应区域行情
+const hotDistricts = computed(() => {
+  const map: Record<string, number[]> = {}
+  store.publicHouses.forEach((h) => (map[h.district] ||= []).push(h.price))
+  return Object.entries(map)
+    .map(([name, ps]) => ({ name, count: ps.length, avg: Math.round(ps.reduce((a, b) => a + b, 0) / ps.length) }))
+    .sort((a, b) => b.count - a.count)
+})
+function goDistrict(name: string) {
+  router.push({ path: '/market', query: { district: name } })
+}
 </script>
 
 <style scoped>
@@ -136,7 +162,7 @@ function quick(rent: string) {
 }
 /* 档案面板：第一版蓝色渐变横幅，白字 + 白底档案卡 */
 .hero-panel {
-  background: linear-gradient(120deg, #2f6fed, #5a86ff);
+  background: var(--grad-hero);
   border-radius: 20px;
   padding: 34px 32px;
   color: #fff;
@@ -265,6 +291,27 @@ function quick(rent: string) {
 .promise small {
   color: var(--sub);
   font-size: 11px;
+}
+.hot {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.hot:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+.hot-name {
+  font-size: 18px;
+  font-weight: 700;
+}
+.hot-meta {
+  font-size: 12px;
+  color: var(--sub);
+  margin-top: 6px;
 }
 @media (max-width: 900px) {
   .hero-panel {

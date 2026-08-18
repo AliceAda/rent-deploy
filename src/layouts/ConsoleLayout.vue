@@ -158,7 +158,7 @@ function onCmd(cmd: string) {
   width: 22px;
   height: 22px;
   border-radius: 6px;
-  background: linear-gradient(135deg, var(--brand), #5a86ff);
+  background: linear-gradient(135deg, var(--brand), #2DD4BF);
   display: grid;
   place-items: center;
   font-size: 13px;

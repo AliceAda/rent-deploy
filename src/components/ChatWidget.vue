@@ -167,7 +167,7 @@ greet()
   height: 52px;
   border-radius: 50%;
   border: none;
-  background: linear-gradient(135deg, var(--brand), #5a86ff);
+  background: linear-gradient(135deg, var(--brand), #2DD4BF);
   color: #fff;
   font-size: 22px;
   cursor: pointer;
@@ -215,7 +215,7 @@ greet()
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
-  background: linear-gradient(135deg, var(--brand), #5a86ff);
+  background: linear-gradient(135deg, var(--brand), #2DD4BF);
   color: #fff;
 }
 .chat-agent {

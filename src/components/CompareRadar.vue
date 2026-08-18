@@ -12,7 +12,7 @@ const el = ref<HTMLElement | null>(null)
 let chart: echarts.ECharts | null = null
 let ro: ResizeObserver | null = null
 
-const palette = ['#2f6fed', '#ff7d3c', '#1aa86a', '#7c3aed']
+const palette = ['#10B0A0', '#ff7d3c', '#1aa86a', '#7c3aed']
 // 归一化维度：价格取「越低越优」反向分，其余取相对最大值占比
 function build() {
   if (!props.houses.length) return null

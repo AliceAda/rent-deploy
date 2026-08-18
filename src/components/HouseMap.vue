@@ -14,7 +14,7 @@
 
       <!-- 地铁线路与站点 -->
       <svg class="metro-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <path d="M6,88 L44,58 L82,14" stroke="#2F6FED" stroke-width="1.1" fill="none" stroke-dasharray="0.6 1.5" />
+        <path d="M6,88 L44,58 L82,14" stroke="#10B0A0" stroke-width="1.1" fill="none" stroke-dasharray="0.6 1.5" />
         <path d="M12,22 L50,60 L90,34" stroke="#FF7D3C" stroke-width="1.1" fill="none" stroke-dasharray="0.6 1.5" />
         <path d="M30,10 L58,44 L30,92" stroke="#1aa86a" stroke-width="1" fill="none" stroke-dasharray="0.6 1.5" opacity="0.8" />
       </svg>
@@ -313,9 +313,9 @@ onBeforeUnmount(() => {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #2f6fed;
+  background: #10B0A0;
   border: 1.5px solid #fff;
-  box-shadow: 0 0 0 1px #2f6fed;
+  box-shadow: 0 0 0 1px #10B0A0;
 }
 .poi-tag {
   position: absolute;
@@ -437,7 +437,7 @@ onBeforeUnmount(() => {
   box-shadow: 0 1px 4px rgba(16, 24, 40, 0.12);
 }
 .amap-marker {
-  background: #2f6fed;
+  background: #10B0A0;
   color: #fff;
   border: 2px solid #fff;
   border-radius: 14px;

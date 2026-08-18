@@ -45,7 +45,7 @@ function render() {
           smooth: true,
           showSymbol: false,
           data: props.data.map((d) => d.price),
-          itemStyle: { color: '#2f6fed' },
+          itemStyle: { color: '#10B0A0' },
           areaStyle: { color: 'rgba(47,111,237,0.12)' },
           lineStyle: { width: 2 }
         }

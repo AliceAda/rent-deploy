@@ -164,7 +164,7 @@ async function onSubmit() {
 }
 .brand {
   flex: 1;
-  background: linear-gradient(135deg, var(--brand), #5a86ff);
+  background: linear-gradient(135deg, var(--brand), #2DD4BF);
   color: #fff;
   display: flex;
   align-items: center;

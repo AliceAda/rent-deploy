@@ -56,7 +56,7 @@ async function renderCharts() {
       tooltip: { trigger: 'axis' },
       xAxis: { type: 'category', data: gmvRes.data.labels },
       yAxis: { type: 'value' },
-      series: [{ type: 'bar', data: gmvRes.data.data, itemStyle: { color: '#2F6FED' }, name: 'GMV(万)' }]
+      series: [{ type: 'bar', data: gmvRes.data.data, itemStyle: { color: '#10B0A0' }, name: 'GMV(万)' }]
     })
     charts.push(c)
   }

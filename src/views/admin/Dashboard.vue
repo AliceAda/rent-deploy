@@ -97,7 +97,7 @@ function renderCharts() {
       grid: { left: 40, right: 16, top: 20, bottom: 24 },
       xAxis: { type: 'category', data: gmv.data.value.labels },
       yAxis: { type: 'value' },
-      series: [{ type: 'line', smooth: true, data: gmv.data.value.data, areaStyle: { opacity: 0.15 }, itemStyle: { color: '#2F6FED' } }]
+      series: [{ type: 'line', smooth: true, data: gmv.data.value.data, areaStyle: { opacity: 0.15 }, itemStyle: { color: '#10B0A0' } }]
     })
     charts.push(c)
   }
@@ -132,7 +132,7 @@ function renderCharts() {
             { name: '签约', value: f.sign }
           ],
           label: { formatter: '{b} {c}' },
-          color: ['#2F6FED', '#5a86ff', '#FF7D3C', '#1aa86a']
+          color: ['#10B0A0', '#2DD4BF', '#FF7D3C', '#1aa86a']
         }
       ]
     })

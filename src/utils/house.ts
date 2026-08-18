@@ -5,16 +5,18 @@ import type { House } from '@/mock/data'
 
 /**
  * 后端 HouseItem → 租客端浏览视图 House 的适配。
- * 后端尚未返回的展示字段（facilities/tags）给空默认值；地图坐标用 id 确定性生成，
- * 保证同一房源每次打开打点位置稳定。接真后端后如返回 lng/lat，替换 x/y 即可。
+ * - facilities/tags 优先用后端真实聚合字段；后端未返回时兜底为空（不覆盖已有数据）。
+ * - 地图坐标优先用后端返回（x/y），缺省时按 id 确定性生成，保证同一房源打点稳定。
+ *   接真后端后如返回 lng/lat，替换 x/y 即可。
  */
 export function toBrowseHouse(h: HouseItem): House {
+  const base = h as Partial<House>
   return {
     ...h,
-    facilities: [],
-    tags: [],
-    x: ((h.id * 37) % 80) + 10,
-    y: ((h.id * 53) % 70) + 10
+    facilities: base.facilities ?? [],
+    tags: base.tags ?? [],
+    x: base.x ?? ((h.id * 37) % 80) + 10,
+    y: base.y ?? ((h.id * 53) % 70) + 10
   }
 }
 

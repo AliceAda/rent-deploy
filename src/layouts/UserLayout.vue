@@ -85,6 +85,9 @@
           <router-link to="/list" custom v-slot="{ navigate, isActive }">
             <button :class="{ active: isActive }" @click="navigate">找房</button>
           </router-link>
+          <router-link to="/market" custom v-slot="{ navigate, isActive }">
+            <button :class="{ active: isActive }" @click="navigate">行情</button>
+          </router-link>
           <router-link to="/mine" custom v-slot="{ navigate, isActive }">
             <button :class="{ active: isActive }" @click="navigate">我的</button>
           </router-link>
@@ -134,6 +137,9 @@
       </router-link>
       <router-link to="/map" custom v-slot="{ navigate, isActive }">
         <button :class="{ on: isActive }" @click="navigate">🗺️<span>地图</span></button>
+      </router-link>
+      <router-link to="/market" custom v-slot="{ navigate, isActive }">
+        <button :class="{ on: isActive }" @click="navigate">📊<span>行情</span></button>
       </router-link>
       <router-link to="/mine" custom v-slot="{ navigate, isActive }">
         <button :class="{ on: isActive }" @click="navigate">👤<span>我的</span></button>
@@ -427,7 +433,7 @@ function onUserCmd(cmd: string) {
   background: #fff;
   border-top: 1px solid var(--line);
   z-index: 60;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
 }
 .mtab button {
   background: transparent;

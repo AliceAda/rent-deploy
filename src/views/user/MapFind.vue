@@ -78,8 +78,8 @@
             <el-option label="3室" value="3室" />
           </el-select>
         </el-form-item>
-        <el-form-item label="月租金上限：{{ f.price >= 15000 ? '不限' : f.price + '元' }}">
-          <el-slider v-model="f.price" :min="1500" :max="15000" :step="500" />
+          <el-form-item label="月租金上限：{{ f.price >= PRICE_MAX ? '不限' : f.price + '元' }}">
+            <el-slider v-model="f.price" :min="PRICE_MIN" :max="PRICE_MAX" :step="500" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" style="width: 100%" @click="showFilter = false">查看结果</el-button>
@@ -90,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { reactive, ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '@/store'
 import HouseMap from '@/components/HouseMap.vue'
@@ -103,19 +103,42 @@ import type { House } from '@/mock/data'
 const store = useAppStore()
 const router = useRouter()
 
+const PRICE_MAX = 15000
+const PRICE_MIN = 1500
+
 // 房源数据：API-first + mock 回退（与列表页同一策略）
-const { data: houses } = useDataSource<House[]>(
+const { data: houses, load } = useDataSource<House[]>(
   async () => {
-    const r = await getHouseList()
+    const r = await getHouseList(buildQuery())
     return { code: r.code, data: (r.data?.list ?? []) as House[] }
   },
   store.publicHouses
 )
 
-const f = reactive({ rent: '全部', type: 'all', price: 15000 })
+const f = reactive({ rent: '全部', type: 'all', price: PRICE_MAX })
 const nearMe = ref(false)
 const active = ref<number | null>(null)
 const showFilter = ref(false)
+
+// 把当前筛选 + 顶栏定位拼成后端查询参数（server-first）
+function buildQuery(): Record<string, string | number | undefined> {
+  const q: Record<string, string | number | undefined> = {}
+  if (f.rent !== '全部') q.rent = f.rent
+  if (f.type !== 'all') q.type = f.type
+  if (f.price < PRICE_MAX) q.price = f.price
+  if (store.cityShort) q.city = store.cityShort
+  if (store.district) q.district = store.district
+  return q
+}
+
+// 筛选 / 定位变化 → 防抖向后端重新拉取（client filtered 仅作排序与兜底）
+let reloadTimer: ReturnType<typeof setTimeout> | null = null
+function scheduleReload() {
+  if (reloadTimer) clearTimeout(reloadTimer)
+  reloadTimer = setTimeout(() => load(), 280)
+}
+watch(f, scheduleReload, { deep: true })
+watch(() => [store.cityShort, store.district], scheduleReload)
 
 // 先按顶栏定位，再按筛选；nearMe 用一个伪定位点(50,50)做半径过滤（演示）
 const MY_LOC = { x: 50, y: 50 }
@@ -156,7 +179,10 @@ const mapHeight = computed(() => (isMobile.value ? 300 : 560))
 function onResize() {
   isMobile.value = window.innerWidth <= 980
 }
-onMounted(onResize)
+onMounted(() => {
+  onResize()
+  load()
+})
 onMounted(() => window.addEventListener('resize', onResize))
 onBeforeUnmount(() => window.removeEventListener('resize', onResize))
 </script>

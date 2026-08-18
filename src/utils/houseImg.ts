@@ -25,7 +25,7 @@ interface Palette {
 
 // 从现有 4 组品牌渐变派生语义色板（第一版配色）
 const PALETTES: Palette[] = [
-  { wall: ['#eaf1ff', '#d7e3ff'], floor: ['#c9a585', '#b08d6a'], accent: '#5a86ff', accent2: '#8aa8ff', wood: '#8a6a4c', sun: '#bfe0ff' },
+  { wall: ['#eaf1ff', '#d7e3ff'], floor: ['#c9a585', '#b08d6a'], accent: '#2DD4BF', accent2: '#8aa8ff', wood: '#8a6a4c', sun: '#bfe0ff' },
   { wall: ['#fff1e6', '#ffe3cf'], floor: ['#cbb094', '#b39272'], accent: '#ff8f52', accent2: '#ffb088', wood: '#93683f', sun: '#ffe9c4' },
   { wall: ['#e9f7ef', '#d7f0e2'], floor: ['#c3a98d', '#ab8f70'], accent: '#3fbf83', accent2: '#7cd4a8', wood: '#7d6142', sun: '#d8f0d8' },
   { wall: ['#f0ecff', '#e2daff'], floor: ['#c6ad95', '#ad9278'], accent: '#8f6ef2', accent2: '#b09af7', wood: '#7a6044', sun: '#e3d8ff' }
@@ -95,7 +95,7 @@ function living(id: number): string {
   const p = paletteOf(id)
   const s = hash(id, 1)
   const sofaX = 40 + s * 30
-  const sofa = ['#5a86ff', '#ff8f52', '#3fbf83', '#8f6ef2'][Math.abs(id) % 4]
+  const sofa = ['#2DD4BF', '#ff8f52', '#3fbf83', '#8f6ef2'][Math.abs(id) % 4]
   return `
   <rect width="600" height="400" fill="#fff"/>
   <defs><linearGradient id="w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.wall[0]}"/><stop offset="1" stop-color="${p.wall[1]}"/></linearGradient></defs>

@@ -160,6 +160,15 @@ export const handlers = [
     if (q.get('city')) list = list.filter((h) => h.city === q.get('city'))
     if (q.get('district')) list = list.filter((h) => h.district === q.get('district'))
     if (q.get('rent')) list = list.filter((h) => h.rentType === q.get('rent'))
+    // 户型 / 朝向 / 租金上限 / 配套：与前端筛选条件对齐，做到 server-first
+    const type = q.get('type')
+    if (type && type !== 'all') list = list.filter((h) => h.layout.startsWith(type))
+    const ori = q.get('ori')
+    if (ori && ori !== 'all') list = list.filter((h) => h.orientation.includes(ori))
+    const price = Number(q.get('price'))
+    if (q.get('price') && !Number.isNaN(price)) list = list.filter((h) => h.price <= price)
+    const fac = (q.get('fac') || '').split(',').filter(Boolean)
+    if (fac.length) list = list.filter((h) => fac.every((x) => (h.facilities ?? []).includes(x)))
     if (kw) list = list.filter((h) => h.title.toLowerCase().includes(kw) || h.district.toLowerCase().includes(kw))
     return ok({ list, total: list.length })
   }),

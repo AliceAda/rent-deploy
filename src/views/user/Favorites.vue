@@ -50,6 +50,8 @@ async function remove(id: number) {
   if (r.code === 0) {
     ElMessage.success('已取消收藏')
     list.value = list.value.filter((i) => i.id !== id)
+    // 同步全站收藏事实源（store.collects 是单一 Set），避免列表/卡片收藏心状态残留
+    store.collects.delete(id)
   } else {
     ElMessage.error(r.message || '操作失败')
   }
