@@ -1,0 +1,1143 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "安居易租 API",
+    "description": "租房平台前后端统一接口规范 - OpenAPI 3.0",
+    "version": "1.0.0",
+    "contact": {
+      "name": "AgnesCode AI Assistant"
+    },
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.rent.com/v1",
+      "description": "生产环境"
+    },
+    {
+      "url": "http://localhost:8080/v1",
+      "description": "开发环境"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/sms/send": {
+      "post": {
+        "tags": ["认证模块"],
+        "summary": "发送短信验证码",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SmsSendData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "发送成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["认证模块"],
+        "summary": "用户登录",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "登录成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["认证模块"],
+        "summary": "用户注册",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "注册成功"
+          }
+        }
+      }
+    },
+    "/user/me": {
+      "get": {
+        "tags": ["认证模块"],
+        "summary": "获取当前用户信息",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/house": {
+      "get": {
+        "tags": ["房源模块"],
+        "summary": "房源列表",
+        "parameters": [
+          {"$ref": "#/components/parameters/Page"},
+          {"$ref": "#/components/parameters/Size"},
+          {"$ref": "#/components/parameters/District"},
+          {"$ref": "#/components/parameters/RentType"},
+          {"$ref": "#/components/parameters/Layout"},
+          {"$ref": "#/components/parameters/MinPrice"},
+          {"$ref": "#/components/parameters/MaxPrice"},
+          {"$ref": "#/components/parameters/Keyword"}
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HouseList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/house/{id}": {
+      "get": {
+        "tags": ["房源模块"],
+        "summary": "房源详情",
+        "parameters": [
+          {"$ref": "#/components/parameters/Id"}
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HouseItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/house/{houseId}/review": {
+      "get": {
+        "tags": ["房源模块"],
+        "summary": "房源评价列表",
+        "parameters": [
+          {"$ref": "#/components/parameters/HouseId"}
+        ],
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      },
+      "post": {
+        "tags": ["房源模块"],
+        "summary": "提交评价",
+        "parameters": [
+          {"$ref": "#/components/parameters/HouseId"}
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewSubmit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功"
+          }
+        }
+      }
+    },
+    "/order/my": {
+      "get": {
+        "tags": ["订单模块"],
+        "summary": "我的订单列表",
+        "parameters": [
+          {"$ref": "#/components/parameters/Page"},
+          {"$ref": "#/components/parameters/Size"},
+          {"$ref": "#/components/parameters/Status"}
+        ],
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    },
+    "/order": {
+      "post": {
+        "tags": ["订单模块"],
+        "summary": "创建订单",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "创建成功"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/pay": {
+      "post": {
+        "tags": ["订单模块"],
+        "summary": "订单支付",
+        "parameters": [
+          {"$ref": "#/components/parameters/OrderId"}
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PayResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order/{id}/cancel": {
+      "post": {
+        "tags": ["订单模块"],
+        "summary": "取消订单",
+        "parameters": [
+          {"$ref": "#/components/parameters/Id"}
+        ],
+        "responses": {
+          "200": {
+            "description": "取消成功"
+          }
+        }
+      }
+    },
+    "/order/{id}/checkin": {
+      "post": {
+        "tags": ["订单模块"],
+        "summary": "确认入住",
+        "parameters": [
+          {"$ref": "#/components/parameters/Id"}
+        ],
+        "responses": {
+          "200": {
+            "description": "入住成功"
+          }
+        }
+      }
+    },
+    "/contract/my": {
+      "get": {
+        "tags": ["合同模块"],
+        "summary": "我的合同列表",
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    },
+    "/contract/{id}": {
+      "get": {
+        "tags": ["合同模块"],
+        "summary": "合同详情",
+        "parameters": [
+          {"$ref": "#/components/parameters/Id"}
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contract/sign": {
+      "post": {
+        "tags": ["合同模块"],
+        "summary": "电子签约",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignContractData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "签约成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/booking/my": {
+      "get": {
+        "tags": ["预约模块"],
+        "summary": "我的预约列表",
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    },
+    "/booking": {
+      "post": {
+        "tags": ["预约模块"],
+        "summary": "创建预约",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBookingData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "预约成功"
+          }
+        }
+      }
+    },
+    "/landlord/profile": {
+      "get": {
+        "tags": ["房东中心"],
+        "summary": "获取房东资料",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LandlordProfile"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["房东中心"],
+        "summary": "更新房东资料",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LandlordProfile"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功"
+          }
+        }
+      }
+    },
+    "/landlord/bills": {
+      "get": {
+        "tags": ["房东中心"],
+        "summary": "账单列表",
+        "parameters": [
+          {"$ref": "#/components/parameters/Page"},
+          {"$ref": "#/components/parameters/Size"},
+          {"$ref": "#/components/parameters/Status"}
+        ],
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    },
+    "/landlord/bills/generate": {
+      "post": {
+        "tags": ["房东中心"],
+        "summary": "生成月度账单",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateBillData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "生成成功"
+          }
+        }
+      }
+    },
+    "/landlord/stats": {
+      "get": {
+        "tags": ["房东中心"],
+        "summary": "房东统计",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LandlordStats"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/houses": {
+      "get": {
+        "tags": ["管理后台"],
+        "summary": "房源列表（管理端）",
+        "parameters": [
+          {"$ref": "#/components/parameters/Page"},
+          {"$ref": "#/components/parameters/Size"}
+        ],
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    },
+    "/admin/users": {
+      "get": {
+        "tags": ["管理后台"],
+        "summary": "用户列表",
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    },
+    "/admin/agents": {
+      "get": {
+        "tags": ["管理后台"],
+        "summary": "经纪人列表",
+        "parameters": [
+          {"$ref": "#/components/parameters/Page"},
+          {"$ref": "#/components/parameters/Size"}
+        ],
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      },
+      "post": {
+        "tags": ["管理后台"],
+        "summary": "创建经纪人",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "创建成功"
+          }
+        }
+      }
+    },
+    "/admin/buildings": {
+      "get": {
+        "tags": ["管理后台"],
+        "summary": "楼栋列表",
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      },
+      "post": {
+        "tags": ["管理后台"],
+        "summary": "创建楼栋",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Building"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "创建成功"
+          }
+        }
+      }
+    },
+    "/admin/regions": {
+      "get": {
+        "tags": ["管理后台"],
+        "summary": "区域列表",
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    },
+    "/admin/metros": {
+      "get": {
+        "tags": ["管理后台"],
+        "summary": "地铁站点列表",
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    },
+    "/admin/statistics/today": {
+      "get": {
+        "tags": ["管理后台"],
+        "summary": "今日统计数据",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardToday"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/statistics/gmv": {
+      "get": {
+        "tags": ["管理后台"],
+        "summary": "GMV统计",
+        "parameters": [
+          {"name": "dim", "in": "query", "schema": {"type": "string"}}
+        ],
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    },
+    "/user/address": {
+      "get": {
+        "tags": ["用户中心"],
+        "summary": "我的地址列表",
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      },
+      "post": {
+        "tags": ["用户中心"],
+        "summary": "新增地址",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddressItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "添加成功"
+          }
+        }
+      }
+    },
+    "/user/collect": {
+      "get": {
+        "tags": ["用户中心"],
+        "summary": "我的收藏列表",
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      },
+      "post": {
+        "tags": ["用户中心"],
+        "summary": "添加收藏",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "houseId": {"type": "number"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "收藏成功"
+          }
+        }
+      }
+    },
+    "/user/points": {
+      "get": {
+        "tags": ["用户中心"],
+        "summary": "我的积分",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PointsInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/credit": {
+      "get": {
+        "tags": ["用户中心"],
+        "summary": "我的信用分",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workorder/my": {
+      "get": {
+        "tags": ["工单模块"],
+        "summary": "我的工单列表",
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    },
+    "/workorder/repair": {
+      "post": {
+        "tags": ["工单模块"],
+        "summary": "提交报修",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RepairSubmit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功"
+          }
+        }
+      }
+    },
+    "/message/my": {
+      "get": {
+        "tags": ["消息模块"],
+        "summary": "我的消息列表",
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    },
+    "/storage/presign": {
+      "get": {
+        "tags": ["存储模块"],
+        "summary": "获取上传签名URL",
+        "parameters": [
+          {"name": "filename", "in": "query", "required": true, "schema": {"type": "string"}},
+          {"name": "contentType", "in": "query", "required": true, "schema": {"type": "string"}}
+        ],
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "parameters": {
+      "Id": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {"type": "number"}
+      },
+      "OrderId": {
+        "name": "orderId",
+        "in": "path",
+        "required": true,
+        "schema": {"type": "number"}
+      },
+      "HouseId": {
+        "name": "houseId",
+        "in": "path",
+        "required": true,
+        "schema": {"type": "number"}
+      },
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "schema": {"type": "number", "default": 1}
+      },
+      "Size": {
+        "name": "size",
+        "in": "query",
+        "schema": {"type": "number", "default": 20}
+      },
+      "Status": {
+        "name": "status",
+        "in": "query",
+        "schema": {"type": "string"}
+      },
+      "District": {
+        "name": "district",
+        "in": "query",
+        "schema": {"type": "string"}
+      },
+      "RentType": {
+        "name": "rentType",
+        "in": "query",
+        "schema": {"type": "string", "enum": ["整租", "合租", "公寓"]}
+      },
+      "Layout": {
+        "name": "layout",
+        "in": "query",
+        "schema": {"type": "string"}
+      },
+      "MinPrice": {
+        "name": "minPrice",
+        "in": "query",
+        "schema": {"type": "number"}
+      },
+      "MaxPrice": {
+        "name": "maxPrice",
+        "in": "query",
+        "schema": {"type": "number"}
+      },
+      "Keyword": {
+        "name": "keyword",
+        "in": "query",
+        "schema": {"type": "string"}
+      }
+    },
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "code": {"type": "number", "example": 0},
+          "message": {"type": "string", "example": "success"},
+          "data": {"type": "object"}
+        }
+      },
+      "SmsSendData": {
+        "type": "object",
+        "required": ["phone", "biz"],
+        "properties": {
+          "phone": {"type": "string", "example": "13800138000"},
+          "biz": {"type": "string", "enum": ["register", "reset_pwd", "change_phone", "change_pwd"]}
+        }
+      },
+      "LoginData": {
+        "type": "object",
+        "required": ["phone", "pwd"],
+        "properties": {
+          "phone": {"type": "string"},
+          "pwd": {"type": "string"},
+          "code": {"type": "string"}
+        }
+      },
+      "RegisterData": {
+        "type": "object",
+        "required": ["phone", "pwd", "code"],
+        "properties": {
+          "phone": {"type": "string"},
+          "pwd": {"type": "string"},
+          "code": {"type": "string"},
+          "name": {"type": "string"}
+        }
+      },
+      "LoginResult": {
+        "type": "object",
+        "properties": {
+          "token": {"type": "string"},
+          "refreshToken": {"type": "string"},
+          "user": {"$ref": "#/components/schemas/User"}
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "number"},
+          "name": {"type": "string"},
+          "phone": {"type": "string"},
+          "role": {"type": "string", "enum": ["tenant", "landlord", "agent", "admin"]},
+          "avatar": {"type": "string"},
+          "email": {"type": "string"}
+        }
+      },
+      "HouseItem": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "number"},
+          "title": {"type": "string"},
+          "district": {"type": "string"},
+          "layout": {"type": "string"},
+          "area": {"type": "number"},
+          "price": {"type": "number"},
+          "rentType": {"type": "string", "enum": ["整租", "合租", "公寓"]},
+          "orientation": {"type": "string"},
+          "floor": {"type": "string"},
+          "status": {"type": "string", "enum": ["可租", "已租", "待审核", "违规", "已下架"]},
+          "views": {"type": "number"},
+          "collectCount": {"type": "number"},
+          "images": {"type": "array", "items": {"type": "string"}},
+          "landlordName": {"type": "string"},
+          "createdAt": {"type": "string"}
+        }
+      },
+      "HouseList": {
+        "type": "object",
+        "properties": {
+          "list": {"type": "array", "items": {"$ref": "#/components/schemas/HouseItem"}},
+          "total": {"type": "number"}
+        }
+      },
+      "ReviewSubmit": {
+        "type": "object",
+        "required": ["score", "content"],
+        "properties": {
+          "score": {"type": "number", "minimum": 1, "maximum": 5},
+          "content": {"type": "string"}
+        }
+      },
+      "CreateOrderData": {
+        "type": "object",
+        "required": ["houseId", "amount"],
+        "properties": {
+          "houseId": {"type": "number"},
+          "rentType": {"type": "string"},
+          "amount": {"type": "number"},
+          "startDate": {"type": "string", "format": "date"},
+          "endDate": {"type": "string", "format": "date"}
+        }
+      },
+      "PayResult": {
+        "type": "object",
+        "properties": {
+          "payUrl": {"type": "string"},
+          "orderId": {"type": "number"}
+        }
+      },
+      "ContractDetail": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "number"},
+          "contractNo": {"type": "string"},
+          "houseId": {"type": "number"},
+          "houseTitle": {"type": "string"},
+          "tenantId": {"type": "number"},
+          "tenantName": {"type": "string"},
+          "landlordId": {"type": "number"},
+          "landlordName": {"type": "string"},
+          "startDate": {"type": "string", "format": "date"},
+          "endDate": {"type": "string", "format": "date"},
+          "monthlyRent": {"type": "number"},
+          "deposit": {"type": "number"},
+          "status": {"type": "string", "enum": ["草稿", "待签订", "生效中", "已到期", "已终止"]},
+          "signedAt": {"type": "string"},
+          "createdAt": {"type": "string"}
+        }
+      },
+      "SignContractData": {
+        "type": "object",
+        "required": ["orderId"],
+        "properties": {
+          "orderId": {"type": "number"},
+          "templateId": {"type": "number"},
+          "signType": {"type": "string", "enum": ["face", "sms"]},
+          "tenantInfo": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "phone": {"type": "string"},
+              "idcard": {"type": "string"}
+            }
+          }
+        }
+      },
+      "SignResult": {
+        "type": "object",
+        "properties": {
+          "contractId": {"type": "number"},
+          "contractNo": {"type": "string"},
+          "signUrl": {"type": "string"},
+          "certInfo": {
+            "type": "object",
+            "properties": {
+              "certNo": {"type": "string"},
+              "issuer": {"type": "string"},
+              "validFrom": {"type": "string"},
+              "validTo": {"type": "string"},
+              "hash": {"type": "string"}
+            }
+          }
+        }
+      },
+      "CreateBookingData": {
+        "type": "object",
+        "required": ["houseId"],
+        "properties": {
+          "houseId": {"type": "number"},
+          "time": {"type": "string", "format": "date-time"},
+          "remark": {"type": "string"}
+        }
+      },
+      "LandlordProfile": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "number"},
+          "name": {"type": "string"},
+          "phone": {"type": "string"},
+          "realName": {"type": "string"},
+          "idCard": {"type": "string"},
+          "bankCard": {"type": "string"},
+          "bankName": {"type": "string"},
+          "avatar": {"type": "string"},
+          "rating": {"type": "number"},
+          "totalOrders": {"type": "number"},
+          "totalHouses": {"type": "number"},
+          "joinDays": {"type": "number"}
+        }
+      },
+      "LandlordStats": {
+        "type": "object",
+        "properties": {
+          "totalHouses": {"type": "number"},
+          "totalContracts": {"type": "number"},
+          "totalOrders": {"type": "number"},
+          "totalIncome": {"type": "number"},
+          "pendingWithdraw": {"type": "number"},
+          "expiringContracts": {"type": "number"},
+          "pendingRepairs": {"type": "number"}
+        }
+      },
+      "GenerateBillData": {
+        "type": "object",
+        "properties": {
+          "month": {"type": "string"},
+          "houseId": {"type": "number"}
+        }
+      },
+      "AgentItem": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "number"},
+          "name": {"type": "string"},
+          "phone": {"type": "string"},
+          "storeName": {"type": "string"},
+          "level": {"type": "string", "enum": ["见习", "初级", "中级", "高级", "金牌"]},
+          "certNo": {"type": "string"},
+          "status": {"type": "number"},
+          "createdAt": {"type": "string"}
+        }
+      },
+      "Building": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "number"},
+          "name": {"type": "string"},
+          "district": {"type": "string"},
+          "community": {"type": "string"},
+          "totalFloors": {"type": "number"},
+          "totalUnits": {"type": "number"},
+          "status": {"type": "string", "enum": ["正常", "停用"]},
+          "createdAt": {"type": "string"}
+        }
+      },
+      "DashboardToday": {
+        "type": "object",
+        "properties": {
+          "newHouse": {"type": "number"},
+          "newOrder": {"type": "number"},
+          "deal": {"type": "number"},
+          "todo": {"type": "number"}
+        }
+      },
+      "AddressItem": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "number"},
+          "contactName": {"type": "string"},
+          "phone": {"type": "string"},
+          "provinceId": {"type": "number"},
+          "cityId": {"type": "number"},
+          "districtId": {"type": "number"},
+          "detail": {"type": "string"},
+          "tag": {"type": "string"},
+          "isDefault": {"type": "boolean"}
+        }
+      },
+      "PointsInfo": {
+        "type": "object",
+        "properties": {
+          "userId": {"type": "number"},
+          "balance": {"type": "number"},
+          "updatedat": {"type": "string"}
+        }
+      },
+      "CreditInfo": {
+        "type": "object",
+        "properties": {
+          "userId": {"type": "number"},
+          "score": {"type": "number"},
+          "level": {"type": "string", "enum": ["极好", "优秀", "良好", "一般", "较差"]},
+          "history": {"type": "array", "items": {"type": "object"}},
+          "rules": {"type": "array", "items": {"type": "object"}}
+        }
+      },
+      "RepairSubmit": {
+        "type": "object",
+        "required": ["houseId", "title", "description"],
+        "properties": {
+          "houseId": {"type": "number"},
+          "type": {"type": "string", "enum": ["报修", "投诉", "咨询"]},
+          "title": {"type": "string"},
+          "description": {"type": "string"},
+          "images": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}
