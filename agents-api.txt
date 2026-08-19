@@ -1,7 +1,0 @@
-// Agent API additions
-export const agentsApi = {
-  getAdminAgents: () => '/admin/agents',
-  createAdminAgent: (data: any) => ({ url: '/admin/agents', method: 'POST', data }),
-  updateAdminAgent: (id: number, data: any) => ({ url: `/admin/agents/${id}`, method: 'PUT', data }),
-  deleteAdminAgent: (id: number) => ({ url: `/admin/agents/${id}`, method: 'DELETE' })
-}
