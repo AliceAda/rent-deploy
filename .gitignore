@@ -1,32 +1,26 @@
-# dependencies
+# Dependencies
 node_modules/
-.pnp
-.pnp.js
+/.agnes/
+/.workbuddy/
 
-# build output
-dist/
-dist_deploy/
-dist-ssr/
-*.local
+# Build outputs
+/dist/
+/build/
+/.vite/
 
-# env（密钥永不入库；.env.local 已被 *.local 覆盖，这里再显式兜底）
-.env
-.env.*
-!.env.example
-
-# temp
-*.class
-ShowTables.java
-
-# logs
-logs/
+# Logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# editor
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea/
@@ -36,19 +30,54 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-# system
+# OS generated files
 .DS_Store
 Thumbs.db
 
-# tool state
-.freebuff/
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.unsaved
 
-# WorkBuddy 本地工具数据（记忆/技能/session，非项目源码，不入库）
-.workbuddy/
+# Work directory
+/work/
+/temp/
 
-# 临时构建产物回收目录
-_build_trash/
-
-# 非代码资产：接口文档/头脑风暴交付物，不入库（本地保留）
-/apifox/
-frontend-brainstorm.html
+# Old/redundant files
+frontend-doc-v2.html
+*-fixed.vue
+*-clean.vue
+*-final.*
+*-en.*
+*-utf8.*
+*-v2.*
+*-append.*
+*-fix.*
+router-*.ts
+new-router.ts
+admin-agents-*.ts
+agents-*.ts
+auth-*.ts
+useCrud-*.ts
+useForm-*.ts
+useTable-*.ts
+contract-status.ts
+errorHandler.ts
+export.ts
+field-mapping-*.ts
+http-with-transform.ts
+landlord-api.ts
+relations-api.ts
+status-mapping.ts
+table-relations.ts
+types-common.ts
+user-extensions-api.ts
+admin-extensions-api.ts
+extensions-api.ts
+extensions-pages.ts
+database_migration.sql
+migration_only.sql
+add_foreign_keys.sql
+fix_enum.sql
+create_views.sql
