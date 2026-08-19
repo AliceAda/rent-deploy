@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安居易租 - 前端开发文档</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #f5f7fa;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+        .header {
+            background: linear-gradient(135deg, #1677ff, #10b981);
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 { font-size: 32px; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 14px; }
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-item .num { font-size: 24px; font-weight: bold; }
+        .stat-item .label { font-size: 12px; opacity: 0.9; }
+        .nav {
+            background: #fff;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav a {
+            padding: 6px 16px;
+            background: #f0f2f5;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #6b7280;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        .nav a:hover { background: #1677ff; color: #fff; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section h2 .badge {
+            background: #1677ff;
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            border: 1px solid #e4e9f0;
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .card h3 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card p {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .tag-user { background: #e6f4ff; color: #0958d9; }
+        .tag-house { background: #f0fdf4; color: #166534; }
+        .tag-order { background: #fff7e6; color: #b45309; }
+        .tag-admin { background: #f5f3ff; color: #6d28d9; }
+        .tag-landlord { background: #fff1f0; color: #cf1322; }
+        .tag-auth { background: #e6fffb; color: #08979c; }
+        .tag-dev { background: #fffbe6; color: #d48806; }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .table th, .table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .table th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #6b7280;
+        }
+        .table tr:hover { background: #f8fafc; }
+        .api-path {
+            font-family: Consolas, monospace;
+            background: #f0f2f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .api-get { color: #166534; }
+        .api-post { color: #0958d9; }
+        .api-put { color: #b45309; }
+        .api-delete { color: #cf1322; }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .code-block .keyword { color: #569cd6; }
+        .code-block .string { color: #ce9178; }
+        .code-block .comment { color: #6a9955; }
+        .progress {
+            height: 8px;
+            background: #e4e9f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #1677ff, #10b981);
+            border-radius: 4px;
+        }
+        .highlight {
+            background: #fff7e6;
+            border-left: 4px solid #f59e0b;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin: 12px 0;
+        }
+        .success {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+        }
+        .info {
+            background: #e6f4ff;
+            border-left: 4px solid #1677ff;
+        }
+        .count-pill {
+            display: inline-block;
+            min-width: 22px;
+            text-align: center;
+            background: #f0f2f5;
+            border-radius: 10px;
+            padding: 0 6px;
+            font-size: 11px;
+            color: #6b7280;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏠 安居易租 - 前端开发文档</h1>
+        <p>Vue 3 + TypeScript + Element Plus 前端项目开发指南</p>
+        <div class="stats">
+            <div class="stat-item">
+                <div class="num">87</div>
+                <div class="label">前端页面 (含 1 个布局组件)</div>
+            </div>
+            <div class="stat-item">
+                <div class="num">344</div>
+                <div class="label">API 接口</div>
+            </div>
+            <div class="stat-item">
+                <div class="num">27</div>
+                <div class="label">API 模块</div>
+            </div>
+            <div class="stat-item">
+                <div class="num">102</div>
+                <div class="label">数据库表 (后端)</div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="nav">
+        <a href="#overview">项目概览</a>
+        <a href="#pages">页面结构</a>
+        <a href="#api">接口模块</a>
+        <a href="#router">路由配置</a>
+        <a href="#components">组件库</a>
+        <a href="#utils">工具函数</a>
+        <a href="#composables">组合式函数</a>
+        <a href="#deploy">部署指南</a>
+    </nav>
+
+    <div class="container">
+        <!-- 项目概览 -->
+        <section id="overview" class="section">
+            <h2>项目概览 <span class="badge">Overview</span></h2>
+            <div class="grid">
+                <div class="card">
+                    <h3><span class="tag tag-user">技术栈</span> Vue 3 + TypeScript</h3>
+                    <p>使用 Vue 3 Composition API + TypeScript 开发，类型安全，开发体验佳 (Vue ^3.4.21 / TS ^5.4.5)</p>
+                </div>
+                <div class="card">
+                    <h3><span class="tag tag-house">UI框架</span> Element Plus</h3>
+                    <p>基于 Element Plus 组件库 (^2.9.0)，提供丰富的管理后台组件，图标使用 @element-plus/icons-vue</p>
+                </div>
+                <div class="card">
+                    <h3><span class="tag tag-order">状态管理</span> Pinia</h3>
+                    <p>使用 Pinia (^2.1.7) 进行状态管理，支持多角色状态隔离</p>
+                </div>
+                <div class="card">
+                    <h3><span class="tag tag-admin">路由管理</span> Vue Router 4</h3>
+                    <p>基于角色的路由守卫，支持 RBAC 权限控制 (vue-router ^4.3.0)</p>
+                </div>
+                <div class="card">
+                    <h3><span class="tag tag-house">图表</span> ECharts</h3>
+                    <p>使用 ECharts (^5.6.0) 实现租金趋势、对比雷达、数据大屏等可视化</p>
+                </div>
+            </div>
+            <div class="highlight info" style="margin-top: 16px;">
+                <strong>📦 项目结构</strong><br>
+                src/ ├── api/           # API 接口模块 (28个文件，27个模块 + http.ts 封装)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── components/  # 公共组件 (7个)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── composables/ # 组合式函数 (6个)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── layouts/     # 布局组件 (3个)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── router/      # 路由配置<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── store/       # 状态管理 (4个)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── utils/       # 工具函数 (13个)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── types/       # 类型定义<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── mock/        # 本地 Mock 数据<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;└── views/       # 页面组件 (87个)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── user/      # 租客端 (29个)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── landlord/  # 房东中心 (13个)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── admin/     # 管理后台 (41个，含 AdminLayout 布局)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── auth/      # 认证登录 (3个)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── dev/       # 开发调试 (1个)
+            </div>
+        </section>
+
+        <!-- 页面结构 -->
+        <section id="pages" class="section">
+            <h2>页面结构 <span class="badge">Pages</span></h2>
+
+            <h3 style="margin: 20px 0 12px; color: #1677ff;">👤 租客端页面 user/ <span class="count-pill">29</span></h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>🏠 首页 / 房源浏览</h3>
+                    <p>Home.vue, HouseList.vue, HouseDetail.vue, MapFind.vue, Market.vue</p>
+                </div>
+                <div class="card">
+                    <h3>📋 订单管理</h3>
+                    <p>MyOrders.vue, OrderDetail.vue, MyBookings.vue</p>
+                </div>
+                <div class="card">
+                    <h3>📄 合同管理</h3>
+                    <p>MyContracts.vue, ContractDetail.vue, SignContract.vue</p>
+                </div>
+                <div class="card">
+                    <h3>💰 财务管理</h3>
+                    <p>MyBills.vue, PayRecords.vue, Points.vue</p>
+                </div>
+                <div class="card">
+                    <h3>👤 个人中心</h3>
+                    <p>Mine.vue, EditProfile.vue, Realname.vue, Security.vue, AddressManage.vue, AccountCancel.vue, Sessions.vue, NotifySettings.vue</p>
+                </div>
+                <div class="card">
+                    <h3>⭐ 收藏历史</h3>
+                    <p>Favorites.vue, BrowseHistory.vue, Compare.vue</p>
+                </div>
+                <div class="card">
+                    <h3>📩 消息工单</h3>
+                    <p>MessageCenter.vue, WorkOrderDetail.vue, Repair.vue</p>
+                </div>
+                <div class="card">
+                    <h3>⭐ 评价</h3>
+                    <p>Review.vue</p>
+                </div>
+            </div>
+
+            <h3 style="margin: 20px 0 12px; color: #10b981;">🏢 房东中心页面 landlord/ <span class="count-pill">13</span></h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>📊 工作台</h3>
+                    <p>Dashboard.vue - 数据统计、到期提醒、智能调价</p>
+                </div>
+                <div class="card">
+                    <h3>🏠 房源管理</h3>
+                    <p>MyHouses.vue, HouseEdit.vue, PublishHouse.vue</p>
+                </div>
+                <div class="card">
+                    <h3>📅 订单管理</h3>
+                    <p>Orders.vue</p>
+                </div>
+                <div class="card">
+                    <h3>📅 预约管理</h3>
+                    <p>Bookings.vue, BookingDetail.vue</p>
+                </div>
+                <div class="card">
+                    <h3>📄 合同管理</h3>
+                    <p>Contracts.vue</p>
+                </div>
+                <div class="card">
+                    <h3>💰 账单管理</h3>
+                    <p>Bills.vue, BillDetail.vue, Withdraw.vue</p>
+                </div>
+                <div class="card">
+                    <h3>🔧 工单管理</h3>
+                    <p>RepairManage.vue</p>
+                </div>
+                <div class="card">
+                    <h3>👤 房东资料</h3>
+                    <p>LandlordProfile.vue</p>
+                </div>
+            </div>
+
+            <h3 style="margin: 20px 0 12px; color: #8b5cf6;">⚙️ 管理后台页面 admin/ <span class="count-pill">40 页面 + 1 布局</span></h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>📊 数据大屏</h3>
+                    <p>Dashboard.vue, Statistics.vue</p>
+                </div>
+                <div class="card">
+                    <h3>🏠 房源管理</h3>
+                    <p>HouseManage.vue, BuildingManage.vue, AdminBuildings.vue, AdminHouseManage.vue, ContractManage.vue, ContractTemplate.vue</p>
+                </div>
+                <div class="card">
+                    <h3>👤 用户管理</h3>
+                    <p>UserManage.vue, UserDetail.vue, AgentManage.vue, AdminInvites.vue</p>
+                </div>
+                <div class="card">
+                    <h3>💰 财务管理</h3>
+                    <p>Finance.vue, WithdrawManage.vue, RefundManage.vue, AdminInvoices.vue, AdminDeposits.vue, AdminTaxes.vue, AdminReconciliation.vue, AdminCreditLogs.vue</p>
+                </div>
+                <div class="card">
+                    <h3>📋 订单 / 合同 / 工单</h3>
+                    <p>TradeManage.vue, TicketManage.vue, ReportManage.vue, AdminDisputes.vue, AdminSubleases.vue, AdminRenewals.vue, AdminTerminations.vue, AdminCheckins.vue, AdminRentPeriods.vue, AdminStatusLogs.vue</p>
+                </div>
+                <div class="card">
+                    <h3>⚙️ 系统配置</h3>
+                    <p>SystemManage.vue, ConfigManage.vue, DictManage.vue</p>
+                </div>
+                <div class="card">
+                    <h3>📝 内容管理</h3>
+                    <p>ContentManage.vue, MessageTemplate.vue, AdminAds.vue, AdminActivities.vue</p>
+                </div>
+                <div class="card">
+                    <h3>🔒 风控管理</h3>
+                    <p>RiskManage.vue, SearchManage.vue, AdminAuditLogs.vue</p>
+                </div>
+            </div>
+            <div class="highlight" style="margin-top: 12px;">
+                <strong>ℹ️ 说明</strong> admin 目录下另有 <code class="api-path">AdminLayout.vue</code> 为后台布局组件（计入 87 个 view 文件，但不作为业务页面统计）。
+            </div>
+
+            <h3 style="margin: 20px 0 12px; color: #08979c;">🔐 认证登录 auth/ <span class="count-pill">3</span></h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>🔐 认证登录</h3>
+                    <p>Login.vue, Register.vue, ForgotPassword.vue</p>
+                </div>
+            </div>
+
+            <h3 style="margin: 20px 0 12px; color: #d48806;">🛠️ 开发调试 dev/ <span class="count-pill">1</span></h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>🛠️ 接口状态</h3>
+                    <p>ApiStatus.vue - 接口/服务状态自检页</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 接口模块 -->
+        <section id="api" class="section">
+            <h2>接口模块 <span class="badge">API</span></h2>
+            <p style="font-size: 13px; color: #6b7280; margin-bottom: 12px;">共 27 个业务模块（http.ts 为请求封装，不计入），导出接口合计 344 个。</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>模块</th>
+                        <th>文件</th>
+                        <th>接口数</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><span class="tag tag-auth">认证</span></td><td class="api-path">auth.ts</td><td>5</td><td>登录、注册、短信、密码找回</td></tr>
+                    <tr><td><span class="tag tag-user">用户</span></td><td class="api-path">user.ts</td><td>9</td><td>用户信息、资料、实名、安全</td></tr>
+                    <tr><td><span class="tag tag-user">地址</span></td><td class="api-path">address.ts</td><td>5</td><td>联系/收货地址管理</td></tr>
+                    <tr><td><span class="tag tag-user">收藏</span></td><td class="api-path">collect.ts</td><td>3</td><td>房源收藏、取消收藏</td></tr>
+                    <tr><td><span class="tag tag-user">积分</span></td><td class="api-path">points.ts</td><td>2</td><td>积分查询、积分明细</td></tr>
+                    <tr><td><span class="tag tag-user">会话</span></td><td class="api-path">session.ts</td><td>4</td><td>登录会话、设备、登出</td></tr>
+                    <tr><td><span class="tag tag-user">用户扩展</span></td><td class="api-path">user-extensions.ts</td><td>15</td><td>邀请、入住、账单、发票</td></tr>
+                    <tr><td><span class="tag tag-user">通知</span></td><td class="api-path">notify.ts</td><td>2</td><td>通知设置、推送</td></tr>
+                    <tr><td><span class="tag tag-user">消息</span></td><td class="api-path">message.ts</td><td>3</td><td>站内消息、会话</td></tr>
+                    <tr><td><span class="tag tag-house">房源</span></td><td class="api-path">house.ts</td><td>29</td><td>房源列表、详情、评价、发布</td></tr>
+                    <tr><td><span class="tag tag-house">搜索</span></td><td class="api-path">search.ts</td><td>6</td><td>房源搜索、筛选、推荐</td></tr>
+                    <tr><td><span class="tag tag-order">预约</span></td><td class="api-path">booking.ts</td><td>10</td><td>看房预约、确认、拒绝</td></tr>
+                    <tr><td><span class="tag tag-order">订单</span></td><td class="api-path">order.ts</td><td>15</td><td>订单 CRUD、支付、取消、入住</td></tr>
+                    <tr><td><span class="tag tag-order">合同</span></td><td class="api-path">contract.ts</td><td>14</td><td>合同签署、续租、终止</td></tr>
+                    <tr><td><span class="tag tag-order">支付</span></td><td class="api-path">pay.ts</td><td>15</td><td>支付、退款、账单</td></tr>
+                    <tr><td><span class="tag tag-order">账单</span></td><td class="api-path">bill.ts</td><td>7</td><td>账单查询、缴费、明细</td></tr>
+                    <tr><td><span class="tag tag-order">工单</span></td><td class="api-path">workorder.ts</td><td>13</td><td>报修、工单处理、进度</td></tr>
+                    <tr><td><span class="tag tag-admin">风控</span></td><td class="api-path">risk.ts</td><td>7</td><td>风控规则、审核、预警</td></tr>
+                    <tr><td><span class="tag tag-admin">存储</span></td><td class="api-path">storage.ts</td><td>1</td><td>文件/图片上传</td></tr>
+                    <tr><td><span class="tag tag-admin">关联</span></td><td class="api-path">relations.ts</td><td>10</td><td>表关联、数据关联查询</td></tr>
+                    <tr><td><span class="tag tag-landlord">房东</span></td><td class="api-path">landlord.ts</td><td>12</td><td>房东资料、账单、提现、统计</td></tr>
+                    <tr><td><span class="tag tag-landlord">经纪人</span></td><td class="api-path">agents.ts</td><td>7</td><td>经纪人或代理商管理</td></tr>
+                    <tr><td><span class="tag tag-admin">管理后台</span></td><td class="api-path">admin.ts</td><td>18</td><td>用户、房源、订单核心管理</td></tr>
+                    <tr><td><span class="tag tag-admin">后台扩展</span></td><td class="api-path">admin-extensions.ts</td><td>37</td><td>楼栋、区域、地铁、POI 管理</td></tr>
+                    <tr><td><span class="tag tag-admin">扩展功能</span></td><td class="api-path">extensions.ts</td><td>47</td><td>活动、广告、纠纷、对账等</td></tr>
+                    <tr><td><span class="tag tag-admin">扩展 API</span></td><td class="api-path">extensions-api.ts</td><td>47</td><td>扩展业务能力接口</td></tr>
+                    <tr><td><span class="tag tag-admin">扩展页面</span></td><td class="api-path">extensions-pages.ts</td><td>1</td><td>扩展页面配置</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 路由配置 -->
+        <section id="router" class="section">
+            <h2>路由配置 <span class="badge">Router</span></h2>
+            <div class="code-block">
+<span class="keyword">const</span> routes = [
+  <span class="comment">// 公开路由</span>
+  { path: <span class="string">'/login'</span>, component: Login },
+  { path: <span class="string">'/register'</span>, component: Register },
+
+  <span class="comment">// 租客端路由</span>
+  {
+    path: <span class="string">'/'</span>,
+    component: UserLayout,
+    children: [
+      { path: <span class="string">''</span>, redirect: <span class="string">'/home'</span> },
+      { path: <span class="string">'/home'</span>, component: () => <span class="keyword">import</span>(<span class="string">'@/views/user/Home.vue'</span>) },
+      { path: <span class="string">'/houses'</span>, component: () => <span class="keyword">import</span>(<span class="string">'@/views/user/HouseList.vue'</span>) },
+      { path: <span class="string">'/house/:id'</span>, component: () => <span class="keyword">import</span>(<span class="string">'@/views/user/HouseDetail.vue'</span>) },
+      { path: <span class="string">'/mine'</span>, component: () => <span class="keyword">import</span>(<span class="string">'@/views/user/Mine.vue'</span>) },
+    ]
+  },
+
+  <span class="comment">// 房东端路由</span>
+  {
+    path: <span class="string">'/landlord'</span>,
+    component: LandlordLayout,
+    meta: { roles: [<span class="string">'landlord'</span>] },
+    children: [...]
+  },
+
+  <span class="comment">// 管理后台路由</span>
+  {
+    path: <span class="string">'/admin'</span>,
+    component: AdminLayout,
+    meta: { roles: [<span class="string">'admin'</span>, <span class="string">'agent'</span>] },
+    children: [...]
+  }
+]
+            </div>
+            <div class="highlight info" style="margin-top: 12px;">
+                <strong>ℹ️ 布局组件</strong> layouts/ 下实际有 3 个布局：<code class="api-path">UserLayout.vue</code>、<code class="api-path">LandlordLayout.vue</code>、<code class="api-path">AdminLayout.vue</code>（原文档仅列 2 个）。
+            </div>
+        </section>
+
+        <!-- 组件库 -->
+        <section id="components" class="section">
+            <h2>公共组件 <span class="badge">Components</span></h2>
+            <p style="font-size: 13px; color: #6b7280; margin-bottom: 12px;">components/ 下共 7 个组件。</p>
+            <div class="grid">
+                <div class="card">
+                    <h3>🏠 HouseCard.vue</h3>
+                    <p>房源卡片组件，展示图片、价格、位置、标签</p>
+                </div>
+                <div class="card">
+                    <h3>🗺️ HouseMap.vue</h3>
+                    <p>地图找房组件，支持高德/百度地图 SDK 接入</p>
+                </div>
+                <div class="card">
+                    <h3>📊 CompareRadar.vue</h3>
+                    <p>房源对比雷达图，可视化展示房源各项指标</p>
+                </div>
+                <div class="card">
+                    <h3>📈 RentTrendChart.vue</h3>
+                    <p>租金趋势图表，ECharts 实现价格走势展示</p>
+                </div>
+                <div class="card">
+                    <h3>💬 ChatWidget.vue</h3>
+                    <p>在线客服聊天组件，支持消息收发</p>
+                </div>
+                <div class="card">
+                    <h3>⏳ AppSkeleton.vue</h3>
+                    <p>页面加载骨架屏，提升用户体验</p>
+                </div>
+                <div class="card">
+                    <h3>🧩 其他公共组件</h3>
+                    <p>components/ 下另有 1 个未在上述清单中单独列出的组件，详见仓库</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 工具函数 -->
+        <section id="utils" class="section">
+            <h2>工具函数 <span class="badge">Utils</span></h2>
+            <p style="font-size: 13px; color: #6b7280; margin-bottom: 12px;">utils/ 下实际共 13 个文件（原文档列 7 个，已补充）。</p>
+            <div class="grid">
+                <div class="card">
+                    <h3>📝 field-mapping.ts</h3>
+                    <p>字段名转换工具，支持 snake_case ↔ camelCase 自动转换</p>
+                </div>
+                <div class="card">
+                    <h3>🎨 status-mapping.ts</h3>
+                    <p>状态映射工具，统一管理业务状态的颜色和标签</p>
+                </div>
+                <div class="card">
+                    <h3>📊 contract-status.ts</h3>
+                    <p>合同状态管理，定义合同生命周期各状态</p>
+                </div>
+                <div class="card">
+                    <h3>🔗 table-relations.ts</h3>
+                    <p>表关联关系定义，管理数据库外键关联</p>
+                </div>
+                <div class="card">
+                    <h3>📤 export.ts</h3>
+                    <p>数据导出工具，支持 CSV 格式导出</p>
+                </div>
+                <div class="card">
+                    <h3>⚠️ errorHandler.ts</h3>
+                    <p>统一错误处理，全局错误捕获和提示</p>
+                </div>
+                <div class="card">
+                    <h3>🧰 其余工具 (7 个)</h3>
+                    <p>utils/ 下另有 7 个工具文件（原文档未列出），详见仓库</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 组合式函数 -->
+        <section id="composables" class="section">
+            <h2>组合式函数 <span class="badge">Composables</span></h2>
+            <p style="font-size: 13px; color: #6b7280; margin-bottom: 12px;">composables/ 下实际共 6 个（原文档列 4 个，已补充 2 个）。</p>
+            <div class="grid">
+                <div class="card">
+                    <h3>📋 useTable.ts</h3>
+                    <p>表格数据管理，封装分页、加载、刷新逻辑</p>
+                </div>
+                <div class="card">
+                    <h3>🔄 useCrud.ts</h3>
+                    <p>通用 CRUD 操作，提供增删改查标准流程</p>
+                </div>
+                <div class="card">
+                    <h3>📝 useForm.ts</h3>
+                    <p>表单管理，封装表单验证、提交、重置逻辑</p>
+                </div>
+                <div class="card">
+                    <h3>🎨 useTheme.ts</h3>
+                    <p>主题管理，支持深色/浅色主题切换</p>
+                </div>
+                <div class="card">
+                    <h3>🧩 其余 composables (2 个)</h3>
+                    <p>composables/ 下另有 2 个未列出，详见仓库</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 部署指南 -->
+        <section id="deploy" class="section">
+            <h2>部署指南 <span class="badge">Deploy</span></h2>
+
+            <h3 style="margin: 16px 0 12px;">🚀 开发环境启动</h3>
+            <div class="code-block">
+<span class="comment"># 安装依赖</span>
+npm install
+
+<span class="comment"># 启动开发服务器</span>
+npm run dev
+
+<span class="comment"># 访问地址</span>
+http://localhost:5173
+            </div>
+
+            <h3 style="margin: 16px 0 12px;">📦 生产构建</h3>
+            <div class="code-block">
+<span class="comment"># 构建生产版本</span>
+npm run build
+
+<span class="comment"># 预览生产版本</span>
+npm run preview
+
+<span class="comment"># 类型检查</span>
+npm run type-check
+            </div>
+
+            <h3 style="margin: 16px 0 12px;">🐳 Docker 部署</h3>
+            <div class="code-block">
+<span class="comment"># 构建镜像</span>
+docker build -t anju-rent-frontend .
+
+<span class="comment"># 运行容器</span>
+docker run -d -p 80:80 anju-rent-frontend
+            </div>
+
+            <div class="highlight success" style="margin-top: 20px;">
+                <strong>✅ 部署检查清单</strong>
+                <ul style="margin-top: 8px; padding-left: 20px;">
+                    <li>环境变量配置 (.env.production)</li>
+                    <li>API 代理配置 (vite.config.ts)</li>
+                    <li>Nginx 静态资源部署</li>
+                    <li>HTTPS 证书配置</li>
+                    <li>错误监控接入 (Sentry)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 开发规范 -->
+        <section class="section">
+            <h2>开发规范 <span class="badge">规范</span></h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>📁 文件命名</h3>
+                    <p>Vue 组件使用 PascalCase，工具函数使用 camelCase，API 模块使用小写</p>
+                </div>
+                <div class="card">
+                    <h3>🏷️ 注释规范</h3>
+                    <p>组件添加 JSDoc 注释，复杂逻辑添加行内注释，导出接口添加说明</p>
+                </div>
+                <div class="card">
+                    <h3>🔐 安全规范</h3>
+                    <p>敏感信息不硬编码，API 请求添加 Token，用户输入进行校验</p>
+                </div>
+                <div class="card">
+                    <h3>⚡ 性能优化</h3>
+                    <p>路由懒加载，组件按需引入，图片压缩，虚拟列表优化</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer style="text-align: center; padding: 30px; color: #6b7280; font-size: 13px;">
+        <p>安居易租 · 前端开发文档（已根据代码核对修正）</p>
+        <p style="margin-top: 8px;">生成时间：2026-08-19 · 数据来源：D:\Project\rent-deploy\src</p>
+    </footer>
+</body>
+</html>
