@@ -1,0 +1,208 @@
+/* ===== 全局设计系统：城市住房档案（Registry of Homes） =====
+   冷纸 + 墨色 + 品牌蓝绿（交互）+ 暖橙（价格）+ 朱砂印（验真/签约，唯一点缀）。
+   仿宋/宋体做展示字（公文档案感），系统黑体正文，等宽数字做数据。
+   2026-08-18 改版：品牌色由档案蓝 #2f6fed 统一切换为蓝绿 #10B0A0（清爽现代）。 */
+:root {
+  --brand: #10B0A0;        /* 蓝绿主色 */
+  --brand-d: #0C9488;      /* 按压/深一档 */
+  --brand-s: #E6FBF7;      /* 主色浅染（hover/选中底） */
+  --grad-primary: linear-gradient(135deg, #29C3AD 0%, #0C9488 100%);
+  --grad-hero: linear-gradient(135deg, #2DD4BF 0%, #0EA5A4 45%, #0C6E8C 100%);
+  --orange: #F59E0B;       /* 价格/促销暖橙点缀 */
+  --orange-s: #FFF7E6;
+  /* 已验印：用于验真 / 签约等官方确认状态（绿色=已核验） */
+  --seal: #16a34a;
+  --seal-ink: #fff;
+  --ink: #1F2A2E;
+  --sub: #475569;
+  --line: #E6ECF0;
+  --bg: #F5F8F9;
+  --panel: #ffffff;
+  --ok: #16A34A;
+  --warn: #EF4444;
+
+  --font-serif: 'FangSong', 'FangSong_GB2312', 'STFangsong', 'Songti SC', 'SimSun', serif;
+  --font-kai: 'Kaiti SC', 'STKaiti', 'KaiTi', 'SimSun', serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', 'Cascadia Mono', Consolas, 'Courier New', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--brand-s);
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* Element Plus 主色注入（蓝绿 #10B0A0） */
+:root {
+  --el-color-primary: #10B0A0;
+  --el-color-primary-light-3: #57D8C2;
+  --el-color-primary-light-5: #8FE8D8;
+  --el-color-primary-light-7: #C2F4EA;
+  --el-color-primary-light-8: #DCF7F1;
+  --el-color-primary-light-9: #E6FBF7;
+  --el-color-primary-dark-2: #0C9488;
+  /* 警告/暖橙对齐：hero「找房」按钮、el-tag warning 不再用 EP 默认金 */
+  --el-color-warning: #F59E0B;
+  --el-color-warning-light-3: #FAC775;
+  --el-color-warning-light-5: #FBD38A;
+  --el-color-warning-light-7: #FCE3B8;
+  --el-color-warning-light-8: #FDEFD6;
+  --el-color-warning-light-9: #FFF7E6;
+  --el-color-warning-dark-2: #C2770D;
+}
+
+/* ===== 深色模式（单一事实源 <html data-theme="dark">） ===== */
+[data-theme='dark'] {
+  --bg: #0e141d;
+  --panel: #161e29;
+  --ink: #e7ecf3;
+  --sub: #9aa6b6;
+  --line: #27323f;
+  --brand-s: #0c2c2a;
+  --orange-s: #2a1c12;
+  --ok: #34d399;
+  --seal: #22c55e;
+  /* Element Plus 组件级变量：卡片 / 输入 / 文字 / 边框 同步变深 */
+  --el-bg-color: #161e29;
+  --el-bg-color-page: #0e141d;
+  --el-fill-color: #1d2733;
+  --el-fill-color-light: #1a232f;
+  --el-fill-color-lighter: #161e29;
+  --el-fill-color-blank: #161e29;
+  --el-text-color-primary: #e7ecf3;
+  --el-text-color-regular: #c2ccd9;
+  --el-text-color-secondary: #9aa6b6;
+  --el-border-color: #27323f;
+  --el-border-color-light: #222c38;
+  --el-border-color-lighter: #1d2733;
+  --el-mask-color: rgba(8, 12, 18, 0.7);
+}
+[data-theme='dark'] .topbar,
+[data-theme='dark'] .mtab {
+  background: var(--panel);
+  border-color: var(--line);
+}
+[data-theme='dark'] .cta {
+  background: var(--panel);
+}
+[data-theme='dark'] .house-map {
+  background: linear-gradient(180deg, #13203a, #0e1726);
+}
+[data-theme='dark'] .map-ph {
+  background: #13203a;
+  border-color: var(--line);
+}
+
+.page-max {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 22px 20px;
+}
+
+.text-sub {
+  color: var(--sub);
+}
+
+.price {
+  color: var(--orange);
+  font-weight: 800;
+}
+
+/* ===== 档案字体工具类 ===== */
+.serif {
+  font-family: var(--font-serif);
+}
+.mono {
+  font-family: var(--font-mono);
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--sub);
+}
+
+/* ===== 朱砂印章（签名元素）：官方确认的唯一视觉符号 ===== */
+.seal {
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  background: var(--seal);
+  color: var(--seal-ink);
+  font-family: var(--font-kai);
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 2px;
+  transform: rotate(-3deg);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 1px 3px rgba(22, 163, 74, 0.35);
+  user-select: none;
+  flex-shrink: 0;
+}
+.seal.sm {
+  width: 30px;
+  height: 30px;
+  font-size: 12px;
+  letter-spacing: 0;
+  transform: rotate(-2deg);
+}
+/* 三字印章（如「已签约」） */
+.seal.wide {
+  width: auto;
+  height: 52px;
+  padding: 0 14px;
+  font-size: 16px;
+  letter-spacing: 3px;
+  transform: rotate(-3deg);
+}
+
+/* ===== 分区标题（公文样式：玉青段标 + 仿宋标题 + 等宽眉题） ===== */
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 6px 0 14px;
+}
+.sec-head .bar {
+  align-self: center;
+  width: 4px;
+  height: 18px;
+  background: var(--brand);
+  border-radius: 2px;
+}
+.sec-head .eyebrow {
+  margin-left: auto;
+}
+
+/* 尊重系统减弱动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

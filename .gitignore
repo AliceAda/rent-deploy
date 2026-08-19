@@ -1,0 +1,54 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# build output
+dist/
+dist_deploy/
+dist-ssr/
+*.local
+
+# env（密钥永不入库；.env.local 已被 *.local 覆盖，这里再显式兜底）
+.env
+.env.*
+!.env.example
+
+# temp
+*.class
+ShowTables.java
+
+# logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# system
+.DS_Store
+Thumbs.db
+
+# tool state
+.freebuff/
+
+# WorkBuddy 本地工具数据（记忆/技能/session，非项目源码，不入库）
+.workbuddy/
+
+# 临时构建产物回收目录
+_build_trash/
+
+# 非代码资产：接口文档/头脑风暴交付物，不入库（本地保留）
+/apifox/
+frontend-brainstorm.html
