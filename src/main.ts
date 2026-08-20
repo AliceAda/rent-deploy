@@ -34,12 +34,4 @@ setUnauthorizedHandler(() => {
   }
 })
 
-// 演示模式：后端未就绪时用 MSW 内存数据库实现整套 /api/* 契约（VITE_USE_MOCK=0 关闭后走真实后端）
-async function enableMock() {
-  if (import.meta.env.VITE_USE_MOCK === '0') return
-  const { worker } = await import('./mock/browser')
-  await worker.start({ onUnhandledRequest: 'bypass' })
-  console.info('[mock] 演示模式已启用：全站数据来自内存数据库（后端就绪后设 VITE_USE_MOCK=0 切换真实接口）')
-}
-
-enableMock().then(() => app.mount('#app'))
+app.mount('#app')
