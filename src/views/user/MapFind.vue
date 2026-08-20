@@ -78,7 +78,7 @@
             <el-option label="3室" value="3室" />
           </el-select>
         </el-form-item>
-          <el-form-item label="月租金上限：{{ f.price >= PRICE_MAX ? '不限' : f.price + '元' }}">
+          <el-form-item :label="f.price >= PRICE_MAX ? '月租金上限：不限' : '月租金上限：' + f.price + '元'">
             <el-slider v-model="f.price" :min="PRICE_MIN" :max="PRICE_MAX" :step="500" />
         </el-form-item>
         <el-form-item>
